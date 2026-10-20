@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "669854356042",
+    "project_id": "pillsense-d14cb",
+    "storage_bucket": "pillsense-d14cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669854356042:android:a1c9fd2a3c128a068c4cb3",
+        "android_client_info": {
+          "package_name": "com.equipo5.pillsense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJoHBi2C6v8xYWHWcc9NgmxRuxfViXUVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
