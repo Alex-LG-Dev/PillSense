@@ -1,7 +1,9 @@
 package com.equipo5.pillsense;
 
+import android.content.Intent; // necesario para navegar a otras pantallas
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button; // para usar los dos botones del layout
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,8 +43,17 @@ public class MainActivity extends AppCompatActivity {
         // Prueba de conexión (si funciona):
         // db.child("test").setValue("Hola PillSense");
 
+        //Buscamos los dos botones del layout activity_main.xml
+        Button btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
+        Button btnRegistrarse = findViewById(R.id.btnRegistrarse);
 
+        //Al pulsar "Iniciar sesión" se abre LoginActivity
+        btnIniciarSesion.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, LoginActivity.class)));
 
+        //Al pulsar "Registrarse" se abre RegistroActivity
+        btnRegistrarse.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, RegistroActivity.class)));
 
     }
 }
