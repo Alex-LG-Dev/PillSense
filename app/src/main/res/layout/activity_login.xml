@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margen_pantalla">
+
+        <!-- Logo -->
+        <TextView
+            android:id="@+id/tvLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@color/azul_pillsense"
+            android:textSize="@dimen/texto_boton"
+            android:textStyle="bold" />
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:text="@string/login_titulo"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_titulo"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvSubtitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:text="@string/login_subtitulo"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <!-- Correo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:text="@string/hint_correo_label"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/bg_campos"
+            android:hint="@string/hint_correo"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textColorHint="@color/gris_pizarra"
+            android:textSize="@dimen/texto_normal" />
+
+        <!-- Contraseña -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/label_contrasena"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:autofillHints="password"
+            android:background="@drawable/bg_campos"
+            android:inputType="textPassword"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal" />
+
+        <!-- ¿Olvidaste tu contraseña?-->
+        <TextView
+            android:id="@+id/tvOlvidaste"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/olvidaste_contrasena"
+            android:textColor="@color/azul_medio"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <!-- Mantener sesión -->
+        <CheckBox
+            android:id="@+id/cbMantenerSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/verde_menta"
+            android:checked="true"
+            android:text="@string/mantener_sesion"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <!-- Mensaje de error -->
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/bg_error"
+            android:padding="@dimen/espacio_medio"
+            android:text="@string/error_credenciales"
+            android:textColor="@color/error_suave"
+            android:textSize="@dimen/texto_pequeno"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- Botón principal -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnIniciarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_boton"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/btn_iniciar_sesion"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/texto_boton"
+            android:textStyle="bold"
+            app:backgroundTint="@color/verde_menta"
+            app:cornerRadius="@dimen/radio_esquina" />
+
+        <!-- Separador -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/gris_pizarra" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/espacio_medio"
+                android:text="@string/o_continua_con"
+                android:textColor="@color/gris_pizarra"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/gris_pizarra" />
+        </LinearLayout>
+
+        <!-- Google -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoogle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_boton"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/continuar_google"
+            android:textAllCaps="false"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal"
+            android:textStyle="bold"
+            app:cornerRadius="@dimen/radio_esquina"
+            app:strokeColor="@color/azul_pillsense"
+            app:strokeWidth="2dp" />
+
+        <!-- Facebook -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFacebook"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_boton"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:text="@string/continuar_facebook"
+            android:textAllCaps="false"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal"
+            android:textStyle="bold"
+            app:cornerRadius="@dimen/radio_esquina"
+            app:strokeColor="@color/azul_pillsense"
+            app:strokeWidth="2dp" />
+
+        <!-- ir a registro -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:gravity="center"
+            android:text="@string/no_tienes_cuenta"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <TextView
+            android:id="@+id/tvIrARegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/registrate"
+            android:textColor="@color/azul_pillsense"
+            android:textSize="@dimen/texto_normal"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>
