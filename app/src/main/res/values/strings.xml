@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">PillSense</string>
+
+    <!-- Inicio -->
+    <string name="btn_iniciar_sesion">Iniciar sesión</string>
+    <string name="btn_registrarse">Registrarse</string>
+
+    <!-- Login -->
+    <string name="login_titulo">Inicia sesión</string>
+    <string name="login_subtitulo">Accede de forma segura a tus pastilleros.</string>
+    <string name="hint_correo_label">Correo electrónico</string>
+    <string name="hint_correo">nombre@correo.com</string>
+    <string name="label_contrasena">Contraseña</string>
+    <string name="olvidaste_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="mantener_sesion">Mantener sesión iniciada</string>
+    <string name="error_credenciales">Correo o contraseña incorrectos</string>
+    <string name="o_continua_con">o continúa con</string>
+    <string name="continuar_google">Continuar con Google</string>
+    <string name="continuar_facebook">Continuar con Facebook</string>
+    <string name="no_tienes_cuenta">¿No tienes cuenta?</string>
+    <string name="registrate">Regístrate</string>
+
+    <!-- Registro -->
+    <string name="registro_titulo">Crear cuenta</string>
+    <string name="label_nombre">Nombre y apellidos</string>
+    <string name="minimo_caracteres">Mínimo 8 caracteres</string>
+    <string name="label_soy">Soy</string>
+    <string name="rol_paciente">Paciente</string>
+    <string name="rol_cuidador">Cuidador/familiar</string>
+    <string name="acepto_terminos">Acepto términos y política de privacidad</string>
+    <string name="btn_crear_cuenta">Crear cuenta</string>
+    <string name="o_registrate_con">o regístrate con</string>
+    <string name="google">Google</string>
+    <string name="facebook">Facebook</string>
+    <string name="ya_tienes_cuenta">¿Ya tienes cuenta?</string>
+    <string name="inicia_sesion_link">Inicia sesión</string>
 </resources>
