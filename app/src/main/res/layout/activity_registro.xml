@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".RegistroActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margen_pantalla">
+
+        <!-- volver + título -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnVolver"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/volver"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:id="@+id/tvTituloRegistro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/espacio_pequeno"
+                android:text="@string/registro_titulo"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Nombre y apellidos -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:text="@string/label_nombre"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:autofillHints="name"
+            android:background="@drawable/bg_campos"
+            android:inputType="textPersonName"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal" />
+
+        <!-- Correo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/hint_correo_label"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etCorreoRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/bg_campos"
+            android:hint="@string/hint_correo"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textColorHint="@color/gris_pizarra"
+            android:textSize="@dimen/texto_normal" />
+
+        <!-- Contraseña -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/label_contrasena"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etContrasenaRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:autofillHints="newPassword"
+            android:background="@drawable/bg_campos"
+            android:inputType="textPassword"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/minimo_caracteres"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <!-- Paciente / Cuidador -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/label_soy"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <RadioGroup
+            android:id="@+id/rgRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbPaciente"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:buttonTint="@color/verde_menta"
+                android:checked="true"
+                android:text="@string/rol_paciente"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <RadioButton
+                android:id="@+id/rbCuidador"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/espacio_grande"
+                android:buttonTint="@color/verde_menta"
+                android:text="@string/rol_cuidador"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_pequeno" />
+        </RadioGroup>
+
+        <!-- Términos -->
+        <CheckBox
+            android:id="@+id/cbTerminos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/verde_menta"
+            android:text="@string/acepto_terminos"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <!-- Botón crear cuenta -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCrearCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_boton"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/btn_crear_cuenta"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/texto_boton"
+            android:textStyle="bold"
+            app:backgroundTint="@color/verde_menta"
+            app:cornerRadius="@dimen/radio_esquina" />
+
+        <!-- Separador -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/gris_pizarra" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/espacio_medio"
+                android:text="@string/o_registrate_con"
+                android:textColor="@color/gris_pizarra"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/gris_pizarra" />
+        </LinearLayout>
+
+        <!-- Google y Facebook -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoogleRegistro"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginEnd="@dimen/espacio_pequeno"
+                android:layout_weight="1"
+                android:text="@string/google"
+                android:textAllCaps="false"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_normal"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/radio_esquina"
+                app:strokeColor="@color/azul_pillsense"
+                app:strokeWidth="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFacebookRegistro"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginStart="@dimen/espacio_pequeno"
+                android:layout_weight="1"
+                android:text="@string/facebook"
+                android:textAllCaps="false"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_normal"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/radio_esquina"
+                app:strokeColor="@color/azul_pillsense"
+                app:strokeWidth="2dp" />
+        </LinearLayout>
+
+        <!-- ir a login -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:gravity="center"
+            android:text="@string/ya_tienes_cuenta"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <TextView
+            android:id="@+id/tvIrALogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/inicia_sesion_link"
+            android:textColor="@color/azul_pillsense"
+            android:textSize="@dimen/texto_normal"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

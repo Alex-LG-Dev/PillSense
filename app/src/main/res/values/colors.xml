@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Paleta según moodboard -->
+    <color name="azul_noche">#0D2F57</color>
+    <color name="azul_pillsense">#134A86</color>
+    <color name="azul_medio">#2F68A8</color>
+    <color name="gris_pizarra">#4A5F75</color>
+
+    <color name="verde_menta">#1DBF8E</color>
+    <color name="verde_claro">#2FD9A9</color>
+    <color name="verde_bosque">#0E7A5C</color>
+    <color name="niebla">#F2F6F9</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="error_suave">#C0392B</color>
 </resources>

@@ -21,6 +21,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Pantalla de inicio de sesión -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
+        <!-- Pantalla de registro -->
+        <activity
+            android:name=".RegistroActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
