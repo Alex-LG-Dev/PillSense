@@ -34,4 +34,7 @@
     <string name="facebook">Facebook</string>
     <string name="ya_tienes_cuenta">¿Ya tienes cuenta?</string>
     <string name="inicia_sesion_link">Inicia sesión</string>
+
+    
+    <string name="volver">Volver</string>
 </resources>
