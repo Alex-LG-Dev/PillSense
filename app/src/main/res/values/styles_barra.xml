@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Título de la barra de acciones: Atkinson, negrita, mismo tamaño que los títulos de las pantallas -->
+    <style name="TextAppearance.PillSense.TituloBarra" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/texto_boton</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/atkinson_hyperlegible</item>
+        <item name="fontFamily">@font/atkinson_hyperlegible</item>
+    </style>
+</resources>
