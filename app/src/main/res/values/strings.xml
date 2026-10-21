@@ -37,29 +37,4 @@
 
     
     <string name="volver">Volver</string>
-
-    <!-- Barra de acciones -->
-    <string name="menu_acerca_de">Acerca de</string>
-
-    <!-- Acerca de -->
-    <string name="acerca_de_titulo">Acerca de</string>
-    <string name="acerca_de_logo">Logo de PillSense</string>
-    <string name="acerca_de_lema">El pastillero inteligente que cuida contigo</string>
-    <string name="acerca_de_version">Versión %1</string>
-    <string name="acerca_de_que_es_titulo">¿Qué es PillSense?</string>
-    <string name="acerca_de_que_es_texto">Un pastillero conectado y una app para que el cuidador configure las tomas y siga cómo va todo. El paciente solo tiene que atender el pastillero: se enciende la luz, suena el aviso y se abre el compartimento.</string>
-    <string name="acerca_de_equipo">Equipo 5</string>
-    <string name="acerca_de_contacto">Contacto y soporte</string>
-    <string name="acerca_de_privacidad">Política de privacidad</string>
-    <string name="acerca_de_terminos">Términos de uso</string>
-    <string name="acerca_de_pendiente">%1: pantalla pendiente</string>
-    <string name="acerca_de_aviso">PillSense es una ayuda para recordar las tomas. No sustituye el consejo médico.</string>
-
-    <!-- Nombres del equipo: cambiar por los reales -->
-    <string-array name="integrantes_equipo">
-        <item>Nombre y apellidos</item>
-        <item>Nombre y apellidos</item>
-        <item>Nombre y apellidos</item>
-        <item>Nombre y apellidos</item>
-    </string-array>
 </resources>

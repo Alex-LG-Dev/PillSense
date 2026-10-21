@@ -14,8 +14,4 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="error_suave">#C0392B</color>
-
-    <!-- Barra de acciones y pantalla Acerca de -->
-    <color name="azul_hielo">#D5E3F2</color>
-    <color name="linea_suave">#D5DDE6</color>
 </resources>

@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Barra de acciones reutilizable. En cualquier pantalla: <include layout="@layout/app_bar" /> -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contenedorBarra"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/azul_pillsense">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barraAcciones"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        app:navigationIconTint="@color/white"
+        android:background="@color/white"
         app:titleTextAppearance="@style/TextAppearance.PillSense.TituloBarra"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/azul_pillsense" />
 
-</FrameLayout>
+    <!-- Línea fina de separación -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/niebla" />
+
+</LinearLayout>
