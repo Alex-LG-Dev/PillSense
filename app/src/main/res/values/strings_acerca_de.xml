@@ -17,11 +17,12 @@
     <string name="acerca_de_pendiente">%1$s: pantalla pendiente</string>
     <string name="acerca_de_aviso">PillSense es una ayuda para recordar las tomas. No sustituye el consejo médico.</string>
 
-    <!-- Nombres del equipo: cambiar por los reales -->
+    <!-- Integrantes del Equipo 5 -->
     <string-array name="integrantes_equipo">
-        <item>Nombre y apellidos</item>
-        <item>Nombre y apellidos</item>
-        <item>Nombre y apellidos</item>
-        <item>Nombre y apellidos</item>
+        <item>Alex López</item>
+        <item>Óscar Cloquell</item>
+        <item>Juan Camilo</item>
+        <item>Ferran Martín</item>
+        <item>Eren</item>
     </string-array>
 </resources>
