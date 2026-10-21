@@ -32,6 +32,12 @@
             android:name=".RegistroActivity"
             android:exported="false" />
 
+        <!-- Pantalla Acerca de (se abre desde el menú de la barra de acciones) -->
+        <activity
+            android:name=".AcercaDeActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>

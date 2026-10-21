@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="88dp"
+    android:height="88dp"
+    android:viewportWidth="88"
+    android:viewportHeight="88">
+    <!-- Logo provisional: pastilla mitad turquesa, mitad blanca. Sustituir por el icono real. -->
+    <group
+        android:pivotX="44"
+        android:pivotY="44"
+        android:rotation="-35">
+        <path
+            android:fillColor="@color/verde_menta"
+            android:pathData="M44,22L28,22A22,22 0 0 0 28,66L44,66Z" />
+        <path
+            android:fillColor="@color/white"
+            android:pathData="M44,22L60,22A22,22 0 0 1 60,66L44,66Z" />
+    </group>
+</vector>

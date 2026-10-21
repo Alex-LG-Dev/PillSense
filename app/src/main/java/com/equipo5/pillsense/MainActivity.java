@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button; // para usar los dos botones del layout
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,12 +27,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        BarraAcciones.prepararVentana(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        // Barra de acciones: nombre de la app y menú (⋮) con "Acerca de"
+        MaterialToolbar barra = BarraAcciones.configurar(this, R.string.app_name, false, R.menu.menu_principal);
+        barra.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.accion_acerca_de) {
+                startActivity(new Intent(MainActivity.this, AcercaDeActivity.class));
+                return true;
+            }
+            return false;
         });
 
         // Conexión con la base de datos
