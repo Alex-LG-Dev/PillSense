@@ -6,7 +6,7 @@
     <!-- Acerca de -->
     <string name="acerca_de_titulo">Acerca de</string>
     <string name="acerca_de_logo">Logo de PillSense</string>
-    <string name="acerca_de_lema">El pastillero inteligente que cuida contigo</string>
+    <string name="acerca_de_lema">Tu pastillero inteligente</string>
     <string name="acerca_de_version">Versión %1$s</string>
     <string name="acerca_de_que_es_titulo">¿Qué es PillSense?</string>
     <string name="acerca_de_que_es_texto">Un pastillero conectado y una app para que el cuidador configure las tomas y siga cómo va todo. El paciente solo tiene que atender el pastillero: se enciende la luz, suena el aviso y se abre el compartimento.</string>
