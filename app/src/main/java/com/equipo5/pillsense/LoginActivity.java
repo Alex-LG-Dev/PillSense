@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.credentials.Credential;
@@ -21,6 +22,15 @@ import androidx.credentials.CustomCredential;
 import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import java.util.Arrays;
 
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
@@ -41,10 +51,13 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private CredentialManager credentialManager;
 
+    private CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         etCorreo = findViewById(R.id.etCorreo);
         etContrasena = findViewById(R.id.etContrasena);
@@ -55,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         credentialManager = CredentialManager.create(this);
 
+        //CallbackManager para Facebook
+        callbackManager = CallbackManager.Factory.create();
+
         // Botón "Iniciar sesión" valida los campos
         Button btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
         btnIniciarSesion.setOnClickListener(v -> iniciarSesion());
@@ -62,6 +78,30 @@ public class LoginActivity extends AppCompatActivity {
         // Botón "Continuar con Google"
         Button btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setOnClickListener(v -> iniciarSesionConGoogle());
+
+        // Configurar botón y el Callback para Facebook
+        Button btnFacebook = findViewById(R.id.btnFacebook);
+        btnFacebook.setOnClickListener(v -> iniciarSesionConFacebook());
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        manejarCredencialFacebook(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG, "Login con Facebook cancelado");
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.e(TAG, "Error en login con Facebook", error);
+                        Toast.makeText(LoginActivity.this,
+                                "No se pudo iniciar sesión con Facebook", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         // Enlace "Regístrate" abre el registro y cierra el login
         TextView tvIrARegistro = findViewById(R.id.tvIrARegistro);
@@ -145,5 +185,33 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "Tipo de credencial inesperado");
         }
+    }
+
+    //Abre la ventana de Facebook para confirmar la cuenta (si ya tiene una en el dispositivo)
+    private void iniciarSesionConFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
+    }
+
+    //Recibe el token de Facebook y se lo pasa a Firebase
+    private void manejarCredencialFacebook(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(this, "Hola, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Log.e(TAG, "Error al iniciar sesión en Firebase con FB", task.getException());
+                        tvError.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
