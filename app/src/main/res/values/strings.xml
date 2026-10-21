@@ -19,6 +19,9 @@
     <string name="continuar_facebook">Continuar con Facebook</string>
     <string name="no_tienes_cuenta">¿No tienes cuenta?</string>
     <string name="registrate">Regístrate</string>
+    <string name="facebook_app_id">1048370001569831</string>
+    <string name="fb_login_protocol_scheme">fb1048370001569831</string>
+    <string name="facebook_client_token">EAAO5fKmJaCcBS5NcxmpUU8kdXz0NFgLsyfmOQqZBF7W37YPu45bWejXLGGZAEdDeLy4RZBI35czNGHtCCYlNqDaZAQPCjxfdJCKFVmUtYxhMbeOTCSPLD4zq8Wb9OS67YFXPMIfHVGJ0KZAj62ZBwKZBjshQuScCVC9r9S7T8ZB8SmjWVlFZAz1edeeOvhwDqtxrxAqTacolZCUGkG9keF9ZAADEh5EOiZCtGEsfOdPz9ZCexG0sKxKqHNHs4vJIo51cwI3E7vR77OZAvnxZCI7zz5sMEp7vZBkV4vAsigvAP5uiL8S2PrCtbiJEfwjc6XAzBTkZBs5nfDCTNmIat2OGG</string>
 
     <!-- Registro -->
     <string name="registro_titulo">Crear cuenta</string>

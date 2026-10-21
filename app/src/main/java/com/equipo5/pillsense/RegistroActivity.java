@@ -13,6 +13,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.credentials.Credential;
@@ -22,6 +24,15 @@ import androidx.credentials.CustomCredential;
 import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import java.util.Arrays;
 
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
@@ -43,6 +54,8 @@ public class RegistroActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private CredentialManager credentialManager;
 
+    private CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +71,9 @@ public class RegistroActivity extends AppCompatActivity {
         // Firebase y Credential Manager
         mAuth = FirebaseAuth.getInstance();
         credentialManager = CredentialManager.create(this);
+
+        // AÑADIDO PARA FACEBOOK: Inicializar CallbackManager
+        callbackManager = CallbackManager.Factory.create();
 
         // Flecha de volver: cierra la pantalla
         ImageButton btnVolver = findViewById(R.id.btnVolver);
@@ -77,6 +93,30 @@ public class RegistroActivity extends AppCompatActivity {
         // Btn Google
         Button btnGoogleRegistro = findViewById(R.id.btnGoogleRegistro);
         btnGoogleRegistro.setOnClickListener(v -> registrarseConGoogle());
+
+        // Btn Facebook
+        Button btnFacebookRegistro = findViewById(R.id.btnFacebookRegistro);
+        btnFacebookRegistro.setOnClickListener(v -> registrarseConFacebook());
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<>() {
+                    @Override
+                    public void onSuccess(@NonNull LoginResult loginResult) {
+                        manejarCredencialFacebook(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG, "Registro con Facebook cancelado");
+                    }
+
+                    @Override
+                    public void onError(@NonNull FacebookException error) {
+                        Log.e(TAG, "Error en registro con Facebook", error);
+                        Toast.makeText(RegistroActivity.this,
+                                "No se pudo registrar con Facebook", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void crearCuenta() {
@@ -129,14 +169,14 @@ public class RegistroActivity extends AppCompatActivity {
                 request,
                 new CancellationSignal(),
                 ContextCompat.getMainExecutor(this),
-                new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                new CredentialManagerCallback<>() {
                     @Override
-                    public void onResult(GetCredentialResponse result) {
+                    public void onResult(@NonNull GetCredentialResponse result) {
                         manejarCredencial(result.getCredential());
                     }
 
                     @Override
-                    public void onError(GetCredentialException e) {
+                    public void onError(@NonNull GetCredentialException e) {
                         Log.e(TAG, "Error al obtener la credencial de Google", e);
                         Toast.makeText(RegistroActivity.this,
                                 "No se pudo registrar con Google", Toast.LENGTH_SHORT).show();
@@ -160,12 +200,10 @@ public class RegistroActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String nombre = (user != null && user.getDisplayName() != null)
+                                    ? user.getDisplayName() : "";
 
-
-                            String rol = (rgRol.getCheckedRadioButtonId() == R.id.rbPaciente)
-                                    ? "paciente" : "cuidador";
-
-                            Toast.makeText(this, "Bienvenido, " + user.getDisplayName(),
+                            Toast.makeText(this, "Bienvenido, " + nombre,
                                     Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegistroActivity.this, MainActivity.class));
                             finish();
@@ -178,5 +216,41 @@ public class RegistroActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "Tipo de credencial inesperado");
         }
+    }
+
+    //Comprueba los términos y abre la ventana de Facebook para elegir la cuenta
+    private void registrarseConFacebook() {
+        // Al ser un registro, también debe aceptar los términos
+        if (!cbTerminos.isChecked()) {
+            Toast.makeText(this, "Debes aceptar los términos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
+    }
+
+    // Recibe Facebook y se lo pasa a Firebase (crea el usuario si es nuevo)
+    private void manejarCredencialFacebook(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        String nombre = (user != null && user.getDisplayName() != null)
+                                ? user.getDisplayName() : "";
+
+                        Toast.makeText(this, "Bienvenido, " + nombre, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RegistroActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Log.e(TAG, "Error al registrarse en FB", task.getException());
+                        Toast.makeText(this, "Error al registrarse con Facebook", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
