@@ -32,9 +32,14 @@
             android:name=".RegistroActivity"
             android:exported="false" />
 
-
             <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
             <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
+        <!-- Pantalla Acerca de (se abre desde el menú de la barra de acciones) -->
+        <activity
+            android:name=".AcercaDeActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
 
     </application>
 

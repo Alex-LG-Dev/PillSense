@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".AcercaDeActivity">
+
+    <include layout="@layout/app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margen_pantalla">
+
+            <!-- Cabecera de la app -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_cabecera"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/espacio_grande">
+
+                <ImageView
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:contentDescription="@string/acerca_de_logo"
+                    android:src="@drawable/logo_pillsense" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_medio"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/texto_titulo"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:gravity="center"
+                    android:text="@string/acerca_de_lema"
+                    android:textColor="@color/niebla"
+                    android:textSize="@dimen/texto_normal" />
+
+                <TextView
+                    android:id="@+id/tvVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_medio"
+                    android:background="@drawable/bg_chip_version"
+                    android:paddingStart="@dimen/espacio_medio"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="@dimen/espacio_medio"
+                    android:paddingBottom="4dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/texto_pequeno"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:background="@drawable/bg_tarjeta"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/espacio_grande"
+                android:paddingTop="@dimen/espacio_medio"
+                android:paddingEnd="@dimen/espacio_grande"
+                android:paddingBottom="@dimen/espacio_medio">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/acerca_de_que_es_titulo"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_boton"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:text="@string/acerca_de_que_es_texto"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_normal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:background="@drawable/bg_tarjeta"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/espacio_grande"
+                android:paddingTop="@dimen/espacio_medio"
+                android:paddingEnd="@dimen/espacio_grande"
+                android:paddingBottom="@dimen/espacio_pequeno">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/acerca_de_equipo"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_boton"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/listaEquipo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:background="@drawable/bg_tarjeta"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/espacio_grande"
+                android:paddingTop="0dp"
+                android:paddingEnd="@dimen/espacio_grande"
+                android:paddingBottom="0dp">
+
+            <LinearLayout
+                android:id="@+id/enlaceContacto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/altura_boton"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/acerca_de_contacto"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_normal"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_derecha" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:id="@+id/enlacePrivacidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/altura_boton"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/acerca_de_privacidad"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_normal"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_derecha" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:id="@+id/enlaceTerminos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/altura_boton"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/acerca_de_terminos"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_normal"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_derecha" />
+            </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:gravity="center"
+                android:text="@string/acerca_de_aviso"
+                android:textColor="@color/gris_pizarra"
+                android:textSize="@dimen/texto_pequeno" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
