@@ -29,11 +29,11 @@ public final class BarraAcciones {
 
     private BarraAcciones() { }
 
-    /** Pantalla de borde a borde. Fondo blanco, así que los iconos de la barra de estado van oscuros. */
+    /** Pantalla de borde a borde. La parte de arriba es azul oscuro, así que los iconos de la barra de estado (hora, batería, notificaciones) van en blanco. */
     public static void prepararVentana(AppCompatActivity activity) {
         EdgeToEdge.enable(
                 activity,
-                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+                SystemBarStyle.dark(Color.TRANSPARENT),
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT));
     }
 
@@ -47,7 +47,7 @@ public final class BarraAcciones {
         View raiz = activity.findViewById(R.id.main);
         View contenedorBarra = activity.findViewById(R.id.contenedorBarra);
 
-        // La barra llega hasta arriba del todo (por detrás de la barra de estado)
+        // El contenedor azul oscuro llega hasta arriba del todo (por detrás de la barra de estado)
         ViewCompat.setOnApplyWindowInsetsListener(raiz, (v, insets) -> {
             Insets barras = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(barras.left, 0, barras.right, barras.bottom);
@@ -59,8 +59,6 @@ public final class BarraAcciones {
         barra.setTitle(titulo);
 
         if (conVolver) {
-            // Pantallas secundarias: título en azul noche, como "Crear cuenta"
-            barra.setTitleTextColor(ContextCompat.getColor(activity, R.color.azul_noche));
             barra.setNavigationIcon(R.drawable.ic_volver_barra);
             barra.setNavigationContentDescription(R.string.volver);
             barra.setNavigationOnClickListener(v ->
@@ -69,11 +67,11 @@ public final class BarraAcciones {
 
         if (menu != 0) {
             barra.inflateMenu(menu);
-            // Icono de los tres puntos en azul noche
+            // Icono de los tres puntos en blanco, como el título
             Drawable puntos = barra.getOverflowIcon();
             if (puntos != null) {
                 Drawable tenido = DrawableCompat.wrap(puntos.mutate());
-                DrawableCompat.setTint(tenido, ContextCompat.getColor(activity, R.color.azul_noche));
+                DrawableCompat.setTint(tenido, ContextCompat.getColor(activity, R.color.white));
                 barra.setOverflowIcon(tenido);
             }
         }

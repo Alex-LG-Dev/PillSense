@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Barra de acciones reutilizable. En cualquier pantalla: <include layout="@layout/app_bar" /> -->
+<!-- Barra de acciones reutilizable. En cualquier pantalla: <include layout="@layout/app_bar" />
+     El contenedor es azul noche: su parte de arriba queda detrás de la barra de estado (hora, batería,
+     notificaciones) y la barra azul PillSense va justo debajo, sin que se mezclen. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contenedorBarra"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/azul_noche"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barraAcciones"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
+        android:background="@color/azul_pillsense"
+        app:navigationIconTint="@color/white"
         app:titleTextAppearance="@style/TextAppearance.PillSense.TituloBarra"
-        app:titleTextColor="@color/azul_pillsense" />
-
-    <!-- Línea fina de separación -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/niebla" />
+        app:titleTextColor="@color/white" />
 
 </LinearLayout>
