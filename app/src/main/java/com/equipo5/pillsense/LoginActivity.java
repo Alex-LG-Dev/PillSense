@@ -2,36 +2,66 @@ package com.equipo5.pillsense;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CancellationSignal;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.credentials.Credential;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.CredentialManagerCallback;
+import androidx.credentials.CustomCredential;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.GetCredentialException;
+
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginGoogle";
 
     private EditText etCorreo;
     private EditText etContrasena;
     private CheckBox cbMantenerSesion;
     private TextView tvError;
 
+    private FirebaseAuth mAuth;
+    private CredentialManager credentialManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Enlazamos las vistas del layout con las variables
         etCorreo = findViewById(R.id.etCorreo);
         etContrasena = findViewById(R.id.etContrasena);
         cbMantenerSesion = findViewById(R.id.cbMantenerSesion);
         tvError = findViewById(R.id.tvError);
 
+        // Firebase
+        mAuth = FirebaseAuth.getInstance();
+        credentialManager = CredentialManager.create(this);
+
         // Botón "Iniciar sesión" valida los campos
         Button btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
         btnIniciarSesion.setOnClickListener(v -> iniciarSesion());
+
+        // Botón "Continuar con Google"
+        Button btnGoogle = findViewById(R.id.btnGoogle);
+        btnGoogle.setOnClickListener(v -> iniciarSesionConGoogle());
 
         // Enlace "Regístrate" abre el registro y cierra el login
         TextView tvIrARegistro = findViewById(R.id.tvIrARegistro);
@@ -54,6 +84,66 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Muestra el recuadro de error
             tvError.setVisibility(View.VISIBLE);
+        }
+    }
+
+    //Abre la ventana de Google para elegir la cuenta
+    private void iniciarSesionConGoogle() {
+        GetSignInWithGoogleOption opcionGoogle = new GetSignInWithGoogleOption.Builder(
+                getString(R.string.default_web_client_id)
+        ).build();
+
+        GetCredentialRequest request = new GetCredentialRequest.Builder()
+                .addCredentialOption(opcionGoogle)
+                .build();
+
+        credentialManager.getCredentialAsync(
+                this,
+                request,
+                new CancellationSignal(),
+                ContextCompat.getMainExecutor(this),
+                new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                    @Override
+                    public void onResult(GetCredentialResponse result) {
+                        manejarCredencial(result.getCredential());
+                    }
+
+                    @Override
+                    public void onError(GetCredentialException e) {
+                        Log.e(TAG, "Error al obtener la credencial de Google", e);
+                        Toast.makeText(LoginActivity.this,
+                                "No se pudo iniciar sesión con Google", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    //Recibe el token de Google y se lo pasa a Firebase
+    private void manejarCredencial(Credential credential) {
+        if (credential instanceof CustomCredential
+                && credential.getType().equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
+
+            GoogleIdTokenCredential googleCredential =
+                    GoogleIdTokenCredential.createFrom(credential.getData());
+
+            AuthCredential firebaseCredential =
+                    GoogleAuthProvider.getCredential(googleCredential.getIdToken(), null);
+
+            mAuth.signInWithCredential(firebaseCredential)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(this, "Hola, " + user.getDisplayName(),
+                                    Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            Log.e(TAG, "Error al iniciar sesión en Firebase", task.getException());
+                            tvError.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            Log.e(TAG, "Tipo de credencial inesperado");
         }
     }
 }
