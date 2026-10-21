@@ -21,20 +21,20 @@ import com.google.android.material.appbar.MaterialToolbar;
  * Ayuda para poner la barra de acciones (layout app_bar) en cualquier pantalla.
  *
  * Uso en una Activity:
- *   BarraAcciones.prepararVentana(this);          // antes de setContentView
- *   setContentView(R.layout.mi_pantalla);          // el layout incluye app_bar y tiene un contenedor raíz con id "main"
+ *   BarraAcciones.prepararVentana(this);           // antes de setContentView
+ *   setContentView(R.layout.mi_pantalla);           // el layout incluye app_bar y tiene un contenedor raíz con id "main"
  *   MaterialToolbar barra = BarraAcciones.configurar(this, R.string.mi_titulo, false, R.menu.menu_principal);
  */
 public final class BarraAcciones {
 
     private BarraAcciones() { }
 
-    /** Pantalla de borde a borde con los iconos de la barra de estado en claro (la barra es azul). */
+    /** Pantalla de borde a borde. Fondo blanco, así que los iconos de la barra de estado van oscuros. */
     public static void prepararVentana(AppCompatActivity activity) {
         EdgeToEdge.enable(
                 activity,
-                SystemBarStyle.dark(Color.TRANSPARENT),
-                SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT));
+                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT));
     }
 
     /**
@@ -47,7 +47,7 @@ public final class BarraAcciones {
         View raiz = activity.findViewById(R.id.main);
         View contenedorBarra = activity.findViewById(R.id.contenedorBarra);
 
-        // La barra azul llega hasta arriba del todo (por detrás de la barra de estado)
+        // La barra llega hasta arriba del todo (por detrás de la barra de estado)
         ViewCompat.setOnApplyWindowInsetsListener(raiz, (v, insets) -> {
             Insets barras = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(barras.left, 0, barras.right, barras.bottom);
@@ -59,6 +59,8 @@ public final class BarraAcciones {
         barra.setTitle(titulo);
 
         if (conVolver) {
+            // Pantallas secundarias: título en azul noche, como "Crear cuenta"
+            barra.setTitleTextColor(ContextCompat.getColor(activity, R.color.azul_noche));
             barra.setNavigationIcon(R.drawable.ic_volver_barra);
             barra.setNavigationContentDescription(R.string.volver);
             barra.setNavigationOnClickListener(v ->
@@ -67,11 +69,11 @@ public final class BarraAcciones {
 
         if (menu != 0) {
             barra.inflateMenu(menu);
-            // Icono de los tres puntos en blanco, como el título
+            // Icono de los tres puntos en azul noche
             Drawable puntos = barra.getOverflowIcon();
             if (puntos != null) {
                 Drawable tenido = DrawableCompat.wrap(puntos.mutate());
-                DrawableCompat.setTint(tenido, ContextCompat.getColor(activity, R.color.white));
+                DrawableCompat.setTint(tenido, ContextCompat.getColor(activity, R.color.azul_noche));
                 barra.setOverflowIcon(tenido);
             }
         }

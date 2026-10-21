@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp">
+    android:paddingTop="@dimen/espacio_pequeno"
+    android:paddingBottom="@dimen/espacio_pequeno">
 
     <TextView
         android:id="@+id/tvInicial"
@@ -22,7 +22,7 @@
         android:id="@+id/tvNombreIntegrante"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/espacio_medio"
         android:layout_weight="1"
         android:textColor="@color/azul_noche"
         android:textSize="@dimen/texto_normal" />
