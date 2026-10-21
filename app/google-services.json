@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "669854356042",
+    "firebase_url": "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "pillsense-d14cb",
     "storage_bucket": "pillsense-d14cb.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.equipo5.pillsense"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "669854356042-nd4kb29s03ddun75b16ium4sesppsfgv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.equipo5.pillsense",
+            "certificate_hash": "f9fa2a7d257f73bc89f0fc91eabd0df806c11d92"
+          }
+        },
+        {
+          "client_id": "669854356042-1jf384erp7aa3rvfmgi1i188uv0go7p8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAJoHBi2C6v8xYWHWcc9NgmxRuxfViXUVI"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669854356042-1jf384erp7aa3rvfmgi1i188uv0go7p8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
