@@ -20,9 +20,9 @@
     <!-- Integrantes del Equipo 5 -->
     <string-array name="integrantes_equipo">
         <item>Alex López</item>
-        <item>Óscar Cloquell</item>
-        <item>Juan Camilo</item>
+        <item>Óscar Llácer</item>
         <item>Ferran Martín</item>
-        <item>Eren</item>
+        <item>Juan Camilo Valencia</item>
+        <item>Suleyman Eren Teloglu</item>
     </string-array>
 </resources>
