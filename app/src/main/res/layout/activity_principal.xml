@@ -35,6 +35,7 @@
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed"
         app:tabTextAppearance="@style/TextAppearance.PillSense.Pestana"
-        app:tabTextColor="@color/color_pestana" />
+        app:tabTextColor="@color/color_pestana"
+        android:background="@color/fondo_pantalla"/>
 
 </LinearLayout>
