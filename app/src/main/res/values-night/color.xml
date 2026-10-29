@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pestana_activa">@color/verde_menta</color>
+    <color name="pestana_inactiva">#9AA8B8</color>
+</resources>
