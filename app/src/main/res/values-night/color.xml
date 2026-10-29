@@ -8,4 +8,5 @@
     <color name="texto_principal">#FFFFFF</color>
     <color name="texto_secundario">#9AA8B8</color>
     <color name="aviso_stock">@color/verde_menta</color>
+    <color name="toma_olvidada">#3B7DD8</color>
 </resources>
