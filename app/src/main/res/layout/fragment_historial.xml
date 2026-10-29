@@ -1,12 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Pantalla HISTORIAL (pestaña 4). De momento con datos de ejemplo del diseño. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fondo_pantalla">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Historial"
-        android:textSize="24sp" />
-</FrameLayout>
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 1. TÍTULO Y SEMANA -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Historial"
+            android:textColor="@color/texto_principal"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Esta semana · 5 al 11 de octubre"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp" />
+
+        <!-- 2. TARJETA AZUL: porcentaje de cumplimiento -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/azul_pillsense"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tvPorcentaje"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="92%"
+                    android:textColor="@color/white"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTomasSemana"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="24 de 26 tomas"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvOlvidadas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2 olvidadas"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 3. TABLA DE LA SEMANA: cabecera con las horas (mismas columnas que las filas) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="56dp"
+                android:layout_height="0dp" />
+
+            <TextView style="@style/Historial.HoraTabla" android:text="8:00" />
+            <TextView style="@style/Historial.HoraTabla" android:text="9:00" />
+            <TextView style="@style/Historial.HoraTabla" android:text="14:00" />
+            <TextView style="@style/Historial.HoraTabla" android:text="22:00" />
+        </LinearLayout>
+
+        <!-- Las 7 filas (lunes a domingo) se añaden desde HistorialFragment.java -->
+        <LinearLayout
+            android:id="@+id/tablaSemana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <!-- 4. LEYENDA -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout style="@style/Historial.Leyenda">
+                <View
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/punto_lleno"
+                    android:backgroundTint="@color/verde_menta" />
+                <TextView style="@style/Historial.TextoLeyenda" android:text="Tomada" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/Historial.Leyenda">
+                <View
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/punto_vacio"
+                    android:backgroundTint="@color/verde_menta" />
+                <TextView style="@style/Historial.TextoLeyenda" android:text="Tarde" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout style="@style/Historial.Leyenda">
+                <View
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/punto_lleno"
+                    android:backgroundTint="@color/toma_olvidada" />
+                <TextView style="@style/Historial.TextoLeyenda" android:text="Olvidada" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/Historial.Leyenda">
+                <View
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/punto_vacio" />
+                <TextView style="@style/Historial.TextoLeyenda" android:text="Pendiente" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
