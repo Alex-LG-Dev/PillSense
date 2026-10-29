@@ -7,4 +7,5 @@
     <color name="fondo_tarjeta">#0B1F37</color>
     <color name="texto_principal">#FFFFFF</color>
     <color name="texto_secundario">#9AA8B8</color>
+    <color name="aviso_stock">@color/verde_menta</color>
 </resources>
