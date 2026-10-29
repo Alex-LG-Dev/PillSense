@@ -1,12 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Pantalla HOY (pestaña 1). De momento con datos de ejemplo del diseño. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fondo_pantalla">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/contenidoHoy"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Hoy"
-        android:textSize="24sp" />
-</FrameLayout>
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 1. CABECERA: título y fecha -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hoy"
+            android:textColor="@color/texto_principal"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Domingo, 11 de octubre"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp" />
+
+        <!-- 2. TARJETA AZUL: próxima toma -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/azul_pillsense"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Próxima toma"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14:00"
+                    android:textColor="@color/white"
+                    android:textSize="56sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dentro de 1 hora y 25 minutos"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <!-- Línea separadora -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:alpha="0.3"
+                    android:background="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ibuprofeno 600 mg"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 pastilla · después de comer · cajón 3"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 3. TOMAS DE HOY: título, contador y barra de 4 trozos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tomas de hoy"
+                android:textColor="@color/texto_principal"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 de 4"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Barra: verde = tomada, gris = pendiente (puntas redondeadas con bg_segmento) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_segmento"
+                android:backgroundTint="@color/verde_menta" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_segmento"
+                android:backgroundTint="@color/verde_menta" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:alpha="0.4"
+                android:background="@drawable/bg_segmento"
+                android:backgroundTint="@color/pestana_inactiva" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:alpha="0.4"
+                android:background="@drawable/bg_segmento"
+                android:backgroundTint="@color/pestana_inactiva" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/listaTomas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
