@@ -14,4 +14,8 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="error_suave">#C0392B</color>
+
+    <!-- Pestañas de abajo -->
+    <color name="pestana_activa">@color/azul_pillsense</color>
+    <color name="pestana_inactiva">@color/gris_pizarra</color>
 </resources>
