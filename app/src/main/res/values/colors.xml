@@ -24,4 +24,5 @@
     <color name="fondo_tarjeta">@color/niebla</color>
     <color name="texto_principal">@color/azul_noche</color>
     <color name="texto_secundario">@color/gris_pizarra</color>
+    <color name="aviso_stock">@color/verde_bosque</color>
 </resources>

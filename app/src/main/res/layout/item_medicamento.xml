@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tarjeta de UN medicamento: nombre, hora, dosis/cajón y pastillas que quedan -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/fondo_tarjeta"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Nombre a la izquierda, hora a la derecha -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvNombreMed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Omeprazol"
+                android:textColor="@color/texto_principal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvHoraMed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="08:00"
+                android:textColor="@color/texto_principal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDetalleMed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="20 mg · en ayunas · cajón 1"
+            android:textColor="@color/texto_secundario"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvQuedan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Quedan 18"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
