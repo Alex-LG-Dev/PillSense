@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PrincipalActivity">
+
+    <!-- Barra de acciones (la misma que en el resto de pantallas) -->
+    <include layout="@layout/app_bar" />
+
+    <!-- Aquí se ven las pantallas de las pestañas; se puede deslizar -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Línea fina encima de las pestañas -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/pestana_inactiva" />
+
+    <!-- Las 4 pestañas, abajo como en el diseño -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabIconTint="@color/color_pestana"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/TextAppearance.PillSense.Pestana"
+        app:tabTextColor="@color/color_pestana" />
+
+</LinearLayout>

@@ -205,7 +205,7 @@ public class RegistroActivity extends AppCompatActivity {
 
                             Toast.makeText(this, "Bienvenido, " + nombre,
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegistroActivity.this, MainActivity.class));
+                            startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
                             finish();
                         } else {
                             Log.e(TAG, "Error al registrarse en Firebase", task.getException());
@@ -239,7 +239,7 @@ public class RegistroActivity extends AppCompatActivity {
                                 ? user.getDisplayName() : "";
 
                         Toast.makeText(this, "Bienvenido, " + nombre, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegistroActivity.this, MainActivity.class));
+                        startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
                         finish();
                     } else {
                         Log.e(TAG, "Error al registrarse en FB", task.getException());

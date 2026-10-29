@@ -7,4 +7,10 @@
         <item name="android:fontFamily">@font/atkinson_hyperlegible</item>
         <item name="fontFamily">@font/atkinson_hyperlegible</item>
     </style>
+        <!-- Texto de las pestañas de abajo: pequeño y sin mayúsculas -->
+        <style name="TextAppearance.PillSense.Pestana" parent="TextAppearance.MaterialComponents.Caption">
+            <item name="android:textSize">12sp</item>
+            <item name="android:textAllCaps">false</item>
+            <item name="fontFamily">@font/atkinson_hyperlegible</item>
+        </style>
 </resources>
