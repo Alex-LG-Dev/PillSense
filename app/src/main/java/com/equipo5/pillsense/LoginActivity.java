@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(this, "Hola, " + user.getDisplayName(),
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
                             finish();
                         } else {
                             Log.e(TAG, "Error al iniciar sesión en Firebase", task.getException());
@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Hola, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
                         finish();
                     } else {
                         Log.e(TAG, "Error al iniciar sesión en Firebase con FB", task.getException());
