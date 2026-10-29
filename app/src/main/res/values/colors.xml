@@ -18,4 +18,10 @@
     <!-- Pestañas de abajo -->
     <color name="pestana_activa">@color/azul_pillsense</color>
     <color name="pestana_inactiva">@color/gris_pizarra</color>
+
+    <!-- Colores según el tema -->
+    <color name="fondo_pantalla">@color/white</color>
+    <color name="fondo_tarjeta">@color/niebla</color>
+    <color name="texto_principal">@color/azul_noche</color>
+    <color name="texto_secundario">@color/gris_pizarra</color>
 </resources>

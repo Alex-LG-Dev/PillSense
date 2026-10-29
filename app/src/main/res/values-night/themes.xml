@@ -1,17 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.PillSense" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/azul_pillsense</item>
-        <item name="colorPrimaryVariant">@color/azul_noche</item>
-        <item name="colorOnPrimary">@color/white</item>
+    <!-- Tema OSCURO de PillSense (se usa solo cuando el móvil está en modo oscuro).
+         Mismo nombre que el claro: Android elige uno u otro automáticamente. -->
+    <style name="Theme.PillSense" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- En oscuro el color de acento es el verde, como en el diseño -->
+        <item name="colorPrimary">@color/verde_menta</item>
+        <item name="colorPrimaryVariant">@color/verde_bosque</item>
+        <item name="colorOnPrimary">@color/black</item>
         <item name="colorSecondary">@color/verde_menta</item>
         <item name="colorSecondaryVariant">@color/verde_bosque</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Fondo negro y textos claros -->
+        <item name="android:windowBackground">@color/fondo_pantalla</item>
+        <item name="android:colorBackground">@color/fondo_pantalla</item>
+        <item name="android:textColorPrimary">@color/texto_principal</item>
+        <item name="android:textColorSecondary">@color/texto_secundario</item>
+
+        <!-- Barra de estado oscura con iconos blancos -->
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+
         <item name="android:fontFamily">@font/atkinson_hyperlegible</item>
         <item name="fontFamily">@font/atkinson_hyperlegible</item>
-        <item name="android:textColorPrimary">@color/azul_noche</item>
-        <item name="android:textColorSecondary">@color/gris_pizarra</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 </resources>

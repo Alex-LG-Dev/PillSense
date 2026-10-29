@@ -2,4 +2,9 @@
 <resources>
     <color name="pestana_activa">@color/verde_menta</color>
     <color name="pestana_inactiva">#9AA8B8</color>
+
+    <color name="fondo_pantalla">#000000</color>
+    <color name="fondo_tarjeta">#0B1F37</color>
+    <color name="texto_principal">#FFFFFF</color>
+    <color name="texto_secundario">#9AA8B8</color>
 </resources>
