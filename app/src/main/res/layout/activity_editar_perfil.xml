@@ -1,315 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Pantalla EDITAR PERFIL (T036): cambiar nombre y teléfono. Sigue el prototipo del Sprint 2. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
+    android:background="@color/fondo_pantalla"
+    android:fitsSystemWindows="true"
     tools:context=".EditarPerfilActivity">
 
-    <!-- Barra de acciones (la misma que en el resto de pantallas) -->
-    <include layout="@layout/app_bar" />
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- 1. BOTÓN VOLVER -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVolver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volver"
+            android:textAllCaps="false"
+            android:textColor="@color/texto_principal"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/fondo_tarjeta"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_arrow_back"
+            app:iconTint="@color/texto_principal" />
+
+        <!-- 2. TÍTULO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Editar perfil"
+            android:textColor="@color/texto_principal"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- 3. FOTO Y BOTÓN "CAMBIAR FOTO" -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/margen_pantalla">
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <!-- Cabecera: inicial, nombre y correo -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/ivFotoEditar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_avatar_perfil"
+                android:contentDescription="Foto de perfil"
+                android:padding="14dp"
+                android:src="@drawable/ic_persona" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCambiarFoto"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginStart="16dp"
+                android:text="Cambiar foto"
+                android:textAllCaps="false"
+                android:textColor="@color/texto_principal"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/fondo_tarjeta"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_camara"
+                app:iconTint="@color/texto_principal" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvInicialPerfil"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:background="@drawable/bg_avatar_perfil"
-                    android:gravity="center"
-                    android:importantForAccessibility="no"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/texto_titulo"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/espacio_medio"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvNombreCabecera"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/azul_noche"
-                        android:textSize="@dimen/texto_boton"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvCorreoCabecera"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/gris_pizarra"
-                        android:textSize="@dimen/texto_pequeno" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Mis datos -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/espacio_grande"
-                android:text="@string/perfil_datos_titulo"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_boton"
-                android:textStyle="bold" />
-
+        <!-- 4. NOMBRE -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_medio"
-            android:text="@string/label_nombre"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_pequeno" />
+            android:layout_marginTop="24dp"
+            android:text="@string/label_nombre_editar"
+            android:textColor="@color/texto_principal"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/etNombrePerfil"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_campo"
-            android:layout_marginTop="@dimen/espacio_pequeno"
-            android:background="@drawable/bg_campos"
-            android:paddingHorizontal="@dimen/espacio_medio"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_normal"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
             android:autofillHints="name"
+            android:background="@drawable/bg_campo_perfil"
+            android:hint="@string/hint_nombre_editar"
+            android:imeOptions="actionNext"
             android:inputType="textPersonName|textCapWords"
-            android:imeOptions="actionDone" />
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario"
+            android:textSize="18sp" />
 
+        <!-- 5. CORREO (no se puede cambiar) -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_medio"
+            android:layout_marginTop="16dp"
             android:text="@string/hint_correo_label"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_pequeno" />
+            android:textColor="@color/texto_principal"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/etCorreoPerfil"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_campo"
-            android:layout_marginTop="@dimen/espacio_pequeno"
-            android:background="@drawable/bg_campos"
-            android:paddingHorizontal="@dimen/espacio_medio"
-            android:textSize="@dimen/texto_normal"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_campo_perfil"
             android:enabled="false"
+            android:hint="@string/hint_correo"
             android:inputType="textEmailAddress"
-            android:textColor="@color/gris_pizarra" />
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/texto_secundario"
+            android:textColorHint="@color/texto_secundario"
+            android:textSize="18sp" />
 
+        <!-- 6. TELÉFONO (opcional) -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/perfil_correo_aviso"
-            android:textColor="@color/gris_pizarra"
-            android:textSize="@dimen/texto_pequeno" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/espacio_medio"
-                android:text="Teléfono (opcional)"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_pequeno" />
-
-            <EditText
-                android:id="@+id/etTelefonoPerfil"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/altura_campo"
-                android:layout_marginTop="@dimen/espacio_pequeno"
-                android:background="@drawable/bg_campos"
-                android:paddingHorizontal="@dimen/espacio_medio"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_normal"
-                android:hint="Tu teléfono"
-                android:autofillHints="phone"
-                android:inputType="phone" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_medio"
-            android:text="@string/label_soy"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_pequeno" />
-
-        <RadioGroup
-            android:id="@+id/rgRolPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbPacientePerfil"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:buttonTint="@color/verde_menta"
-                android:checked="true"
-                android:text="@string/rol_paciente"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_pequeno" />
-
-            <RadioButton
-                android:id="@+id/rbCuidadorPerfil"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginStart="@dimen/espacio_grande"
-                android:buttonTint="@color/verde_menta"
-                android:text="@string/rol_cuidador"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_pequeno" />
-        </RadioGroup>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardarPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_boton"
-            android:layout_marginTop="@dimen/espacio_medio"
-            android:text="@string/perfil_btn_guardar"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/texto_boton"
-            android:textStyle="bold"
-            app:backgroundTint="@color/verde_menta"
-            app:cornerRadius="@dimen/radio_esquina" />
-
-        <!-- Línea separadora -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/espacio_grande"
-            android:alpha="0.3"
-            android:background="@color/gris_pizarra" />
-
-        <!-- Cambiar contraseña (solo para cuentas con correo y contraseña) -->
-        <LinearLayout
-            android:id="@+id/seccionContrasena"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/espacio_grande"
-                android:text="@string/contrasena_titulo"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_boton"
-                android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_medio"
-            android:text="@string/contrasena_actual"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_pequeno" />
+            android:layout_marginTop="16dp"
+            android:text="@string/label_telefono"
+            android:textColor="@color/texto_principal"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/etContrasenaActual"
+            android:id="@+id/etTelefonoPerfil"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_campo"
-            android:layout_marginTop="@dimen/espacio_pequeno"
-            android:background="@drawable/bg_campos"
-            android:paddingHorizontal="@dimen/espacio_medio"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_normal"
-            android:autofillHints="password"
-            android:inputType="textPassword" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_medio"
-            android:text="@string/contrasena_nueva"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_pequeno" />
-
-        <EditText
-            android:id="@+id/etContrasenaNueva"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_campo"
-            android:layout_marginTop="@dimen/espacio_pequeno"
-            android:background="@drawable/bg_campos"
-            android:paddingHorizontal="@dimen/espacio_medio"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_normal"
-            android:autofillHints="newPassword"
-            android:inputType="textPassword" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/minimo_caracteres"
-                android:textColor="@color/gris_pizarra"
-                android:textSize="@dimen/texto_pequeno" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_medio"
-            android:text="@string/contrasena_repetir"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_pequeno" />
-
-        <EditText
-            android:id="@+id/etContrasenaRepetir"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_campo"
-            android:layout_marginTop="@dimen/espacio_pequeno"
-            android:background="@drawable/bg_campos"
-            android:paddingHorizontal="@dimen/espacio_medio"
-            android:textColor="@color/azul_noche"
-            android:textSize="@dimen/texto_normal"
-            android:autofillHints="newPassword"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:autofillHints="phone"
+            android:background="@drawable/bg_campo_perfil"
+            android:hint="@string/hint_telefono"
             android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:inputType="phone"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario"
+            android:textSize="18sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCambiarContrasena"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/altura_boton"
-                android:layout_marginTop="@dimen/espacio_medio"
-                android:text="@string/contrasena_btn_cambiar"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/texto_boton"
-                android:textStyle="bold"
-                app:backgroundTint="@color/azul_pillsense"
-                app:cornerRadius="@dimen/radio_esquina" />
+        <!-- 7. FILA "CAMBIAR CONTRASEÑA" (solo cuentas con correo y contraseña) -->
+        <LinearLayout
+            android:id="@+id/filaCambiarContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_campo_perfil"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_candado"
+                app:tint="@color/texto_principal" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:text="@string/contrasena_titulo"
+                android:textColor="@color/texto_principal"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_chevron_derecha"
+                app:tint="@color/texto_secundario" />
         </LinearLayout>
 
-        <!-- Aviso para cuentas de Google o Facebook -->
+        <!-- Aviso para las cuentas de Google o Facebook (no tienen contraseña aquí) -->
         <TextView
             android:id="@+id/tvContrasenaOtraCuenta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_grande"
-            android:textColor="@color/gris_pizarra"
-            android:textSize="@dimen/texto_pequeno"
-            android:visibility="gone" />
+            android:layout_marginTop="24dp"
+            android:textColor="@color/texto_secundario"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:text="Tu cuenta usa Google para iniciar sesión."
+            tools:visibility="visible" />
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+        <!-- 8. GUARDAR CAMBIOS -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/perfil_btn_guardar"
+            android:textAllCaps="false"
+            android:textColor="@color/azul_noche"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/verde_menta"
+            app:cornerRadius="16dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
