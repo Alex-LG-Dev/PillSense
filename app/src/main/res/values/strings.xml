@@ -40,4 +40,17 @@
 
 
     <string name="volver">Volver</string>
+    <!-- Formulario de medicamento (T033) -->
+    <string name="med_titulo_nuevo">Nuevo medicamento</string>
+    <string name="med_titulo_editar">Editar medicamento</string>
+    <string name="med_foto">Foto del medicamento</string>
+    <string name="med_camara">Hacer foto</string>
+    <string name="med_galeria">Elegir de galería</string>
+    <string name="med_nombre">Nombre</string>
+    <string name="med_nombre_hint">Ej. Omeprazol</string>
+    <string name="med_dosis">Dosis</string>
+    <string name="med_dosis_hint">Ej. 20 mg</string>
+    <string name="med_cajon">Cajón del pastillero</string>
+    <string name="med_guardar">Guardar</string>
+    <string name="med_borrar">Borrar medicamento</string>
 </resources>
