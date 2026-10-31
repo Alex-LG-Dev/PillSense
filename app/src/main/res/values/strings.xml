@@ -103,4 +103,6 @@
 
     <string name="toma_detalle">Pendiente · cajón %1$d · hasta las %2$s</string>
     <string name="toma_sin_tomas">Aún no tienes tomas. Pulsa + para añadir una.</string>
+
+    <string name="toma_error_cargar">No se ha podido cargar la toma</string>
 </resources>
