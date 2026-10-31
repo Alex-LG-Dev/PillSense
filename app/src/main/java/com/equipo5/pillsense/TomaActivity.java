@@ -6,6 +6,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RadioButton;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -98,6 +99,11 @@ public class TomaActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(v -> guardar());
         if (idEditando != null) {
             cargarToma();
+
+            // El botón de borrar solo tiene sentido si la toma ya existe
+            Button btnBorrar = findViewById(R.id.btnBorrarToma);
+            btnBorrar.setVisibility(View.VISIBLE);
+            btnBorrar.setOnClickListener(v -> confirmarBorrado());
         }
     }
 
@@ -246,6 +252,28 @@ public class TomaActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.toma_error_guardar, e.getMessage()),
                             Toast.LENGTH_LONG).show();
                 });
+    }
+    /** Pregunta antes de borrar, porque no se puede deshacer. */
+    private void confirmarBorrado() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.toma_borrar_titulo)
+                .setMessage(getString(R.string.toma_borrar_mensaje,
+                        tvMedicamento.getText().toString(), hora))
+                .setNegativeButton(R.string.med_cancelar, null)
+                .setPositiveButton(R.string.med_borrar_si, (dialogo, boton) -> borrar())
+                .show();
+    }
+
+    /** Borra la toma de Firebase y vuelve a Hoy. */
+    private void borrar() {
+        refTomas.child(idEditando).removeValue()
+                .addOnSuccessListener(r -> {
+                    Toast.makeText(this, R.string.toma_borrada, Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, getString(R.string.toma_error_borrar, e.getMessage()),
+                                Toast.LENGTH_LONG).show());
     }
 
     // ===== Franjas del día =====

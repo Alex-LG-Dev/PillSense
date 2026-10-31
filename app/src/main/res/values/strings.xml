@@ -105,4 +105,9 @@
     <string name="toma_sin_tomas">Aún no tienes tomas. Pulsa + para añadir una.</string>
 
     <string name="toma_error_cargar">No se ha podido cargar la toma</string>
+
+    <string name="toma_borrar_titulo">¿Borrar toma?</string>
+    <string name="toma_borrar_mensaje">Se borrará la toma de %1$s de las %2$s. No se puede deshacer.</string>
+    <string name="toma_borrada">Toma borrada</string>
+    <string name="toma_error_borrar">No se ha podido borrar: %1$s</string>
 </resources>
