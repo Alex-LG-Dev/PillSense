@@ -14,4 +14,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="error_suave">#C0392B</color>
+
+    <!-- Splash screen (T031): azul cielo suave -->
+    <color name="splash_fondo">#CFE2F5</color>
 </resources>
