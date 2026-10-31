@@ -1,5 +1,6 @@
 package com.equipo5.pillsense;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-/** Pestaña "Hoy". De momento muestra datos de ejemplo del diseño. */
+
 public class HoyFragment extends Fragment {
 
-    // Datos de ejemplo (más adelante vendrán de Firebase)
+
     private final String[] horas   = {"08:00", "09:00", "14:00", "22:00"};
     private final String[] nombres = {"Omeprazol", "Enalapril", "Ibuprofeno", "Simvastatina"};
     private final String[] estados = {"Tomada", "Tomada", "Siguiente", "Pendiente"};
@@ -34,7 +35,7 @@ public class HoyFragment extends Fragment {
         int verde = ContextCompat.getColor(requireContext(), R.color.verde_menta);
         int gris = ContextCompat.getColor(requireContext(), R.color.pestana_inactiva);
 
-        // Una fila (item_toma.xml) por cada toma
+        // Una fila por cada toma
         for (int i = 0; i < horas.length; i++) {
             View fila = inflater.inflate(R.layout.item_toma, lista, false);
 
@@ -72,5 +73,8 @@ public class HoyFragment extends Fragment {
 
             lista.addView(fila);
         }
+        // Botón flotante: abre el formulario para crear una toma nueva
+        view.findViewById(R.id.fabNuevaToma).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), TomaActivity.class)));
     }
 }

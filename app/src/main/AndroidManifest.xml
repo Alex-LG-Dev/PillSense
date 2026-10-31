@@ -57,18 +57,26 @@
             android:parentActivityName=".PrincipalActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Perfil (T035): ver los datos -->
+        <!-- Perfil -->
         <activity
             android:name=".PerfilActivity"
             android:exported="false"
             android:parentActivityName=".PrincipalActivity" />
 
-        <!-- Editar perfil (T036): cambiar datos y contraseña -->
+        <!-- Editar perfil: cambiar datos y contraseña -->
         <activity
             android:name=".EditarPerfilActivity"
             android:exported="false"
             android:parentActivityName=".PerfilActivity" />
+        
+        <!-- Crear / editar toma -->
+        <activity
+            android:name=".TomaActivity"
+            android:exported="false"
+            android:parentActivityName=".PrincipalActivity"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
+
 
 </manifest>
