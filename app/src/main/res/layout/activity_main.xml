@@ -1,64 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 1. El DrawerLayout pasa a ser el contenedor raíz de toda la pantalla -->
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!-- Barra de acciones: nombre de la app y menú con "Acerca de" -->
-    <include layout="@layout/app_bar" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/contenido"
+    <!-- 2. Tu diseño original se mantiene intacto aquí adentro -->
+    <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:background="@color/white"
-        android:padding="@dimen/margen_pantalla"
-        tools:context=".MainActivity">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <!-- Barra de acciones: nombre de la app y menú con "Acerca de" -->
+        <include layout="@layout/app_bar" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnIniciarSesion"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/altura_boton"
-                android:text="@string/btn_iniciar_sesion"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/texto_boton"
-                android:textStyle="bold"
-                app:backgroundTint="@color/verde_menta"
-                app:cornerRadius="@dimen/radio_esquina" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contenido"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:padding="@dimen/margen_pantalla">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegistrarse"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/altura_boton"
-                android:layout_marginTop="@dimen/espacio_medio"
-                android:text="@string/btn_registrarse"
-                android:textAllCaps="false"
-                android:textColor="@color/azul_noche"
-                android:textSize="@dimen/texto_boton"
-                android:textStyle="bold"
-                app:cornerRadius="@dimen/radio_esquina"
-                app:strokeColor="@color/azul_pillsense"
-                app:strokeWidth="2dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnIniciarSesion"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/altura_boton"
+                    android:text="@string/btn_iniciar_sesion"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/texto_boton"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/verde_menta"
+                    app:cornerRadius="@dimen/radio_esquina" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrarse"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/altura_boton"
+                    android:layout_marginTop="@dimen/espacio_medio"
+                    android:text="@string/btn_registrarse"
+                    android:textAllCaps="false"
+                    android:textColor="@color/azul_noche"
+                    android:textSize="@dimen/texto_boton"
+                    android:textStyle="bold"
+                    app:cornerRadius="@dimen/radio_esquina"
+                    app:strokeColor="@color/azul_pillsense"
+                    app:strokeWidth="2dp" />
 
-</LinearLayout>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <!-- 3. Añadimos el menú lateral oculto al final del DrawerLayout -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
