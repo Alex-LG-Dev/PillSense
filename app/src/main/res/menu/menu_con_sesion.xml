@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Menú (⋮) de las pantallas a las que se llega con la sesión iniciada -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/accion_perfil"
+        android:title="@string/menu_perfil"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/accion_acerca_de"
+        android:title="@string/menu_acerca_de"
+        app:showAsAction="never" />
+
+</menu>
