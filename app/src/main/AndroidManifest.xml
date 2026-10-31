@@ -68,7 +68,7 @@
             android:name=".EditarPerfilActivity"
             android:exported="false"
             android:parentActivityName=".PerfilActivity" />
-        
+
         <!-- Crear / editar toma -->
         <activity
             android:name=".TomaActivity"
