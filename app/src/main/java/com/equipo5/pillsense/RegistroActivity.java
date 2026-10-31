@@ -39,11 +39,19 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistroActivity extends AppCompatActivity {
 
     private static final String TAG = "RegistroGoogle";
+    private static final String DB_URL =
+            "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
 
     private EditText etNombre;
     private EditText etCorreo;
@@ -144,8 +152,35 @@ public class RegistroActivity extends AppCompatActivity {
         // rol paciente o cuidador
         String rol = (rgRol.getCheckedRadioButtonId() == R.id.rbPaciente) ? "paciente" : "cuidador";
 
-        // crea usuario en Firebase Auth y guardar el rol en la bbdd
-        Toast.makeText(this, "Cuenta de " + rol + " lista para crear", Toast.LENGTH_SHORT).show();
+        // Crea el usuario en Firebase Auth y guarda nombre, rol y correo en la base de datos
+        mAuth.createUserWithEmailAndPassword(correo, contrasena)
+                .addOnCompleteListener(this, task -> {
+                    if (!task.isSuccessful()) {
+                        Log.e(TAG, "Error al crear la cuenta con correo", task.getException());
+                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                            etCorreo.setError("Ya existe una cuenta con ese correo");
+                        } else {
+                            Toast.makeText(this, "No se pudo crear la cuenta", Toast.LENGTH_SHORT).show();
+                        }
+                        return;
+                    }
+                    FirebaseUser user = task.getResult().getUser();
+                    if (user == null) return;
+
+                    // Nombre en la cuenta y datos en usuarios/{uid}
+                    user.updateProfile(new UserProfileChangeRequest.Builder()
+                            .setDisplayName(nombre).build());
+                    Map<String, Object> datos = new HashMap<>();
+                    datos.put("nombre", nombre);
+                    datos.put("rol", rol);
+                    datos.put("correo", correo);
+                    FirebaseDatabase.getInstance(DB_URL)
+                            .getReference("usuarios").child(user.getUid()).updateChildren(datos);
+
+                    Toast.makeText(this, "Bienvenido, " + nombre, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
+                    finish();
+                });
     }
 
     //Comprueba los términos y abre la ventana de Google para elegir la cuenta
