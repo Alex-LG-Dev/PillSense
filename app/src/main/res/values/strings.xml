@@ -69,4 +69,10 @@
         <item quantity="other">%d medicamentos</item>
     </plurals>
     <string name="med_error_cargar">No se ha podido cargar el medicamento</string>
+    <string name="med_borrar_titulo">¿Borrar medicamento?</string>
+    <string name="med_borrar_mensaje">Se borrará «%1$s» de tu lista. No se puede deshacer.</string>
+    <string name="med_borrar_si">Borrar</string>
+    <string name="med_cancelar">Cancelar</string>
+    <string name="med_borrado">Medicamento borrado</string>
+    <string name="med_error_borrar">No se ha podido borrar: %1$s</string>
 </resources>
