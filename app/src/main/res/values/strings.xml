@@ -100,4 +100,7 @@
     </string-array>
     <string name="toma_cajon_franja">Cajón %1$d · %2$s · %3$s – %4$s</string>
     <string name="toma_fuera_franja">El cajón %1$d (%2$s) es de %3$s a %4$s. Elige una hora dentro de ese horario.</string>
+
+    <string name="toma_detalle">Pendiente · cajón %1$d · hasta las %2$s</string>
+    <string name="toma_sin_tomas">Aún no tienes tomas. Pulsa + para añadir una.</string>
 </resources>
