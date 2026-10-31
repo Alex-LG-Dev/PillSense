@@ -50,11 +50,17 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Pantalla Mi perfil (se abre desde el menú de la pantalla principal) -->
+        <!-- Perfil (T035): ver los datos -->
         <activity
             android:name=".PerfilActivity"
             android:exported="false"
             android:parentActivityName=".PrincipalActivity" />
+
+        <!-- Editar perfil (T036): cambiar datos y contraseña -->
+        <activity
+            android:name=".EditarPerfilActivity"
+            android:exported="false"
+            android:parentActivityName=".PerfilActivity" />
 
     </application>
 
