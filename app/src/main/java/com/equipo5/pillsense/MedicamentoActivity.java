@@ -22,6 +22,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 /** Pantalla para añadir un medicamento. Se guarda en medicamentos/{uid}/{id} de Realtime Database. */
 public class MedicamentoActivity extends AppCompatActivity {
 
+    public static final String EXTRA_ID = "idMedicamento";
+
     private static final String DB_URL =
             "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
 
@@ -35,6 +37,8 @@ public class MedicamentoActivity extends AppCompatActivity {
 
     // La foto en Base64 (la rellenaremos en el paso 4)
     private String imagenBase64 = "";
+
+    private String idEditando;
     private ImageView ivFoto;
 
     // Abre la cámara y devuelve la foto (en pequeño)
@@ -54,7 +58,11 @@ public class MedicamentoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         BarraAcciones.prepararVentana(this);
         setContentView(R.layout.activity_medicamento);
-        BarraAcciones.configurar(this, R.string.med_titulo_nuevo, true, 0);
+        // Si nos pasan un id, estamos editando; si no, es uno nuevo
+        idEditando = getIntent().getStringExtra(EXTRA_ID);
+        BarraAcciones.configurar(this,
+                idEditando == null ? R.string.med_titulo_nuevo : R.string.med_titulo_editar,
+                true, 0);
 
         // Sin sesión no sabemos de quién es el medicamento
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -80,6 +88,9 @@ public class MedicamentoActivity extends AppCompatActivity {
                         .build()));
 
         btnGuardar.setOnClickListener(v -> guardar());
+        if (idEditando != null) {
+            cargarMedicamento();
+        }
     }
 
     private void guardar() {
@@ -99,7 +110,8 @@ public class MedicamentoActivity extends AppCompatActivity {
         }
 
         // push() crea un id único para el medicamento nuevo
-        String id = refMedicamentos.push().getKey();
+        // Si editamos usamos el mismo id (se sobrescribe); si es nuevo, push() crea uno
+        String id = (idEditando != null) ? idEditando : refMedicamentos.push().getKey();
         Medicamento med = new Medicamento(id, nombre, dosis, cajonElegido(), imagenBase64);
 
         btnGuardar.setEnabled(false); // evita guardarlo dos veces si se pulsa rápido
@@ -139,5 +151,37 @@ public class MedicamentoActivity extends AppCompatActivity {
         ivFoto.setPadding(0, 0, 0, 0);
         ivFoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivFoto.setImageBitmap(foto);
+    }
+    /** Lee el medicamento de Firebase y rellena el formulario con sus datos. */
+    private void cargarMedicamento() {
+        refMedicamentos.child(idEditando).get()
+                .addOnSuccessListener(datos -> {
+                    Medicamento med = datos.getValue(Medicamento.class);
+                    if (med == null) {
+                        Toast.makeText(this, R.string.med_error_cargar, Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+                    etNombre.setText(med.getNombre());
+                    etDosis.setText(med.getDosis());
+                    marcarCajon(med.getCajon());
+
+                    // Conservamos la foto que ya tenía (si no se cambia, se vuelve a guardar la misma)
+                    imagenBase64 = med.getImagenBase64() != null ? med.getImagenBase64() : "";
+                    Bitmap foto = FotoUtils.deBase64(imagenBase64);
+                    if (foto != null) mostrarFoto(foto);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, R.string.med_error_cargar, Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+    }
+
+    /** Marca el cajón que tenía guardado el medicamento. */
+    private void marcarCajon(int cajon) {
+        if (cajon == 2) rgCajon.check(R.id.rbCajon2);
+        else if (cajon == 3) rgCajon.check(R.id.rbCajon3);
+        else if (cajon == 4) rgCajon.check(R.id.rbCajon4);
+        else rgCajon.check(R.id.rbCajon1);
     }
 }
