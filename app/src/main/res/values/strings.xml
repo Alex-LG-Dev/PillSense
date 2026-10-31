@@ -53,4 +53,10 @@
     <string name="med_cajon">Cajón del pastillero</string>
     <string name="med_guardar">Guardar</string>
     <string name="med_borrar">Borrar medicamento</string>
+
+    <string name="med_error_nombre">Escribe el nombre</string>
+    <string name="med_error_dosis">Escribe la dosis</string>
+    <string name="med_guardado">Medicamento guardado</string>
+    <string name="med_error_guardar">No se ha podido guardar: %1$s</string>
+    <string name="med_sin_sesion">Inicia sesión para guardar medicamentos</string>
 </resources>
