@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">PillSense</string>
 
+    <!-- Menú lateral -->
+    <string name="abrir_menu">Abrir menú de navegación</string>
+    <string name="cerrar_menu">Cerrar menú de navegación</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
     <!-- Inicio -->
     <string name="btn_iniciar_sesion">Iniciar sesión</string>
     <string name="btn_registrarse">Registrarse</string>
