@@ -75,4 +75,14 @@
     <string name="med_cancelar">Cancelar</string>
     <string name="med_borrado">Medicamento borrado</string>
     <string name="med_error_borrar">No se ha podido borrar: %1$s</string>
+
+    <!-- Formulario de toma (T039) -->
+    <string name="toma_titulo_nueva">Nueva toma</string>
+    <string name="toma_titulo_editar">Editar toma</string>
+    <string name="toma_medicamento">Medicamento</string>
+    <string name="toma_elige_medicamento">Elige un medicamento</string>
+    <string name="toma_hora">Hora</string>
+    <string name="toma_hora_limite">Hora límite</string>
+    <string name="toma_hora_limite_ayuda">Si no se toma antes de la hora límite, cuenta como olvidada.</string>
+    <string name="toma_borrar">Borrar toma</string>
 </resources>
