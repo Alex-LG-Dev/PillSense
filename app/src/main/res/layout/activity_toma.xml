@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pantalla para CREAR o EDITAR una toma (medicamento, cajón, hora y hora límite) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo_pantalla"
+    android:orientation="vertical"
+    tools:context=".TomaActivity">
+
+    <include layout="@layout/app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margen_pantalla">
+
+            <!-- 1. MEDICAMENTO (al tocarlo sale la lista de tus medicamentos) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/toma_medicamento"
+                android:textColor="@color/texto_principal"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <TextView
+                android:id="@+id/tvMedicamentoToma"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_campo"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:background="@drawable/bg_campos"
+                android:drawableEnd="@drawable/ic_chevron_derecha"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:hint="@string/toma_elige_medicamento"
+                android:paddingHorizontal="@dimen/espacio_medio"
+                android:textColor="@color/azul_noche"
+                android:textColorHint="@color/gris_pizarra"
+                android:textSize="@dimen/texto_normal" />
+
+            <!-- 2. CAJÓN (1 a 4). Se rellena solo al elegir el medicamento -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:text="@string/med_cajon"
+                android:textColor="@color/texto_principal"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <RadioGroup
+                android:id="@+id/rgCajonToma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbCajonToma1"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:checked="true"
+                    android:text="1"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbCajonToma2"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:text="2"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbCajonToma3"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:text="3"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbCajonToma4"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:text="4"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+            </RadioGroup>
+
+            <!-- 3. HORA y HORA LÍMITE, una al lado de la otra -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/espacio_pequeno"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/toma_hora"
+                        android:textColor="@color/texto_principal"
+                        android:textSize="@dimen/texto_pequeno" />
+
+                    <TextView
+                        android:id="@+id/tvHoraToma"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/altura_campo"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:background="@drawable/bg_campos"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="08:00"
+                        android:textColor="@color/azul_noche"
+                        android:textSize="@dimen/texto_boton"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/espacio_pequeno"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/toma_hora_limite"
+                        android:textColor="@color/texto_principal"
+                        android:textSize="@dimen/texto_pequeno" />
+
+                    <TextView
+                        android:id="@+id/tvHoraLimiteToma"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/altura_campo"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:background="@drawable/bg_campos"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="09:00"
+                        android:textColor="@color/azul_noche"
+                        android:textSize="@dimen/texto_boton"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/toma_hora_limite_ayuda"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+
+            <!-- 4. GUARDAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarToma"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginTop="@dimen/espacio_grande"
+                android:text="@string/med_guardar"
+                android:textAllCaps="false"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold"
+                app:backgroundTint="@color/verde_menta"
+                app:cornerRadius="@dimen/radio_esquina" />
+
+            <!-- 5. BORRAR (solo se ve al editar una toma que ya existe) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBorrarToma"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:text="@string/toma_borrar"
+                android:textAllCaps="false"
+                android:textColor="@color/error_suave"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/radio_esquina"
+                app:strokeColor="@color/error_suave" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
