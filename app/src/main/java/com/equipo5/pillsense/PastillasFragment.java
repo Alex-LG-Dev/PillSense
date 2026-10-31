@@ -1,35 +1,39 @@
 package com.equipo5.pillsense;
 
-import android.graphics.Typeface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-/** Pestaña "Pastillas". De momento muestra datos de ejemplo del diseño. */
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+/** Pestaña "Pastillas": lista de medicamentos del usuario, leída de Realtime Database. */
 public class PastillasFragment extends Fragment {
 
-    // Datos de ejemplo (más adelante vendrán de Firebase)
-    private final String[] nombres  = {"Omeprazol", "Enalapril", "Ibuprofeno", "Simvastatina"};
-    private final String[] horas    = {"08:00", "09:00", "14:00", "22:00"};
-    private final String[] detalles = {
-            "20 mg · en ayunas · cajón 1",
-            "10 mg · cajón 2",
-            "600 mg · después de comer · cajón 3",
-            "20 mg · cajón 4"
-    };
-    private final int[] quedan = {18, 22, 3, 26};
+    private static final String DB_URL =
+            "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
 
-    // Con estas pastillas o menos avisamos de que hay que comprar
-    private static final int POCAS_PASTILLAS = 5;
+    private DatabaseReference refMedicamentos;
+    private ValueEventListener escuchador;
+
+    private LinearLayout lista;
+    private TextView tvNum;
 
     public PastillasFragment() {
         super(R.layout.fragment_pastillas);
@@ -39,37 +43,89 @@ public class PastillasFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView tvNum = view.findViewById(R.id.tvNumMedicamentos);
-        tvNum.setText(nombres.length + " medicamentos");
+        tvNum = view.findViewById(R.id.tvNumMedicamentos);
+        lista = view.findViewById(R.id.listaMedicamentos);
 
-        LinearLayout lista = view.findViewById(R.id.listaMedicamentos);
-        LayoutInflater inflater = getLayoutInflater();
-        int colorAviso = ContextCompat.getColor(requireContext(), R.color.aviso_stock);
-
-        // Una tarjeta (item_medicamento.xml) por cada medicamento
-        for (int i = 0; i < nombres.length; i++) {
-            View tarjeta = inflater.inflate(R.layout.item_medicamento, lista, false);
-
-            ((TextView) tarjeta.findViewById(R.id.tvNombreMed)).setText(nombres[i]);
-            ((TextView) tarjeta.findViewById(R.id.tvHoraMed)).setText(horas[i]);
-            ((TextView) tarjeta.findViewById(R.id.tvDetalleMed)).setText(detalles[i]);
-
-            TextView tvQuedan = tarjeta.findViewById(R.id.tvQuedan);
-            if (quedan[i] <= POCAS_PASTILLAS) {
-                // Quedan pocas: aviso en verde y negrita
-                tvQuedan.setText("Quedan " + quedan[i] + " · hay que comprar");
-                tvQuedan.setTextColor(colorAviso);
-                tvQuedan.setTypeface(tvQuedan.getTypeface(), Typeface.BOLD);
-            } else {
-                tvQuedan.setText("Quedan " + quedan[i]);
-            }
-
-            lista.addView(tarjeta);
-        }
-
-        // De momento el botón solo avisa; la pantalla de añadir medicamento es otra tarea
+        // Abre el formulario para añadir un medicamento nuevo
         Button btnAnadir = view.findViewById(R.id.btnAnadirMedicamento);
         btnAnadir.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Añadir medicamento (próximamente)", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(requireContext(), MedicamentoActivity.class)));
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        if (usuario == null) {
+            tvNum.setText(R.string.med_sin_sesion);
+            return;
+        }
+        refMedicamentos = FirebaseDatabase.getInstance(DB_URL)
+                .getReference("medicamentos")
+                .child(usuario.getUid());
+
+        // Se ejecuta al abrir la pestaña y cada vez que cambia algo en Firebase
+        // (al añadir, editar o borrar, la lista se actualiza sola)
+        escuchador = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datos) {
+                mostrarLista(datos);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        refMedicamentos.addValueEventListener(escuchador);
+    }
+
+    @Override
+    public void onDestroyView() {
+        // Dejamos de escuchar cuando la pestaña desaparece
+        if (refMedicamentos != null && escuchador != null) {
+            refMedicamentos.removeEventListener(escuchador);
+        }
+        super.onDestroyView();
+    }
+
+    /** Una tarjeta (item_medicamento.xml) por cada medicamento de Firebase. */
+    private void mostrarLista(DataSnapshot datos) {
+        if (getView() == null) return;
+
+        lista.removeAllViews();
+        LayoutInflater inflater = getLayoutInflater();
+        int total = 0;
+
+        for (DataSnapshot hijo : datos.getChildren()) {
+            Medicamento med = hijo.getValue(Medicamento.class);
+            if (med == null) continue;
+
+            View tarjeta = inflater.inflate(R.layout.item_medicamento, lista, false);
+            ((TextView) tarjeta.findViewById(R.id.tvNombreMed)).setText(med.getNombre());
+            ((TextView) tarjeta.findViewById(R.id.tvDetalleMed))
+                    .setText(getString(R.string.med_detalle, med.getDosis(), med.getCajon()));
+
+            Bitmap foto = FotoUtils.deBase64(med.getImagenBase64());
+            if (foto != null) {
+                ImageView iv = tarjeta.findViewById(R.id.ivFotoItem);
+                iv.setImageTintList(null);
+                iv.setPadding(0, 0, 0, 0);
+                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                iv.setImageBitmap(foto);
+            }
+            // Al tocar la tarjeta se abre el formulario para editar ese medicamento
+            String id = hijo.getKey();
+            tarjeta.setOnClickListener(v -> {
+                Intent editar = new Intent(requireContext(), MedicamentoActivity.class);
+                editar.putExtra(MedicamentoActivity.EXTRA_ID, id);
+                startActivity(editar);
+            });
+
+            lista.addView(tarjeta);
+            total++;
+        }
+
+        tvNum.setText(total == 0
+                ? getString(R.string.med_lista_vacia)
+                : getResources().getQuantityString(R.plurals.med_num, total, total));
     }
 }
