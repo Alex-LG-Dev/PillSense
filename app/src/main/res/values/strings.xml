@@ -85,4 +85,9 @@
     <string name="toma_hora_limite">Hora límite</string>
     <string name="toma_hora_limite_ayuda">Si no se toma antes de la hora límite, cuenta como olvidada.</string>
     <string name="toma_borrar">Borrar toma</string>
+    <string name="toma_sin_medicamentos">Primero añade un medicamento en la pestaña Pastillas</string>
+    <string name="toma_error_medicamento">Elige un medicamento</string>
+    <string name="toma_error_limite">La hora límite tiene que ser después de la hora de la toma</string>
+    <string name="toma_guardada">Toma guardada</string>
+    <string name="toma_error_guardar">No se ha podido guardar: %1$s</string>
 </resources>
