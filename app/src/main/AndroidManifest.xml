@@ -67,7 +67,15 @@
         <activity
             android:name=".EditarPerfilActivity"
             android:exported="false"
-            android:parentActivityName=".PerfilActivity" />
+            android:parentActivityName=".PerfilActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Cambiar contraseña (T036) -->
+        <activity
+            android:name=".CambiarContrasenaActivity"
+            android:exported="false"
+            android:parentActivityName=".EditarPerfilActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Crear / editar toma -->
         <activity
