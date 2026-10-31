@@ -59,4 +59,6 @@
     <string name="med_guardado">Medicamento guardado</string>
     <string name="med_error_guardar">No se ha podido guardar: %1$s</string>
     <string name="med_sin_sesion">Inicia sesión para guardar medicamentos</string>
+
+    <string name="med_error_foto">No se ha podido cargar la foto</string>
 </resources>

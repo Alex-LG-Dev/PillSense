@@ -12,6 +12,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 /** Pantalla para añadir un medicamento. Se guarda en medicamentos/{uid}/{id} de Realtime Database. */
 public class MedicamentoActivity extends AppCompatActivity {
@@ -29,6 +35,19 @@ public class MedicamentoActivity extends AppCompatActivity {
 
     // La foto en Base64 (la rellenaremos en el paso 4)
     private String imagenBase64 = "";
+    private ImageView ivFoto;
+
+    // Abre la cámara y devuelve la foto (en pequeño)
+    private final ActivityResultLauncher<Void> lanzarCamara =
+            registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), foto -> {
+                if (foto != null) ponerFoto(foto);
+            });
+
+    // Abre el selector de fotos de Android (no necesita permisos)
+    private final ActivityResultLauncher<PickVisualMediaRequest> lanzarGaleria =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) ponerFoto(FotoUtils.leerDeGaleria(this, uri));
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +71,13 @@ public class MedicamentoActivity extends AppCompatActivity {
         etDosis = findViewById(R.id.etDosisMed);
         rgCajon = findViewById(R.id.rgCajon);
         btnGuardar = findViewById(R.id.btnGuardarMed);
+        ivFoto = findViewById(R.id.ivFotoMed);
+
+        findViewById(R.id.btnCamara).setOnClickListener(v -> lanzarCamara.launch(null));
+        findViewById(R.id.btnGaleria).setOnClickListener(v ->
+                lanzarGaleria.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build()));
 
         btnGuardar.setOnClickListener(v -> guardar());
     }
@@ -96,5 +122,22 @@ public class MedicamentoActivity extends AppCompatActivity {
         if (marcado == R.id.rbCajon3) return 3;
         if (marcado == R.id.rbCajon4) return 4;
         return 1;
+    }
+    /** Guarda la foto elegida en Base64 y la enseña en la tarjeta. */
+    private void ponerFoto(Bitmap foto) {
+        if (foto == null) {
+            Toast.makeText(this, R.string.med_error_foto, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        imagenBase64 = FotoUtils.aBase64(foto);
+        mostrarFoto(foto);
+    }
+
+    /** Quita el icono gris de ejemplo y pone la foto ocupando toda la tarjeta. */
+    private void mostrarFoto(Bitmap foto) {
+        ivFoto.setImageTintList(null);
+        ivFoto.setPadding(0, 0, 0, 0);
+        ivFoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ivFoto.setImageBitmap(foto);
     }
 }
