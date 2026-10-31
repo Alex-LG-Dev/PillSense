@@ -68,4 +68,5 @@
         <item quantity="one">%d medicamento</item>
         <item quantity="other">%d medicamentos</item>
     </plurals>
+    <string name="med_error_cargar">No se ha podido cargar el medicamento</string>
 </resources>

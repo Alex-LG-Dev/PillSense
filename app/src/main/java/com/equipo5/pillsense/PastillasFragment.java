@@ -112,6 +112,13 @@ public class PastillasFragment extends Fragment {
                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 iv.setImageBitmap(foto);
             }
+            // Al tocar la tarjeta se abre el formulario para editar ese medicamento
+            String id = hijo.getKey();
+            tarjeta.setOnClickListener(v -> {
+                Intent editar = new Intent(requireContext(), MedicamentoActivity.class);
+                editar.putExtra(MedicamentoActivity.EXTRA_ID, id);
+                startActivity(editar);
+            });
 
             lista.addView(tarjeta);
             total++;
