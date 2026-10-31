@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Menú y título (T036) -->
+    <string name="menu_perfil">Mi perfil</string>
+    <string name="perfil_titulo">Mi perfil</string>
+
+    <!-- Datos del perfil -->
+    <string name="perfil_datos_titulo">Mis datos</string>
+    <string name="perfil_correo_aviso">El correo no se puede cambiar.</string>
+    <string name="perfil_btn_guardar">Guardar cambios</string>
+    <string name="perfil_guardado">Cambios guardados</string>
+    <string name="perfil_guardado_sin_bd">Guardado en tu cuenta, pero no se pudo actualizar la base de datos</string>
+    <string name="perfil_guardado_sin_conexion">Sin conexión: se guardará cuando vuelva internet</string>
+    <string name="perfil_error_guardar">No se pudieron guardar los cambios. Inténtalo de nuevo.</string>
+    <string name="perfil_error_nombre">Introduce tu nombre</string>
+    <string name="perfil_error_sesion">Inicia sesión para ver tu perfil</string>
+
+    <!-- Cambiar contraseña -->
+    <string name="contrasena_titulo">Cambiar contraseña</string>
+    <string name="contrasena_actual">Contraseña actual</string>
+    <string name="contrasena_nueva">Nueva contraseña</string>
+    <string name="contrasena_repetir">Repite la nueva contraseña</string>
+    <string name="contrasena_btn_cambiar">Cambiar contraseña</string>
+    <string name="contrasena_cambiada">Contraseña cambiada</string>
+    <string name="contrasena_error_actual_vacia">Escribe tu contraseña actual</string>
+    <string name="contrasena_error_actual_incorrecta">La contraseña actual no es correcta</string>
+    <string name="contrasena_error_distintas">Las contraseñas no coinciden</string>
+    <string name="contrasena_error_igual">La nueva contraseña debe ser distinta de la actual</string>
+    <string name="contrasena_error_debil">Contraseña demasiado débil</string>
+    <string name="contrasena_error_red">Sin conexión. Inténtalo de nuevo cuando vuelva internet.</string>
+    <string name="contrasena_error_generico">No se pudo cambiar la contraseña. Inténtalo de nuevo.</string>
+    <string name="contrasena_otra_cuenta">Tu cuenta usa %1$s para iniciar sesión, así que la contraseña se cambia allí.</string>
+    <string name="contrasena_otra_cuenta_generica">Tu cuenta no usa contraseña de PillSense para iniciar sesión.</string>
+</resources>
