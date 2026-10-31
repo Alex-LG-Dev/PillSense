@@ -61,4 +61,11 @@
     <string name="med_sin_sesion">Inicia sesión para guardar medicamentos</string>
 
     <string name="med_error_foto">No se ha podido cargar la foto</string>
+
+    <string name="med_detalle">%1$s · cajón %2$d</string>
+    <string name="med_lista_vacia">Aún no has añadido ningún medicamento</string>
+    <plurals name="med_num">
+        <item quantity="one">%d medicamento</item>
+        <item quantity="other">%d medicamentos</item>
+    </plurals>
 </resources>
