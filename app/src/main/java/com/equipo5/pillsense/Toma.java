@@ -1,13 +1,13 @@
 package com.equipo5.pillsense;
 
-/** Un horario de toma. Se guarda en Realtime Database en tomas/{uid}/{id}. */
+/** Un horario de toma. Se guarda en Realtime Database en tomas. */
 public class Toma {
 
     private String id;
-    private String idMedicamento;      // id del medicamento (de medicamentos/{uid})
+    private String idMedicamento;      // id del medicamento
     private String nombreMedicamento;  // copia del nombre, para enseñarlo sin buscarlo otra vez
-    private int cajon;                 // del 1 al 4
-    private String hora;               // "08:00"
+    private int cajon;
+    private String hora;
     private String horaLimite;         // "09:00": a partir de aquí la toma cuenta como olvidada
 
     // Firebase necesita un constructor vacío para leer los datos
