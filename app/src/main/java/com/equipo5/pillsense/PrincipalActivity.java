@@ -27,13 +27,9 @@ public class PrincipalActivity extends AppCompatActivity {
         BarraAcciones.prepararVentana(this);
         setContentView(R.layout.activity_principal);
 
-        // Barra de acciones: nombre de la app y menú (⋮) con "Mi perfil" y "Acerca de"
-        MaterialToolbar barra = BarraAcciones.configurar(this, R.string.app_name, false, R.menu.menu_con_sesion);
+        // Barra de acciones: nombre de la app y menú (⋮) con "Acerca de"
+        MaterialToolbar barra = BarraAcciones.configurar(this, R.string.app_name, false, R.menu.menu_principal);
         barra.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.accion_perfil) {
-                startActivity(new Intent(PrincipalActivity.this, PerfilActivity.class));
-                return true;
-            }
             if (item.getItemId() == R.id.accion_acerca_de) {
                 startActivity(new Intent(PrincipalActivity.this, AcercaDeActivity.class));
                 return true;
