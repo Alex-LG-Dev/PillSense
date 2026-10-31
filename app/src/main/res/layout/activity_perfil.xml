@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".PerfilActivity">
+
+    <!-- Barra de acciones (la misma que en el resto de pantallas) -->
+    <include layout="@layout/app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margen_pantalla">
+
+            <!-- Cabecera: inicial, nombre y correo -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvInicialPerfil"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_avatar_perfil"
+                    android:gravity="center"
+                    android:importantForAccessibility="no"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/texto_titulo"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/espacio_medio"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvNombreCabecera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/azul_noche"
+                        android:textSize="@dimen/texto_boton"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCorreoCabecera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gris_pizarra"
+                        android:textSize="@dimen/texto_pequeno" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Mis datos -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_grande"
+                android:text="@string/perfil_datos_titulo"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/label_nombre"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etNombrePerfil"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/bg_campos"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal"
+            android:autofillHints="name"
+            android:inputType="textPersonName|textCapWords"
+            android:imeOptions="actionDone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/hint_correo_label"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etCorreoPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/bg_campos"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textSize="@dimen/texto_normal"
+            android:enabled="false"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/gris_pizarra" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/perfil_correo_aviso"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/label_soy"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <RadioGroup
+            android:id="@+id/rgRolPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbPacientePerfil"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:buttonTint="@color/verde_menta"
+                android:checked="true"
+                android:text="@string/rol_paciente"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <RadioButton
+                android:id="@+id/rbCuidadorPerfil"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/espacio_grande"
+                android:buttonTint="@color/verde_menta"
+                android:text="@string/rol_cuidador"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_pequeno" />
+        </RadioGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_boton"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/perfil_btn_guardar"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/texto_boton"
+            android:textStyle="bold"
+            app:backgroundTint="@color/verde_menta"
+            app:cornerRadius="@dimen/radio_esquina" />
+
+        <!-- Línea separadora -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:alpha="0.3"
+            android:background="@color/gris_pizarra" />
+
+        <!-- Cambiar contraseña (solo para cuentas con correo y contraseña) -->
+        <LinearLayout
+            android:id="@+id/seccionContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_grande"
+                android:text="@string/contrasena_titulo"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/contrasena_actual"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etContrasenaActual"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/bg_campos"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal"
+            android:autofillHints="password"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/contrasena_nueva"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etContrasenaNueva"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/bg_campos"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal"
+            android:autofillHints="newPassword"
+            android:inputType="textPassword" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/minimo_caracteres"
+                android:textColor="@color/gris_pizarra"
+                android:textSize="@dimen/texto_pequeno" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:text="@string/contrasena_repetir"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <EditText
+            android:id="@+id/etContrasenaRepetir"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/bg_campos"
+            android:paddingHorizontal="@dimen/espacio_medio"
+            android:textColor="@color/azul_noche"
+            android:textSize="@dimen/texto_normal"
+            android:autofillHints="newPassword"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCambiarContrasena"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:text="@string/contrasena_btn_cambiar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold"
+                app:backgroundTint="@color/azul_pillsense"
+                app:cornerRadius="@dimen/radio_esquina" />
+        </LinearLayout>
+
+        <!-- Aviso para cuentas de Google o Facebook -->
+        <TextView
+            android:id="@+id/tvContrasenaOtraCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_grande"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="@dimen/texto_pequeno"
+            android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
