@@ -50,6 +50,13 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Añadir / editar medicamento -->
+        <activity
+            android:name=".MedicamentoActivity"
+            android:exported="false"
+            android:parentActivityName=".PrincipalActivity"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Perfil (T035): ver los datos -->
         <activity
             android:name=".PerfilActivity"
