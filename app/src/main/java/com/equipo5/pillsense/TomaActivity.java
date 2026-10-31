@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RadioButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,15 +18,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
+/** Pantalla para crear una toma. Se guarda en tomas/{uid}/{id} de Realtime Database. */
 public class TomaActivity extends AppCompatActivity {
 
     private static final String DB_URL =
             "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
+
+    // Franja del día de cada cajón (posición 0 = cajón 1 ... posición 3 = cajón 4)
+    // Cajón 1 mañana · 2 mediodía · 3 tarde · 4 noche
+    private static final String[] INICIO_FRANJA = {"06:00", "12:00", "16:00", "20:00"};
+    private static final String[] FIN_FRANJA    = {"11:59", "15:59", "19:59", "23:59"};
 
     private DatabaseReference refTomas;
     private DatabaseReference refMedicamentos;
@@ -34,8 +41,9 @@ public class TomaActivity extends AppCompatActivity {
     private final List<Medicamento> medicamentos = new ArrayList<>();
     private Medicamento medicamentoElegido;
 
-    private String hora = "08:00";
-    private String horaLimite = "09:00";
+    // Horas en texto "HH:mm" (así se ordenan bien al compararlas)
+    private String hora = "";
+    private String horaLimite = "";
 
     private TextView tvMedicamento;
     private TextView tvHora;
@@ -65,9 +73,11 @@ public class TomaActivity extends AppCompatActivity {
         tvHoraLimite = findViewById(R.id.tvHoraLimiteToma);
         rgCajon = findViewById(R.id.rgCajonToma);
         btnGuardar = findViewById(R.id.btnGuardarToma);
+        ponerTextosCajones();
 
-        tvHora.setText(hora);
-        tvHoraLimite.setText(horaLimite);
+        // Al cambiar de cajón, las horas se ajustan a su franja
+        rgCajon.setOnCheckedChangeListener((grupo, idMarcado) -> ajustarAlCajon());
+        ajustarAlCajon(); // horas iniciales del cajón 1
 
         cargarMedicamentos();
 
@@ -77,7 +87,7 @@ public class TomaActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(v -> guardar());
     }
 
-    /** Lee una vez los medicamentos del usuario para poder elegir uno */
+    /** Lee una vez los medicamentos del usuario para poder elegir uno. */
     private void cargarMedicamentos() {
         refMedicamentos.get().addOnSuccessListener(datos -> {
             medicamentos.clear();
@@ -91,7 +101,7 @@ public class TomaActivity extends AppCompatActivity {
         });
     }
 
-    /** Enseña la lista de medicamentos */
+    /** Enseña la lista de medicamentos en un diálogo. */
     private void elegirMedicamento() {
         if (medicamentos.isEmpty()) {
             Toast.makeText(this, R.string.toma_sin_medicamentos, Toast.LENGTH_LONG).show();
@@ -108,11 +118,26 @@ public class TomaActivity extends AppCompatActivity {
                 .show();
     }
 
-    /** Pone el medicamento elegido y marca su cajón. */
+    /** Pone el medicamento elegido y marca su cajón (las horas se ajustan solas a ese cajón). */
     private void ponerMedicamento(Medicamento med) {
         medicamentoElegido = med;
         tvMedicamento.setText(med.getNombre());
         marcarCajon(med.getCajon());
+    }
+
+    /**
+     * Enseña la franja del cajón marcado y, si las horas no caben en ella,
+     * las cambia por el principio de la franja (y la hora límite, 1 hora después).
+     */
+    /** Si las horas no caben en la franja del cajón marcado, las cambia por el principio de la franja. */
+    private void ajustarAlCajon() {
+        int cajon = cajonElegido();
+        if (!dentroDeFranja(hora, cajon) || !dentroDeFranja(horaLimite, cajon)) {
+            hora = INICIO_FRANJA[cajon - 1];
+            horaLimite = FIN_FRANJA[cajon - 1];
+        }
+        tvHora.setText(hora);
+        tvHoraLimite.setText(horaLimite);
     }
 
 
@@ -126,18 +151,22 @@ public class TomaActivity extends AppCompatActivity {
                 .build();
 
         reloj.addOnPositiveButtonClickListener(v -> {
-            int h = reloj.getHour();
-            int m = reloj.getMinute();
-            if (esHora) {
-                hora = formatear(h, m);
-                // La hora límite se pone sola 1 hora después (sin pasar de las 23:59)
-                horaLimite = (h >= 23) ? "23:59" : formatear(h + 1, m);
-                tvHora.setText(hora);
-                tvHoraLimite.setText(horaLimite);
-            } else {
-                horaLimite = formatear(h, m);
-                tvHoraLimite.setText(horaLimite);
+            String elegida = formatear(reloj.getHour(), reloj.getMinute());
+            int cajon = cajonElegido();
+
+            // Bloqueo: la hora tiene que estar dentro de la franja del cajón
+            if (!dentroDeFranja(elegida, cajon)) {
+                avisarFueraDeFranja(cajon);
+                return; // no se cambia nada
             }
+            if (esHora) {
+                hora = elegida;
+
+            } else {
+                horaLimite = elegida;
+            }
+            tvHora.setText(hora);
+            tvHoraLimite.setText(horaLimite);
         });
         reloj.show(getSupportFragmentManager(), "reloj");
     }
@@ -145,6 +174,11 @@ public class TomaActivity extends AppCompatActivity {
     private void guardar() {
         if (medicamentoElegido == null) {
             Toast.makeText(this, R.string.toma_error_medicamento, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int cajon = cajonElegido();
+        if (!dentroDeFranja(hora, cajon) || !dentroDeFranja(horaLimite, cajon)) {
+            avisarFueraDeFranja(cajon);
             return;
         }
         // Al ser "HH:mm", comparar el texto es comparar las horas
@@ -155,7 +189,7 @@ public class TomaActivity extends AppCompatActivity {
 
         String id = refTomas.push().getKey();
         Toma toma = new Toma(id, medicamentoElegido.getId(), medicamentoElegido.getNombre(),
-                cajonElegido(), hora, horaLimite);
+                cajon, hora, horaLimite);
 
         btnGuardar.setEnabled(false); // evita guardarla dos veces
         refTomas.child(id).setValue(toma)
@@ -170,10 +204,27 @@ public class TomaActivity extends AppCompatActivity {
                 });
     }
 
+    // ===== Franjas del día =====
+
+    /** ¿La hora está dentro de la franja del cajón? */
+    private boolean dentroDeFranja(String h, int cajon) {
+        if (h == null || h.length() != 5) return false;
+        return h.compareTo(INICIO_FRANJA[cajon - 1]) >= 0
+                && h.compareTo(FIN_FRANJA[cajon - 1]) <= 0;
+    }
+
+
+    private void avisarFueraDeFranja(int cajon) {
+        String nombre = getResources().getStringArray(R.array.franjas_cajon)[cajon - 1];
+        Toast.makeText(this, getString(R.string.toma_fuera_franja, cajon, nombre,
+                INICIO_FRANJA[cajon - 1], FIN_FRANJA[cajon - 1]), Toast.LENGTH_LONG).show();
+    }
 
     private String formatear(int h, int m) {
         return String.format(Locale.ROOT, "%02d:%02d", h, m);
     }
+
+    // ===== Cajón =====
 
     private int cajonElegido() {
         int marcado = rgCajon.getCheckedRadioButtonId();
@@ -188,5 +239,15 @@ public class TomaActivity extends AppCompatActivity {
         else if (cajon == 3) rgCajon.check(R.id.rbCajonToma3);
         else if (cajon == 4) rgCajon.check(R.id.rbCajonToma4);
         else rgCajon.check(R.id.rbCajonToma1);
+    }
+
+    private void ponerTextosCajones() {
+        int[] ids = {R.id.rbCajonToma1, R.id.rbCajonToma2, R.id.rbCajonToma3, R.id.rbCajonToma4};
+        String[] nombres = getResources().getStringArray(R.array.franjas_cajon);
+        for (int i = 0; i < ids.length; i++) {
+            RadioButton rb = findViewById(ids[i]);
+            rb.setText(getString(R.string.toma_cajon_franja,
+                    i + 1, nombres[i], INICIO_FRANJA[i], FIN_FRANJA[i]));
+        }
     }
 }
