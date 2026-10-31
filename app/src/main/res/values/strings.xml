@@ -40,7 +40,7 @@
 
 
     <string name="volver">Volver</string>
-    <!-- Formulario de medicamento (T033) -->
+    <!-- Formulario de medicamento  -->
     <string name="med_titulo_nuevo">Nuevo medicamento</string>
     <string name="med_titulo_editar">Editar medicamento</string>
     <string name="med_foto">Foto del medicamento</string>
@@ -76,7 +76,7 @@
     <string name="med_borrado">Medicamento borrado</string>
     <string name="med_error_borrar">No se ha podido borrar: %1$s</string>
 
-    <!-- Formulario de toma (T039) -->
+    <!-- Formulario de toma -->
     <string name="toma_titulo_nueva">Nueva toma</string>
     <string name="toma_titulo_editar">Editar toma</string>
     <string name="toma_medicamento">Medicamento</string>
@@ -90,4 +90,14 @@
     <string name="toma_error_limite">La hora límite tiene que ser después de la hora de la toma</string>
     <string name="toma_guardada">Toma guardada</string>
     <string name="toma_error_guardar">No se ha podido guardar: %1$s</string>
+
+    <!-- Franja del día de cada cajón (1 mañana, 2 mediodía, 3 tarde, 4 noche) -->
+    <string-array name="franjas_cajon">
+        <item>Mañana</item>
+        <item>Mediodía</item>
+        <item>Tarde</item>
+        <item>Noche</item>
+    </string-array>
+    <string name="toma_cajon_franja">Cajón %1$d · %2$s · %3$s – %4$s</string>
+    <string name="toma_fuera_franja">El cajón %1$d (%2$s) es de %3$s a %4$s. Elige una hora dentro de ese horario.</string>
 </resources>
