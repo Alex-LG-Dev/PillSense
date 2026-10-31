@@ -56,52 +56,49 @@
                 android:textColor="@color/texto_principal"
                 android:textSize="@dimen/texto_pequeno" />
 
+            <!-- Cajones en vertical: el texto con la franja se pone desde TomaActivity -->
             <RadioGroup
                 android:id="@+id/rgCajonToma"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/rbCajonToma1"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:buttonTint="@color/verde_menta"
                     android:checked="true"
-                    android:text="1"
                     android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
+                    android:textSize="@dimen/texto_normal"
+                    tools:text="Cajón 1 · Mañana · 06:00 – 11:59" />
 
                 <RadioButton
                     android:id="@+id/rbCajonToma2"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:buttonTint="@color/verde_menta"
-                    android:text="2"
                     android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
+                    android:textSize="@dimen/texto_normal"
+                    tools:text="Cajón 2 · Mediodía · 12:00 – 15:59" />
 
                 <RadioButton
                     android:id="@+id/rbCajonToma3"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:buttonTint="@color/verde_menta"
-                    android:text="3"
                     android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
+                    android:textSize="@dimen/texto_normal"
+                    tools:text="Cajón 3 · Tarde · 16:00 – 19:59" />
 
                 <RadioButton
                     android:id="@+id/rbCajonToma4"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:buttonTint="@color/verde_menta"
-                    android:text="4"
                     android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
+                    android:textSize="@dimen/texto_normal"
+                    tools:text="Cajón 4 · Noche · 20:00 – 23:59" />
             </RadioGroup>
 
             <!-- 3. HORA y HORA LÍMITE, una al lado de la otra -->
