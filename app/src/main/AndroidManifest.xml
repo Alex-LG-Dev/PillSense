@@ -48,6 +48,13 @@
             android:name=".PrincipalActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Añadir / editar medicamento -->
+        <activity
+            android:name=".MedicamentoActivity"
+            android:exported="false"
+            android:parentActivityName=".PrincipalActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

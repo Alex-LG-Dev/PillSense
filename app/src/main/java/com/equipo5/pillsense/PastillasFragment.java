@@ -1,5 +1,6 @@
 package com.equipo5.pillsense;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -67,9 +68,9 @@ public class PastillasFragment extends Fragment {
             lista.addView(tarjeta);
         }
 
-        // De momento el botón solo avisa; la pantalla de añadir medicamento es otra tarea
+        // Abre el formulario para añadir un medicamento nuevo
         Button btnAnadir = view.findViewById(R.id.btnAnadirMedicamento);
         btnAnadir.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Añadir medicamento (próximamente)", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(requireContext(), MedicamentoActivity.class)));
     }
 }
