@@ -107,6 +107,14 @@ public class HoyFragment extends Fragment {
             ivEstado.setImageResource(R.drawable.ic_toma_pendiente);
             ivEstado.setColorFilter(gris);
 
+            // Al tocar la fila se abre el formulario para editar esa toma
+            String id = hijo.getKey();
+            fila.setOnClickListener(v -> {
+                Intent editar = new Intent(requireContext(), TomaActivity.class);
+                editar.putExtra(TomaActivity.EXTRA_ID, id);
+                startActivity(editar);
+            });
+
             lista.addView(fila);
             ultimaFila = fila;
         }
