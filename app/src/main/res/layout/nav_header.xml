@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/fondo_pantalla"
+    android:padding="24dp">
 
+    <!-- Botón de cierre en la parte superior derecha -->
     <TextView
         android:id="@+id/btnCerrarMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
         android:text="X Cerrar"
-        android:textColor="@android:color/black"
+        android:textColor="@color/texto_principal"
         android:textSize="16sp"
         android:textStyle="bold"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Foto de perfil de Google/Facebook -->
+    <ImageView
+        android:id="@+id/ivFotoPerfilMenu"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnCerrarMenu" />
+
+    <!-- Nombre obtenido de la cuenta -->
     <TextView
         android:id="@+id/tvNombreUsuarioMenu"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="[Tu nombre]"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:text="Cargando..."
+        android:textColor="@color/texto_principal"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivFotoPerfilMenu" />
 
+    <!-- Correo electrónico obtenido de la cuenta -->
+    <TextView
+        android:id="@+id/tvCorreoMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="cargando@correo.com"
+        android:textColor="@color/texto_secundario"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNombreUsuarioMenu" />
+
+    <!-- Rol en la aplicación (Paciente/Cuidador) -->
     <TextView
         android:id="@+id/tvRolMenu"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="Cuidador"
-        android:textColor="@color/gris_pizarra"
-        android:textSize="14sp" />
+        android:textColor="@color/texto_secundario"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCorreoMenu" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
