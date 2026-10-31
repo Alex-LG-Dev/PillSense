@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono de la splash screen (T031): el isotipo de PillSense centrado.
+     El margen (inset) evita que el sistema lo recorte con su máscara circular. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/logo_isotipo"
+    android:insetLeft="26%"
+    android:insetTop="26%"
+    android:insetRight="26%"
+    android:insetBottom="26%" />
