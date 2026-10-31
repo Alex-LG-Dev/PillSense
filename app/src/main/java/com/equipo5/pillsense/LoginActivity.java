@@ -121,6 +121,17 @@ public class LoginActivity extends AppCompatActivity {
         if (correoValido && contrasenaValida) {
             tvError.setVisibility(View.GONE);
 
+            // Entra con el correo y la contraseña de la cuenta (la nueva, si se ha cambiado)
+            mAuth.signInWithEmailAndPassword(correo, contrasena)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
+                            finish();
+                        } else {
+                            Log.e(TAG, "Error al iniciar sesión con correo", task.getException());
+                            tvError.setVisibility(View.VISIBLE);
+                        }
+                    });
         } else {
             // Muestra el recuadro de error
             tvError.setVisibility(View.VISIBLE);
