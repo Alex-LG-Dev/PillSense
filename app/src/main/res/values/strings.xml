@@ -40,4 +40,39 @@
 
 
     <string name="volver">Volver</string>
+    <!-- Formulario de medicamento (T033) -->
+    <string name="med_titulo_nuevo">Nuevo medicamento</string>
+    <string name="med_titulo_editar">Editar medicamento</string>
+    <string name="med_foto">Foto del medicamento</string>
+    <string name="med_camara">Hacer foto</string>
+    <string name="med_galeria">Elegir de galería</string>
+    <string name="med_nombre">Nombre</string>
+    <string name="med_nombre_hint">Ej. Omeprazol</string>
+    <string name="med_dosis">Dosis</string>
+    <string name="med_dosis_hint">Ej. 20 mg</string>
+    <string name="med_cajon">Cajón del pastillero</string>
+    <string name="med_guardar">Guardar</string>
+    <string name="med_borrar">Borrar medicamento</string>
+
+    <string name="med_error_nombre">Escribe el nombre</string>
+    <string name="med_error_dosis">Escribe la dosis</string>
+    <string name="med_guardado">Medicamento guardado</string>
+    <string name="med_error_guardar">No se ha podido guardar: %1$s</string>
+    <string name="med_sin_sesion">Inicia sesión para guardar medicamentos</string>
+
+    <string name="med_error_foto">No se ha podido cargar la foto</string>
+
+    <string name="med_detalle">%1$s · cajón %2$d</string>
+    <string name="med_lista_vacia">Aún no has añadido ningún medicamento</string>
+    <plurals name="med_num">
+        <item quantity="one">%d medicamento</item>
+        <item quantity="other">%d medicamentos</item>
+    </plurals>
+    <string name="med_error_cargar">No se ha podido cargar el medicamento</string>
+    <string name="med_borrar_titulo">¿Borrar medicamento?</string>
+    <string name="med_borrar_mensaje">Se borrará «%1$s» de tu lista. No se puede deshacer.</string>
+    <string name="med_borrar_si">Borrar</string>
+    <string name="med_cancelar">Cancelar</string>
+    <string name="med_borrado">Medicamento borrado</string>
+    <string name="med_error_borrar">No se ha podido borrar: %1$s</string>
 </resources>
