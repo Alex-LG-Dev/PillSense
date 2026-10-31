@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import android.view.View;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 /** Pantalla para añadir un medicamento. Se guarda en medicamentos/{uid}/{id} de Realtime Database. */
 public class MedicamentoActivity extends AppCompatActivity {
@@ -90,6 +93,11 @@ public class MedicamentoActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(v -> guardar());
         if (idEditando != null) {
             cargarMedicamento();
+
+            // El botón de borrar solo tiene sentido si el medicamento ya existe
+            Button btnBorrar = findViewById(R.id.btnBorrarMed);
+            btnBorrar.setVisibility(View.VISIBLE);
+            btnBorrar.setOnClickListener(v -> confirmarBorrado());
         }
     }
 
@@ -183,5 +191,26 @@ public class MedicamentoActivity extends AppCompatActivity {
         else if (cajon == 3) rgCajon.check(R.id.rbCajon3);
         else if (cajon == 4) rgCajon.check(R.id.rbCajon4);
         else rgCajon.check(R.id.rbCajon1);
+    }
+    /** Pregunta antes de borrar, porque no se puede deshacer. */
+    private void confirmarBorrado() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.med_borrar_titulo)
+                .setMessage(getString(R.string.med_borrar_mensaje, etNombre.getText().toString().trim()))
+                .setNegativeButton(R.string.med_cancelar, null)
+                .setPositiveButton(R.string.med_borrar_si, (dialogo, boton) -> borrar())
+                .show();
+    }
+
+    /** Borra el medicamento de Firebase y vuelve a la lista. */
+    private void borrar() {
+        refMedicamentos.child(idEditando).removeValue()
+                .addOnSuccessListener(r -> {
+                    Toast.makeText(this, R.string.med_borrado, Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, getString(R.string.med_error_borrar, e.getMessage()),
+                                Toast.LENGTH_LONG).show());
     }
 }
