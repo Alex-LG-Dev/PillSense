@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tarjeta de UN medicamento: nombre, hora, dosis/cajón y pastillas que quedan -->
+<!-- Tarjeta de UN medicamento: foto, nombre, dosis y cajón (+ hora y "quedan" ocultos para tareas futuras) -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -13,51 +13,84 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <!-- Nombre a la izquierda, hora a la derecha -->
+        <!-- Foto (si no tiene, se ve el icono de la pastilla) -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:cardBackgroundColor="@color/fondo_pantalla"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <ImageView
+                android:id="@+id/ivFotoItem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/med_foto"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_pestana_pastillas"
+                app:tint="@color/texto_secundario" />
+        </com.google.android.material.card.MaterialCardView>
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvNombreMed"
-                android:layout_width="0dp"
+            <!-- Nombre a la izquierda, hora a la derecha -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Omeprazol"
-                android:textColor="@color/texto_principal"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvNombreMed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Omeprazol"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <!-- Oculta: la hora será de otra tarea -->
+                <TextView
+                    android:id="@+id/tvHoraMed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="08:00"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvHoraMed"
+                android:id="@+id/tvDetalleMed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="08:00"
-                android:textColor="@color/texto_principal"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="6dp"
+                android:text="20 mg · cajón 1"
+                android:textColor="@color/texto_secundario"
+                android:textSize="15sp" />
+
+            <!-- Oculto: las pastillas que quedan serán de otra tarea -->
+            <TextView
+                android:id="@+id/tvQuedan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Quedan 18"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvDetalleMed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="20 mg · en ayunas · cajón 1"
-            android:textColor="@color/texto_secundario"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tvQuedan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Quedan 18"
-            android:textColor="@color/texto_secundario"
-            android:textSize="14sp" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
