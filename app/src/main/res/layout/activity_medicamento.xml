@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pantalla para AÑADIR o EDITAR un medicamento (nombre, dosis, cajón y foto) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo_pantalla"
+    android:orientation="vertical"
+    tools:context=".MedicamentoActivity">
+
+    <include layout="@layout/app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margen_pantalla">
+
+            <!-- 1. FOTO -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                app:cardBackgroundColor="@color/fondo_tarjeta"
+                app:cardCornerRadius="@dimen/radio_esquina"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:id="@+id/ivFotoMed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/med_foto"
+                    android:padding="48dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_pestana_pastillas"
+                    app:tint="@color/texto_secundario" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botones para elegir la foto -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCamara"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/altura_campo"
+                    android:layout_marginEnd="@dimen/espacio_pequeno"
+                    android:layout_weight="1"
+                    android:text="@string/med_camara"
+                    android:textAllCaps="false"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_pequeno"
+                    app:cornerRadius="@dimen/radio_esquina"
+                    app:strokeColor="@color/verde_menta" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGaleria"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/altura_campo"
+                    android:layout_marginStart="@dimen/espacio_pequeno"
+                    android:layout_weight="1"
+                    android:text="@string/med_galeria"
+                    android:textAllCaps="false"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_pequeno"
+                    app:cornerRadius="@dimen/radio_esquina"
+                    app:strokeColor="@color/verde_menta" />
+            </LinearLayout>
+
+            <!-- 2. NOMBRE -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_grande"
+                android:text="@string/med_nombre"
+                android:textColor="@color/texto_principal"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <EditText
+                android:id="@+id/etNombreMed"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_campo"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:background="@drawable/bg_campos"
+                android:hint="@string/med_nombre_hint"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:paddingHorizontal="@dimen/espacio_medio"
+                android:textColor="@color/azul_noche"
+                android:textColorHint="@color/gris_pizarra"
+                android:textSize="@dimen/texto_normal" />
+
+            <!-- 3. DOSIS -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:text="@string/med_dosis"
+                android:textColor="@color/texto_principal"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <EditText
+                android:id="@+id/etDosisMed"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_campo"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:background="@drawable/bg_campos"
+                android:hint="@string/med_dosis_hint"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:paddingHorizontal="@dimen/espacio_medio"
+                android:textColor="@color/azul_noche"
+                android:textColorHint="@color/gris_pizarra"
+                android:textSize="@dimen/texto_normal" />
+
+            <!-- 4. CAJÓN (1 a 4) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_medio"
+                android:text="@string/med_cajon"
+                android:textColor="@color/texto_principal"
+                android:textSize="@dimen/texto_pequeno" />
+
+            <RadioGroup
+                android:id="@+id/rgCajon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbCajon1"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:checked="true"
+                    android:text="1"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbCajon2"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:text="2"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbCajon3"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:text="3"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbCajon4"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/verde_menta"
+                    android:text="4"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="@dimen/texto_normal" />
+            </RadioGroup>
+
+            <!-- 5. GUARDAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarMed"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginTop="@dimen/espacio_grande"
+                android:text="@string/med_guardar"
+                android:textAllCaps="false"
+                android:textColor="@color/azul_noche"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold"
+                app:backgroundTint="@color/verde_menta"
+                app:cornerRadius="@dimen/radio_esquina" />
+
+            <!-- 6. BORRAR (solo se ve al editar un medicamento que ya existe) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBorrarMed"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/altura_boton"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:text="@string/med_borrar"
+                android:textAllCaps="false"
+                android:textColor="@color/error_suave"
+                android:textSize="@dimen/texto_boton"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/radio_esquina"
+                app:strokeColor="@color/error_suave" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
