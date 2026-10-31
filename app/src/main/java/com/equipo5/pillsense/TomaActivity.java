@@ -26,6 +26,9 @@ import java.util.Locale;
 /** Pantalla para crear una toma. Se guarda en tomas/{uid}/{id} de Realtime Database. */
 public class TomaActivity extends AppCompatActivity {
 
+
+    public static final String EXTRA_ID = "idToma";
+
     private static final String DB_URL =
             "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
 
@@ -45,6 +48,9 @@ public class TomaActivity extends AppCompatActivity {
     private String hora = "";
     private String horaLimite = "";
 
+    // Id de la toma que se edita
+    private String idEditando;
+
     private TextView tvMedicamento;
     private TextView tvHora;
     private TextView tvHoraLimite;
@@ -56,7 +62,12 @@ public class TomaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         BarraAcciones.prepararVentana(this);
         setContentView(R.layout.activity_toma);
-        BarraAcciones.configurar(this, R.string.toma_titulo_nueva, true, 0);
+
+        // Si nos pasan un id, estamos editando; si no, es una toma nueva
+        idEditando = getIntent().getStringExtra(EXTRA_ID);
+        BarraAcciones.configurar(this,
+                idEditando == null ? R.string.toma_titulo_nueva : R.string.toma_titulo_editar,
+                true, 0);
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario == null) {
@@ -85,6 +96,9 @@ public class TomaActivity extends AppCompatActivity {
         tvHora.setOnClickListener(v -> elegirHora(true));
         tvHoraLimite.setOnClickListener(v -> elegirHora(false));
         btnGuardar.setOnClickListener(v -> guardar());
+        if (idEditando != null) {
+            cargarToma();
+        }
     }
 
     /** Lee una vez los medicamentos del usuario para poder elegir uno. */
@@ -124,6 +138,35 @@ public class TomaActivity extends AppCompatActivity {
         tvMedicamento.setText(med.getNombre());
         marcarCajon(med.getCajon());
     }
+
+    private void cargarToma() {
+        refTomas.child(idEditando).get()
+                .addOnSuccessListener(datos -> {
+                    Toma toma = datos.getValue(Toma.class);
+                    if (toma == null) {
+                        Toast.makeText(this, R.string.toma_error_cargar, Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+                    // El medicamento de la toma (solo necesitamos su id y su nombre para guardar)
+                    medicamentoElegido = new Medicamento(toma.getIdMedicamento(),
+                            toma.getNombreMedicamento(), "", toma.getCajon(), "");
+                    tvMedicamento.setText(toma.getNombreMedicamento());
+
+                    // Primero el cajón (esto pone las horas de su franja)...
+                    marcarCajon(toma.getCajon());
+                    // ...y después las horas guardadas, para que no se pisen
+                    hora = toma.getHora();
+                    horaLimite = toma.getHoraLimite();
+                    tvHora.setText(hora);
+                    tvHoraLimite.setText(horaLimite);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, R.string.toma_error_cargar, Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+    }
+
 
     /**
      * Enseña la franja del cajón marcado y, si las horas no caben en ella,
@@ -187,7 +230,8 @@ public class TomaActivity extends AppCompatActivity {
             return;
         }
 
-        String id = refTomas.push().getKey();
+        // Si editamos usamos el mismo id (se sobrescribe); si es nueva, push() crea uno
+        String id = (idEditando != null) ? idEditando : refTomas.push().getKey();
         Toma toma = new Toma(id, medicamentoElegido.getId(), medicamentoElegido.getNombre(),
                 cajon, hora, horaLimite);
 
