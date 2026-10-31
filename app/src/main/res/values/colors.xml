@@ -26,4 +26,7 @@
     <color name="texto_secundario">@color/gris_pizarra</color>
     <color name="aviso_stock">@color/verde_bosque</color>
     <color name="toma_olvidada">@color/azul_pillsense</color>
+
+    <!-- Splash screen (T031): azul cielo suave -->
+    <color name="splash_fondo">#CFE2F5</color>
 </resources>
