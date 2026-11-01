@@ -13,6 +13,7 @@ import androidx.core.splashscreen.SplashScreen;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         super.onCreate(savedInstanceState);
+
+        // Si ya hay una sesión iniciada, vamos directos a la pantalla principal
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            startActivity(new Intent(this, PrincipalActivity.class));
+            finish();   // así al pulsar "atrás" no se vuelve a la bienvenida
+            return;
+        }
+
+        BarraAcciones.prepararVentana(this);
+        setContentView(R.layout.activity_main);
         BarraAcciones.prepararVentana(this);
         setContentView(R.layout.activity_main);
 
