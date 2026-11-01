@@ -23,13 +23,9 @@
             android:title="@string/menu_acerca_de" />
     </group>
 
-    <item android:title="">
-        <menu>
-            <item
-                android:id="@+id/nav_cerrar_sesion"
-                android:icon="@drawable/ic_menu_salir"
-                android:title="@string/cerrar_sesion" />
-        </menu>
-    </item>
+    <item
+        android:id="@+id/nav_cerrar_sesion"
+        android:icon="@drawable/ic_menu_salir"
+        android:title="@string/cerrar_sesion" />
 
 </menu>
