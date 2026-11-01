@@ -128,7 +128,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 3. CAJONES: 2 filas de 2 tarjetas (item_cajon.xml), se rellenan en PastilleroFragment.java -->
+        <!-- 3. CAJONES: RecyclerView en 2 columnas, se rellena en PastilleroFragment con CajonAdapter -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,43 +138,14 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCajones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/cajon1"
-                layout="@layout/item_cajon" />
-
-            <Space
-                android:layout_width="12dp"
-                android:layout_height="0dp" />
-
-            <include
-                android:id="@+id/cajon2"
-                layout="@layout/item_cajon" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/cajon3"
-                layout="@layout/item_cajon" />
-
-            <Space
-                android:layout_width="12dp"
-                android:layout_height="0dp" />
-
-            <include
-                android:id="@+id/cajon4"
-                layout="@layout/item_cajon" />
-        </LinearLayout>
+            android:layout_marginHorizontal="-6dp"
+            android:layout_marginTop="6dp"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never" />
 
         <!-- 4. BOTÓN: hacer sonar el pastillero (de momento solo muestra un aviso) -->
         <com.google.android.material.button.MaterialButton

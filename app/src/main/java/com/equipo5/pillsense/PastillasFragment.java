@@ -101,8 +101,7 @@ public class PastillasFragment extends Fragment {
 
             View tarjeta = inflater.inflate(R.layout.item_medicamento, lista, false);
             ((TextView) tarjeta.findViewById(R.id.tvNombreMed)).setText(med.getNombre());
-            ((TextView) tarjeta.findViewById(R.id.tvDetalleMed))
-                    .setText(getString(R.string.med_detalle, med.getDosis(), med.getCajon()));
+            ((TextView) tarjeta.findViewById(R.id.tvDetalleMed)).setText(med.getDosis());
 
             Bitmap foto = FotoUtils.deBase64(med.getImagenBase64());
             if (foto != null) {
