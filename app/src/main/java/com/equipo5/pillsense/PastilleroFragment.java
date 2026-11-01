@@ -144,7 +144,7 @@ public class PastilleroFragment extends Fragment {
             Medicamento med = medPorId.get(idMed);
             if (med == null) {
                 // El medicamento se borró pero la toma sigue: lo enseñamos sin foto
-                med = new Medicamento(idMed, toma.getNombreMedicamento(), "", numero, null);
+                med = new Medicamento(idMed, toma.getNombreMedicamento(), "", null);
             }
             cajones.get(numero - 1).anadirMedicamento(med);
         }

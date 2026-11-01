@@ -35,7 +35,7 @@ public class MedicamentoActivity extends AppCompatActivity {
 
     private EditText etNombre;
     private EditText etDosis;
-    private RadioGroup rgCajon;
+
     private Button btnGuardar;
 
     // La foto en Base64 (la rellenaremos en el paso 4)
@@ -80,7 +80,6 @@ public class MedicamentoActivity extends AppCompatActivity {
 
         etNombre = findViewById(R.id.etNombreMed);
         etDosis = findViewById(R.id.etDosisMed);
-        rgCajon = findViewById(R.id.rgCajon);
         btnGuardar = findViewById(R.id.btnGuardarMed);
         ivFoto = findViewById(R.id.ivFotoMed);
 
@@ -120,7 +119,7 @@ public class MedicamentoActivity extends AppCompatActivity {
         // push() crea un id único para el medicamento nuevo
         // Si editamos usamos el mismo id (se sobrescribe); si es nuevo, push() crea uno
         String id = (idEditando != null) ? idEditando : refMedicamentos.push().getKey();
-        Medicamento med = new Medicamento(id, nombre, dosis, cajonElegido(), imagenBase64);
+        Medicamento med = new Medicamento(id, nombre, dosis, imagenBase64);
 
         btnGuardar.setEnabled(false); // evita guardarlo dos veces si se pulsa rápido
         refMedicamentos.child(id).setValue(med)
@@ -135,14 +134,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                 });
     }
 
-    /** Devuelve el número de cajón marcado (1 a 4). */
-    private int cajonElegido() {
-        int marcado = rgCajon.getCheckedRadioButtonId();
-        if (marcado == R.id.rbCajon2) return 2;
-        if (marcado == R.id.rbCajon3) return 3;
-        if (marcado == R.id.rbCajon4) return 4;
-        return 1;
-    }
+
     /** Guarda la foto elegida en Base64 y la enseña en la tarjeta. */
     private void ponerFoto(Bitmap foto) {
         if (foto == null) {
@@ -172,7 +164,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                     }
                     etNombre.setText(med.getNombre());
                     etDosis.setText(med.getDosis());
-                    marcarCajon(med.getCajon());
+
 
                     // Conservamos la foto que ya tenía (si no se cambia, se vuelve a guardar la misma)
                     imagenBase64 = med.getImagenBase64() != null ? med.getImagenBase64() : "";
@@ -185,13 +177,6 @@ public class MedicamentoActivity extends AppCompatActivity {
                 });
     }
 
-    /** Marca el cajón que tenía guardado el medicamento. */
-    private void marcarCajon(int cajon) {
-        if (cajon == 2) rgCajon.check(R.id.rbCajon2);
-        else if (cajon == 3) rgCajon.check(R.id.rbCajon3);
-        else if (cajon == 4) rgCajon.check(R.id.rbCajon4);
-        else rgCajon.check(R.id.rbCajon1);
-    }
     /** Pregunta antes de borrar, porque no se puede deshacer. */
     private void confirmarBorrado() {
         new MaterialAlertDialogBuilder(this)
