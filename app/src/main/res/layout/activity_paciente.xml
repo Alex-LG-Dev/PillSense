@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo_pantalla"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp">
+
+        <!-- Cabecera -->
+        <TextView
+            android:id="@+id/tvSaludo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Hola, Carmen"
+            android:textColor="@color/texto_principal"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Domingo, 1 de noviembre"
+            android:textColor="@color/texto_secundario"
+            android:textSize="19sp" />
+
+
+        <LinearLayout
+            android:id="@+id/tarjetaAhora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_cabecera"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvAhoraHora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AHORA TE TOCA · 14:00"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAhoraMedicamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Ibuprofeno 600 mg"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAhoraDosis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 pastilla"
+                android:textColor="@color/white"
+                android:textSize="21sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_caja_blanca"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <TextView
+                    android:id="@+id/tvAhoraCajonNumero"
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:background="@drawable/bg_circulo_cajon"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="42sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvAhoraCajon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cajón 2"
+                        android:textColor="@color/azul_noche"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvAhoraFranja"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mediodía"
+                        android:textColor="@color/gris_pizarra"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTomada"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/verde_bosque"
+                android:letterSpacing="0"
+                android:text="Ya me la he tomado"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_toma_hecha"
+                app:iconGravity="textStart"
+                app:iconSize="28dp"
+                app:iconTint="@color/white" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvTituloDespues"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:text="Después"
+            android:textColor="@color/texto_secundario"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <ScrollView
+            android:id="@+id/scrollDespues"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fadeScrollbars="false"
+            android:scrollbarStyle="outsideOverlay">
+
+
+            <LinearLayout
+                android:id="@+id/listaDespues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp">
+
+                <include layout="@layout/item_toma_paciente" />
+
+                <include layout="@layout/item_toma_paciente" />
+
+                <include layout="@layout/item_toma_paciente" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerTodas"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0"
+            android:text="Ver todas mis pastillas"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="2dp" />
+
+        <!-- Pedir ayuda: pequeño y abajo para que no se pulse sin querer -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPedirAyuda"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0"
+            android:text="Pedir ayuda"
+            android:textAllCaps="false"
+            android:textColor="@color/boton_ayuda"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_telefono"
+            app:iconGravity="textStart"
+            app:iconSize="26dp"
+            app:iconTint="@color/boton_ayuda"
+            app:strokeColor="@color/boton_ayuda"
+            app:strokeWidth="2dp" />
+
+        <!-- Cerrar sesión -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCerrarSesion"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:letterSpacing="0"
+            android:minHeight="0dp"
+            android:text="Cerrar sesión"
+            android:textAllCaps="false"
+            android:textColor="@color/texto_secundario"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>
