@@ -125,8 +125,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(correo, contrasena)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
-                            finish();
+                            Navegacion.abrirPantallaInicio(this);
                         } else {
                             Log.e(TAG, "Error al iniciar sesión con correo", task.getException());
                             tvError.setVisibility(View.VISIBLE);
@@ -186,8 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(this, "Hola, " + user.getDisplayName(),
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
-                            finish();
+                            Navegacion.abrirPantallaInicio(this);
                         } else {
                             Log.e(TAG, "Error al iniciar sesión en Firebase", task.getException());
                             tvError.setVisibility(View.VISIBLE);
@@ -211,8 +209,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Hola, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
-                        finish();
+                        Navegacion.abrirPantallaInicio(this);
                     } else {
                         Log.e(TAG, "Error al iniciar sesión en Firebase con FB", task.getException());
                         tvError.setVisibility(View.VISIBLE);

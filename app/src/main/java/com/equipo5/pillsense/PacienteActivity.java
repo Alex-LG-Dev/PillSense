@@ -22,7 +22,7 @@ public class PacienteActivity extends AppCompatActivity {
         btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
     }
 
-   
+
     private void cerrarSesion() {
         FirebaseAuth.getInstance().signOut();
         SharedPreferences preferencias = getSharedPreferences("PillSensePrefs", Context.MODE_PRIVATE);

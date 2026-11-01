@@ -185,8 +185,7 @@ public class RegistroActivity extends AppCompatActivity {
                 .updateChildren(datos)
                 .addOnCompleteListener(t -> {
                     Toast.makeText(this, "Bienvenido, " + nombre, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
-                    finish();
+                    Navegacion.abrirPantallaInicio(this);
                 });
     }
 
