@@ -50,7 +50,11 @@ public class PrincipalActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-        // Vincular o botón superior de "Menú"
+        // 1. Buscamos el ViewPager2 y el TabLayout ANTES de configurar el menú lateral
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        TabLayout tabs = findViewById(R.id.tabs);
+
+        // Vincular el botón superior de "Menú"
         Button btnAbrirMenu = findViewById(R.id.btnAbrirMenu);
         if (btnAbrirMenu != null && drawerLayout != null) {
             btnAbrirMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
@@ -64,7 +68,10 @@ public class PrincipalActivity extends AppCompatActivity {
                 if (id == R.id.nav_perfil) {
                     startActivity(new Intent(PrincipalActivity.this, PerfilActivity.class));
                 } else if (id == R.id.nav_pastillero) {
-                    android.widget.Toast.makeText(this, "Pantalla Mi pastillero en construción", android.widget.Toast.LENGTH_SHORT).show();
+                    // Cambia a la pestaña "Pastillero" (índice 1) de forma suave
+                    if (viewPager != null) {
+                        viewPager.setCurrentItem(1, true);
+                    }
                 } else if (id == R.id.nav_ayuda) {
                     android.widget.Toast.makeText(this, "Pantalla Ayuda en construción", android.widget.Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_acerca_de) {
@@ -77,8 +84,7 @@ public class PrincipalActivity extends AppCompatActivity {
             });
         }
 
-        ViewPager2 viewPager = findViewById(R.id.viewPager);
-        TabLayout tabs = findViewById(R.id.tabs);
+        // 2. Configuramos los adaptadores con las variables que ya buscamos arriba
         if (viewPager != null) {
             viewPager.setAdapter(new PestanasAdapter(this));
         }
