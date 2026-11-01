@@ -115,4 +115,20 @@
     <string name="toma_borrar_mensaje">Se borrará la toma de %1$s de las %2$s. No se puede deshacer.</string>
     <string name="toma_borrada">Toma borrada</string>
     <string name="toma_error_borrar">No se ha podido borrar: %1$s</string>
+
+    <!-- Historial: gráfico semanal (T043) -->
+    <string name="historial_rango_semana">Esta semana · %1$s – %2$s</string>
+    <string name="historial_grafico_titulo">Tomas de la semana</string>
+    <string name="historial_sin_registros">Todavía no hay registros esta semana</string>
+    <string name="historial_leyenda_hechas">Tomadas</string>
+    <string name="historial_leyenda_olvidadas">Olvidadas</string>
+    <string name="historial_tabla_ejemplo">Vista de ejemplo del diseño (aún sin datos reales)</string>
+    <string name="historial_porcentaje">%1$d%%</string>
+    <string name="historial_tomas_semana">%1$d de %2$d tomas</string>
+    <plurals name="historial_olvidadas">
+        <item quantity="one">%d olvidada</item>
+        <item quantity="other">%d olvidadas</item>
+    </plurals>
+    <string name="historial_dia_descripcion">%1$s: %2$d hechas, %3$d olvidadas</string>
+    <string name="historial_error_cargar">No se han podido cargar los registros: %1$s</string>
 </resources>
