@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Etiqueta "Cajón 3" con los bordes redondos -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/azul_pillsense" />
+    <corners android:radius="100dp" />
+</shape>
