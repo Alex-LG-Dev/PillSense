@@ -2,9 +2,9 @@
 <!-- Tarjeta de UN cajón del pastillero: número, punto de luz, momento y estado -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="0dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_weight="1"
+    android:layout_margin="6dp"
     app:cardBackgroundColor="@color/fondo_tarjeta"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
@@ -59,5 +59,19 @@
             android:text="Ya tomada"
             android:textColor="@color/texto_secundario"
             android:textSize="13sp" />
+
+        <!-- Fotos de los medicamentos de este cajón  -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/llFotosMedicamentos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
