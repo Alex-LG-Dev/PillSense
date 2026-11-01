@@ -5,17 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -26,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class PrincipalActivity extends AppCompatActivity {
 
-    // Texto e icono de cada pestaña, en el mismo orden que el adaptador
     private final String[] titulos = {"Hoy", "Pastillero", "Pastillas", "Historial"};
     private final int[] iconos = {
             R.drawable.ic_pestana_hoy,
@@ -47,14 +45,11 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
 
         mAuth = FirebaseAuth.getInstance();
-        dbUsuarios = FirebaseDatabase.getInstance("https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/")
-                .getReference("usuarios");
+        dbUsuarios = FirebaseDatabase.getInstance("https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Usuarios");
 
-        // 1. Configuración del menú lateral (Drawer) y vistas
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-        // 1. Buscamos el ViewPager2 y el TabLayout ANTES de configurar el menú lateral
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         TabLayout tabs = findViewById(R.id.tabs);
 
@@ -64,38 +59,22 @@ public class PrincipalActivity extends AppCompatActivity {
             btnAbrirMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         }
 
-        // 2. Barra de acciones y toggle del menú lateral
-        MaterialToolbar barra = BarraAcciones.configurar(this, R.string.app_name, false, R.menu.menu_con_sesion);
-        if (drawerLayout != null) {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawerLayout, barra, R.string.abrir_menu, R.string.cerrar_menu);
-            drawerLayout.addDrawerListener(toggle);
-            toggle.syncState();
-
-            barra.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.accion_perfil) {
-                    startActivity(new Intent(PrincipalActivity.this, PerfilActivity.class));
-                    return true;
-                }
-                if (item.getItemId() == R.id.accion_acerca_de) {
-                    startActivity(new Intent(PrincipalActivity.this, AcercaDeActivity.class));
-                    return true;
-                }
-                return false;
-            });
+        // Vincular el botón superior de "Avisos" restaurado
+        Button btnAvisos = findViewById(R.id.btnAvisos);
+        if (btnAvisos != null) {
+            btnAvisos.setOnClickListener(v ->
+                    android.widget.Toast.makeText(this, "Pantalla Avisos en construcción", android.widget.Toast.LENGTH_SHORT).show()
+            );
         }
 
-        // Cargar los datos dinámicos del usuario (nombre, correo y foto) en la cabecera
         configurarCabeceraMenu();
 
-        // Manejar las opciones al pulsar elementos del menú lateral
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(item -> {
                 int id = item.getItemId();
-                if (id == R.id.nav_perfil || id == R.id.accion_perfil) {
+                if (id == R.id.nav_perfil) {
                     startActivity(new Intent(PrincipalActivity.this, PerfilActivity.class));
                 } else if (id == R.id.nav_pastillero) {
-                    // Cambia a la pestaña "Pastillero" (índice 1) de forma suave
                     if (viewPager != null) {
                         viewPager.setCurrentItem(1, true);
                     }
@@ -111,13 +90,11 @@ public class PrincipalActivity extends AppCompatActivity {
             });
         }
 
-        // 2. Configuramos los adaptadores con las variables que ya buscamos arriba
         if (viewPager != null) {
             viewPager.setAdapter(new PestanasAdapter(this));
         }
 
         if (tabs != null && viewPager != null) {
-            // Une las pestañas con las pantallas: tocar o deslizar cambia las dos a la vez
             new TabLayoutMediator(tabs, viewPager, (tab, posicion) -> {
                 tab.setText(titulos[posicion]);
                 tab.setIcon(iconos[posicion]);
@@ -137,6 +114,7 @@ public class PrincipalActivity extends AppCompatActivity {
         TextView btnCerrarMenu = headerView.findViewById(R.id.btnCerrarMenu);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         if (currentUser != null) {
             if (tvNombreUsuario != null && currentUser.getDisplayName() != null) {
                 tvNombreUsuario.setText(currentUser.getDisplayName());
@@ -145,17 +123,17 @@ public class PrincipalActivity extends AppCompatActivity {
                 tvCorreoMenu.setText(currentUser.getEmail());
             }
             if (ivFotoPerfil != null && currentUser.getPhotoUrl() != null) {
-                // Carga la foto de perfil en círculo usando Glide
                 Glide.with(this)
                         .load(currentUser.getPhotoUrl())
                         .circleCrop()
                         .into(ivFotoPerfil);
             }
+
             if (tvRolMenu != null) {
                 dbUsuarios.child(currentUser.getUid()).child("rol").get().addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
                         String rol = task.getResult().getValue(String.class);
-                        if (rol != null && !rol.isEmpty()) {
+                        if (rol != null) {
                             String rolCapitalizado = rol.substring(0, 1).toUpperCase() + rol.substring(1);
                             tvRolMenu.setText(rolCapitalizado);
                         }
