@@ -138,11 +138,10 @@ public class TomaActivity extends AppCompatActivity {
                 .show();
     }
 
-    /** Pone el medicamento elegido y marca su cajón (las horas se ajustan solas a ese cajón). */
+    /** Pone el medicamento elegido (el cajón lo elige el usuario en la toma). */
     private void ponerMedicamento(Medicamento med) {
         medicamentoElegido = med;
         tvMedicamento.setText(med.getNombre());
-        marcarCajon(med.getCajon());
     }
 
     private void cargarToma() {
@@ -154,9 +153,8 @@ public class TomaActivity extends AppCompatActivity {
                         finish();
                         return;
                     }
-                    // El medicamento de la toma (solo necesitamos su id y su nombre para guardar)
                     medicamentoElegido = new Medicamento(toma.getIdMedicamento(),
-                            toma.getNombreMedicamento(), "", toma.getCajon(), "");
+                            toma.getNombreMedicamento(), "", "");
                     tvMedicamento.setText(toma.getNombreMedicamento());
 
                     // Primero el cajón (esto pone las horas de su franja)...
