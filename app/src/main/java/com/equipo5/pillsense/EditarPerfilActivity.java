@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -137,10 +136,14 @@ public class EditarPerfilActivity extends AppCompatActivity {
         });
     }
 
-    /** La contraseña solo se puede cambiar en las cuentas de correo y contraseña. */
+    /**
+     * La fila "Cambiar contraseña" se ve siempre, igual que en el diseño.
+     * Solo las cuentas de correo y contraseña abren la pantalla; las de Google o
+     * Facebook avisan de que la contraseña se cambia en ese servicio.
+     */
     private void prepararFilaContrasena() {
         View fila = findViewById(R.id.filaCambiarContrasena);
-        TextView aviso = findViewById(R.id.tvContrasenaOtraCuenta);
+        findViewById(R.id.tvContrasenaOtraCuenta).setVisibility(View.GONE);
 
         boolean conContrasena = false;
         String otroProveedor = null;
@@ -160,17 +163,16 @@ public class EditarPerfilActivity extends AppCompatActivity {
             }
         }
 
+        final String proveedor = otroProveedor;
         if (conContrasena) {
-            fila.setVisibility(View.VISIBLE);
-            aviso.setVisibility(View.GONE);
             fila.setOnClickListener(v ->
                     startActivity(new Intent(this, CambiarContrasenaActivity.class)));
         } else {
-            fila.setVisibility(View.GONE);
-            aviso.setText(otroProveedor != null
-                    ? getString(R.string.contrasena_otra_cuenta, otroProveedor)
-                    : getString(R.string.contrasena_otra_cuenta_generica));
-            aviso.setVisibility(View.VISIBLE);
+            fila.setOnClickListener(v -> Toast.makeText(this,
+                    proveedor != null
+                            ? getString(R.string.contrasena_otra_cuenta, proveedor)
+                            : getString(R.string.contrasena_otra_cuenta_generica),
+                    Toast.LENGTH_LONG).show());
         }
     }
 
