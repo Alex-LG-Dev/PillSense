@@ -126,62 +126,6 @@
                 android:textColorHint="@color/gris_pizarra"
                 android:textSize="@dimen/texto_normal" />
 
-            <!-- 4. CAJÓN (1 a 4) -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/espacio_medio"
-                android:text="@string/med_cajon"
-                android:textColor="@color/texto_principal"
-                android:textSize="@dimen/texto_pequeno" />
-
-            <RadioGroup
-                android:id="@+id/rgCajon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rbCajon1"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/verde_menta"
-                    android:checked="true"
-                    android:text="1"
-                    android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
-
-                <RadioButton
-                    android:id="@+id/rbCajon2"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/verde_menta"
-                    android:text="2"
-                    android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
-
-                <RadioButton
-                    android:id="@+id/rbCajon3"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/verde_menta"
-                    android:text="3"
-                    android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
-
-                <RadioButton
-                    android:id="@+id/rbCajon4"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/verde_menta"
-                    android:text="4"
-                    android:textColor="@color/texto_principal"
-                    android:textSize="@dimen/texto_normal" />
-            </RadioGroup>
 
             <!-- 5. GUARDAR -->
             <com.google.android.material.button.MaterialButton
