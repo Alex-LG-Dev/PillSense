@@ -6,6 +6,10 @@
 
     <!-- Datos del perfil -->
     <string name="perfil_datos_titulo">Mis datos</string>
+    <string name="label_nombre_editar">Nombre</string>
+    <string name="hint_nombre_editar">Tu nombre</string>
+    <string name="label_telefono">Teléfono (opcional)</string>
+    <string name="hint_telefono">Tu teléfono</string>
     <string name="perfil_correo_aviso">El correo no se puede cambiar.</string>
     <string name="perfil_btn_guardar">Guardar cambios</string>
     <string name="perfil_guardado">Cambios guardados</string>
@@ -13,13 +17,22 @@
     <string name="perfil_guardado_sin_conexion">Sin conexión: se guardará cuando vuelva internet</string>
     <string name="perfil_error_guardar">No se pudieron guardar los cambios. Inténtalo de nuevo.</string>
     <string name="perfil_error_nombre">Introduce tu nombre</string>
+    <string name="perfil_error_telefono">Introduce un teléfono válido</string>
     <string name="perfil_error_sesion">Inicia sesión para ver tu perfil</string>
 
     <!-- Cambiar contraseña -->
     <string name="contrasena_titulo">Cambiar contraseña</string>
+    <string name="contrasena_ayuda">La nueva contraseña debe tener al menos 8 caracteres.</string>
     <string name="contrasena_actual">Contraseña actual</string>
+    <string name="contrasena_actual_hint">Tu contraseña de ahora</string>
     <string name="contrasena_nueva">Nueva contraseña</string>
     <string name="contrasena_repetir">Repite la nueva contraseña</string>
+    <string name="contrasena_repetir_hint">Escríbela otra vez</string>
+    <string name="contrasena_mostrar">Mostrar las contraseñas</string>
+    <string name="contrasena_olvidada">He olvidado mi contraseña</string>
+    <string name="contrasena_reset_enviado">Te hemos enviado un correo para restablecer la contraseña</string>
+    <string name="contrasena_reset_error">No se pudo enviar el correo. Inténtalo de nuevo.</string>
+    <string name="contrasena_btn_guardar">Guardar contraseña</string>
     <string name="contrasena_btn_cambiar">Cambiar contraseña</string>
     <string name="contrasena_cambiada">Contraseña cambiada</string>
     <string name="contrasena_error_actual_vacia">Escribe tu contraseña actual</string>
