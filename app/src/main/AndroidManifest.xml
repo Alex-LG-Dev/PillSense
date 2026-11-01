@@ -83,6 +83,10 @@
             android:exported="false"
             android:parentActivityName=".PrincipalActivity"
             android:windowSoftInputMode="adjustResize" />
+        <!-- Pantalla principal del paciente -->
+        <activity
+            android:name=".PacienteActivity"
+            android:exported="false" />
 
     </application>
 

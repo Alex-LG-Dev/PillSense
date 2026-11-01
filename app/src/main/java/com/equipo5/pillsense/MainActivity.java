@@ -51,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        // Si ya hay una sesión iniciada, vamos directos a la pantalla principal
+        // Si ya hay una sesión iniciada, vamos a la pantalla que toca según el rol
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            startActivity(new Intent(this, PrincipalActivity.class));
-            finish();   // así al pulsar "atrás" no se vuelve a la bienvenida
+            Navegacion.abrirPantallaInicio(this);
             return;
         }
 
