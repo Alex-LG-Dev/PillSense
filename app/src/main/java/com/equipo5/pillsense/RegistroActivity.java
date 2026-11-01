@@ -149,9 +149,6 @@ public class RegistroActivity extends AppCompatActivity {
             return;
         }
 
-        // rol paciente o cuidador
-        String rol = (rgRol.getCheckedRadioButtonId() == R.id.rbPaciente) ? "paciente" : "cuidador";
-
         // Crea el usuario en Firebase Auth y guarda nombre, rol y correo en la base de datos
         mAuth.createUserWithEmailAndPassword(correo, contrasena)
                 .addOnCompleteListener(this, task -> {
@@ -167,16 +164,26 @@ public class RegistroActivity extends AppCompatActivity {
                     FirebaseUser user = task.getResult().getUser();
                     if (user == null) return;
 
-                    // Nombre en la cuenta y datos en usuarios/{uid}
+
                     user.updateProfile(new UserProfileChangeRequest.Builder()
                             .setDisplayName(nombre).build());
-                    Map<String, Object> datos = new HashMap<>();
-                    datos.put("nombre", nombre);
-                    datos.put("rol", rol);
-                    datos.put("correo", correo);
-                    FirebaseDatabase.getInstance(DB_URL)
-                            .getReference("usuarios").child(user.getUid()).updateChildren(datos);
+                    guardarDatosYEntrar(user, nombre);
+                });
+    }
 
+
+    private void guardarDatosYEntrar(FirebaseUser user, String nombre) {
+        String rol = (rgRol.getCheckedRadioButtonId() == R.id.rbPaciente) ? "paciente" : "cuidador";
+
+        Map<String, Object> datos = new HashMap<>();
+        datos.put("nombre", nombre);
+        datos.put("rol", rol);
+        datos.put("correo", user.getEmail());
+
+        FirebaseDatabase.getInstance(DB_URL)
+                .getReference("usuarios").child(user.getUid())
+                .updateChildren(datos)
+                .addOnCompleteListener(t -> {
                     Toast.makeText(this, "Bienvenido, " + nombre, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
                     finish();
@@ -238,10 +245,7 @@ public class RegistroActivity extends AppCompatActivity {
                             String nombre = (user != null && user.getDisplayName() != null)
                                     ? user.getDisplayName() : "";
 
-                            Toast.makeText(this, "Bienvenido, " + nombre,
-                                    Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
-                            finish();
+                            if (user != null) guardarDatosYEntrar(user, nombre);
                         } else {
                             Log.e(TAG, "Error al registrarse en Firebase", task.getException());
                             Toast.makeText(this, "Error al registrarse con Google",
@@ -273,9 +277,7 @@ public class RegistroActivity extends AppCompatActivity {
                         String nombre = (user != null && user.getDisplayName() != null)
                                 ? user.getDisplayName() : "";
 
-                        Toast.makeText(this, "Bienvenido, " + nombre, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegistroActivity.this, PrincipalActivity.class));
-                        finish();
+                        if (user != null) guardarDatosYEntrar(user, nombre);
                     } else {
                         Log.e(TAG, "Error al registrarse en FB", task.getException());
                         Toast.makeText(this, "Error al registrarse con Facebook", Toast.LENGTH_SHORT).show();
