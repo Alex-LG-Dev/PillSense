@@ -64,7 +64,9 @@ public class PacienteActivity extends AppCompatActivity {
     private DatabaseReference refRegistrosHoy;
     private ValueEventListener escuchadorRegistros;
     private final Set<String> tomadasHoy = new HashSet<>();   // ids de las tomas ya tomadas
-    private Toma tomaActual;                                  // la que sale en la tarjeta grande
+    private Toma tomaActual;
+    private Toma siguienteToma;                               // la de después (para "¡Muy bien!")
+    private String primerNombre = ""; // la que sale en la tarjeta grande
 
     // Cada minuto se vuelve a pintar la pantalla, para que "Ahora te toca" cambie solo con la hora
     private final Handler reloj = new Handler(Looper.getMainLooper());
@@ -220,6 +222,7 @@ public class PacienteActivity extends AppCompatActivity {
         // No queda ninguna
         if (pendientes.isEmpty()) {
             tomaActual = null;
+            siguienteToma = null;
             tvAhoraHora.setText("HOY");
             tvAhoraMedicamento.setText("¡Ya has terminado por hoy!");
             cajaCajon.setVisibility(View.GONE);
@@ -231,8 +234,9 @@ public class PacienteActivity extends AppCompatActivity {
         // La primera pendiente va en la tarjeta grande
         Toma primera = pendientes.get(0);
         tomaActual = primera;
-        boolean yaEsLaHora = primera.getHora().compareTo(ahora) <= 0;
+        siguienteToma = pendientes.size() > 1 ? pendientes.get(1) : null;
 
+        boolean yaEsLaHora = primera.getHora().compareTo(ahora) <= 0;
         tvAhoraHora.setText((yaEsLaHora ? "AHORA TE TOCA · " : "TU PRÓXIMA PASTILLA · ")
                 + primera.getHora());
         tvAhoraMedicamento.setText(primera.getNombreMedicamento());
@@ -269,7 +273,20 @@ public class PacienteActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this,
                         "No se ha podido guardar. Inténtalo otra vez", Toast.LENGTH_LONG).show());
         // No hace falta repintar aquí: escuchadorRegistros se entera y llama a mostrarTomas()
+
+        // Abrimos la pantalla "¡Muy bien!" con los datos de esta toma y de la siguiente
+        Intent intent = new Intent(this, TomaRegistradaActivity.class);
+        intent.putExtra(TomaRegistradaActivity.EXTRA_NOMBRE, primerNombre);
+        intent.putExtra(TomaRegistradaActivity.EXTRA_MEDICAMENTO, tomaActual.getNombreMedicamento());
+        intent.putExtra(TomaRegistradaActivity.EXTRA_HORA, tomaActual.getHora());
+        if (siguienteToma != null) {
+            intent.putExtra(TomaRegistradaActivity.EXTRA_PROXIMA_HORA, siguienteToma.getHora());
+            intent.putExtra(TomaRegistradaActivity.EXTRA_PROXIMA_MEDICAMENTO, siguienteToma.getNombreMedicamento());
+            intent.putExtra(TomaRegistradaActivity.EXTRA_PROXIMO_CAJON, siguienteToma.getCajon());
+        }
+        startActivity(intent);
     }
+
 
 
     private String franja(int cajon) {
@@ -309,7 +326,7 @@ public class PacienteActivity extends AppCompatActivity {
             tvSaludo.setText("Hola");
             return;
         }
-        String primerNombre = nombre.trim().split(" ")[0];
+        primerNombre = nombre.trim().split(" ")[0];
         tvSaludo.setText("Hola, " + primerNombre);
     }
 
