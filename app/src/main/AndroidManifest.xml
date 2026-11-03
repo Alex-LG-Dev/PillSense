@@ -94,6 +94,12 @@
             android:name=".TomaRegistradaActivity"
             android:exported="false" />
 
+        <!-- Pastillas de hoy (paciente) -->
+        <activity
+            android:name=".PastillasHoyActivity"
+            android:exported="false"
+            android:parentActivityName=".PacienteActivity" />
+
     </application>
 
 

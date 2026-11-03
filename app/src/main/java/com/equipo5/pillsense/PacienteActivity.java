@@ -170,9 +170,9 @@ public class PacienteActivity extends AppCompatActivity {
 
         // "Ver todas mis pastillas" abre la lista completa del día
         // (descomenta estas líneas cuando hagamos la pantalla PastillasHoyActivity)
-        // Button btnVerTodas = findViewById(R.id.btnVerTodas);
-        // btnVerTodas.setOnClickListener(v ->
-        //         startActivity(new Intent(this, PastillasHoyActivity.class)));
+        Button btnVerTodas = findViewById(R.id.btnVerTodas);
+         btnVerTodas.setOnClickListener(v ->
+                startActivity(new Intent(this, PastillasHoyActivity.class)));
     }
 
     @Override
