@@ -83,10 +83,22 @@
             android:exported="false"
             android:parentActivityName=".PrincipalActivity"
             android:windowSoftInputMode="adjustResize" />
+
         <!-- Pantalla principal del paciente -->
         <activity
             android:name=".PacienteActivity"
             android:exported="false" />
+
+        <!-- "¡Muy bien!" al tomar una pastilla -->
+        <activity
+            android:name=".TomaRegistradaActivity"
+            android:exported="false" />
+
+        <!-- Pastillas de hoy (paciente) -->
+        <activity
+            android:name=".PastillasHoyActivity"
+            android:exported="false"
+            android:parentActivityName=".PacienteActivity" />
 
     </application>
 

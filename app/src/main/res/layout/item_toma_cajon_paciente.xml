@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/texto_secundario" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:id="@+id/tvHora"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:text="08:00"
+            android:textColor="@color/texto_principal"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvMedicamento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Omeprazol"
+            android:textColor="@color/texto_principal"
+            android:textSize="18sp" />
+
+
+        <ImageView
+            android:id="@+id/ivEstado"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:contentDescription="Tomada"
+            android:src="@drawable/ic_toma_hecha"
+            app:tint="@color/verde_bosque" />
+    </LinearLayout>
+</LinearLayout>
