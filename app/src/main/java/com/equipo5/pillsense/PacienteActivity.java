@@ -4,9 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,48 +21,50 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import android.view.View;
-import android.widget.Toast;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
-
-import androidx.annotation.NonNull;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
+/** Pantalla principal del paciente: versión sencilla para personas mayores. */
 public class PacienteActivity extends AppCompatActivity {
 
     private static final String DB_URL =
             "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
 
-    private TextView tvSaludo;
     // Nombre de cada cajón: 1 Mañana, 2 Mediodía, 3 Tarde, 4 Noche
     private static final String[] FRANJAS = {"Mañana", "Mediodía", "Tarde", "Noche"};
+
+    private TextView tvSaludo;
 
     // Tarjeta "Ahora te toca"
     private TextView tvAhoraHora, tvAhoraMedicamento, tvAhoraDosis;
     private TextView tvAhoraCajonNumero, tvAhoraCajon, tvAhoraFranja, tvTituloDespues;
     private View cajaCajon, btnTomada;
-    private android.widget.LinearLayout listaDespues;
+    private LinearLayout listaDespues;
 
-    // Tomas de Firebase
+    // Tomas de Firebase: tomas/{uid}
     private DatabaseReference refTomas;
     private ValueEventListener escuchador;
     private final List<Toma> tomasDeHoy = new ArrayList<>();
+
+    // Tomas ya tomadas hoy: registros/{uid}/{fecha}/{idToma}
+    private DatabaseReference refRegistrosHoy;
+    private ValueEventListener escuchadorRegistros;
+    private final Set<String> tomadasHoy = new HashSet<>();   // ids de las tomas ya tomadas
+    private Toma tomaActual;                                  // la que sale en la tarjeta grande
 
     // Cada minuto se vuelve a pintar la pantalla, para que "Ahora te toca" cambie solo con la hora
     private final Handler reloj = new Handler(Looper.getMainLooper());
@@ -67,13 +76,12 @@ public class PacienteActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paciente);
 
-
+        // Deja hueco arriba (hora, batería) y abajo (botones del móvil) para que nada quede tapado
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets barras = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(barras.left, barras.top, barras.right, barras.bottom);
@@ -89,7 +97,7 @@ public class PacienteActivity extends AppCompatActivity {
         tvFecha.setText(fechaDeHoy());
         cargarNombre();
 
-        //Tarjeta "Ahora te toca" y lista "Después"
+        // Tarjeta "Ahora te toca" y lista "Después"
         tvAhoraHora = findViewById(R.id.tvAhoraHora);
         tvAhoraMedicamento = findViewById(R.id.tvAhoraMedicamento);
         tvAhoraDosis = findViewById(R.id.tvAhoraDosis);
@@ -101,8 +109,8 @@ public class PacienteActivity extends AppCompatActivity {
         btnTomada = findViewById(R.id.btnTomada);
         listaDespues = findViewById(R.id.listaDespues);
 
-
-        tvAhoraDosis.setVisibility(View.GONE);   // la toma no guarda la dosis
+        // Mientras llegan los datos, quitamos los ejemplos del XML
+        tvAhoraDosis.setVisibility(View.GONE);   // la toma no guarda la dosis (de momento)
         tvAhoraHora.setText("");
         tvAhoraMedicamento.setText("Cargando…");
         cajaCajon.setVisibility(View.GONE);
@@ -127,7 +135,7 @@ public class PacienteActivity extends AppCompatActivity {
                             tomasDeHoy.add(toma);
                         }
                     }
-                    // De la más temprana a la más tardía
+                    // De la más temprana a la más tardía ("08:00" va antes que "14:00")
                     Collections.sort(tomasDeHoy, (a, b) -> a.getHora().compareTo(b.getHora()));
                     mostrarTomas();
                 }
@@ -138,21 +146,55 @@ public class PacienteActivity extends AppCompatActivity {
                             "No se han podido cargar tus pastillas", Toast.LENGTH_LONG).show();
                 }
             };
+
+            // Se ejecuta cada vez que se marca (o se borra) una toma como tomada hoy
+            escuchadorRegistros = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot datos) {
+                    tomadasHoy.clear();
+                    for (DataSnapshot hijo : datos.getChildren()) {
+                        tomadasHoy.add(hijo.getKey());   // la clave es el id de la toma
+                    }
+                    mostrarTomas();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            };
         }
 
+        // Botón verde: guarda que se ha tomado la pastilla de la tarjeta
+        btnTomada.setOnClickListener(v -> marcarComoTomada());
+
+        // "Ver todas mis pastillas" abre la lista completa del día
+        // (descomenta estas líneas cuando hagamos la pantalla PastillasHoyActivity)
+        // Button btnVerTodas = findViewById(R.id.btnVerTodas);
+        // btnVerTodas.setOnClickListener(v ->
+        //         startActivity(new Intent(this, PastillasHoyActivity.class)));
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        // Empieza a escuchar Firebase al ver la pantalla
+        // Empieza a escuchar Firebase y el reloj al ver la pantalla
         if (refTomas != null) refTomas.addValueEventListener(escuchador);
         reloj.postDelayed(cadaMinuto, 60_000);
+
+        // Registros de HOY (la fecha se calcula cada vez que se abre la pantalla)
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        if (usuario != null) {
+            String hoy = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            refRegistrosHoy = FirebaseDatabase.getInstance(DB_URL)
+                    .getReference("registros").child(usuario.getUid()).child(hoy);
+            refRegistrosHoy.addValueEventListener(escuchadorRegistros);
+        }
     }
 
     @Override
     protected void onStop() {
         // Y para al salir, para no gastar batería
         if (refTomas != null) refTomas.removeEventListener(escuchador);
+        if (refRegistrosHoy != null) refRegistrosHoy.removeEventListener(escuchadorRegistros);
         reloj.removeCallbacks(cadaMinuto);
         super.onStop();
     }
@@ -161,20 +203,23 @@ public class PacienteActivity extends AppCompatActivity {
     private void mostrarTomas() {
         String ahora = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
 
-        // Pendientes: las que todavía no han pasado su hora límite
+        // Pendientes: no han pasado su hora límite y todavía no se han tomado
         List<Toma> pendientes = new ArrayList<>();
         for (Toma toma : tomasDeHoy) {
             String limite = (toma.getHoraLimite() != null && !toma.getHoraLimite().isEmpty())
                     ? toma.getHoraLimite()
                     : toma.getHora();
-            if (limite.compareTo(ahora) >= 0) {
+            boolean yaTomada = tomadasHoy.contains(toma.getId());
+            if (limite.compareTo(ahora) >= 0 && !yaTomada) {
                 pendientes.add(toma);
             }
         }
+
         listaDespues.removeAllViews();   // borramos las filas de antes para no repetirlas
 
         // No queda ninguna
         if (pendientes.isEmpty()) {
+            tomaActual = null;
             tvAhoraHora.setText("HOY");
             tvAhoraMedicamento.setText("¡Ya has terminado por hoy!");
             cajaCajon.setVisibility(View.GONE);
@@ -185,6 +230,7 @@ public class PacienteActivity extends AppCompatActivity {
 
         // La primera pendiente va en la tarjeta grande
         Toma primera = pendientes.get(0);
+        tomaActual = primera;
         boolean yaEsLaHora = primera.getHora().compareTo(ahora) <= 0;
 
         tvAhoraHora.setText((yaEsLaHora ? "AHORA TE TOCA · " : "TU PRÓXIMA PASTILLA · ")
@@ -198,7 +244,6 @@ public class PacienteActivity extends AppCompatActivity {
         // Solo se puede marcar como tomada cuando ya es la hora
         btnTomada.setVisibility(yaEsLaHora ? View.VISIBLE : View.GONE);
 
-
         // El resto de pendientes va en "Después" (la primera ya está en la tarjeta)
         tvTituloDespues.setVisibility(pendientes.size() > 1 ? View.VISIBLE : View.GONE);
         LayoutInflater inflater = getLayoutInflater();
@@ -211,17 +256,31 @@ public class PacienteActivity extends AppCompatActivity {
             listaDespues.addView(fila);
         }
     }
-    /** Nombre del cajón: */
+
+
+    private void marcarComoTomada() {
+        if (tomaActual == null || refRegistrosHoy == null) return;
+
+        Map<String, Object> registro = new HashMap<>();
+        registro.put("estado", "tomada");
+        registro.put("horaReal", new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()));
+
+        refRegistrosHoy.child(tomaActual.getId()).setValue(registro)
+                .addOnFailureListener(e -> Toast.makeText(this,
+                        "No se ha podido guardar. Inténtalo otra vez", Toast.LENGTH_LONG).show());
+        // No hace falta repintar aquí: escuchadorRegistros se entera y llama a mostrarTomas()
+    }
+
+
     private String franja(int cajon) {
         return (cajon >= 1 && cajon <= 4) ? FRANJAS[cajon - 1] : "";
     }
 
 
-
     private String fechaDeHoy() {
         String fecha = new SimpleDateFormat("EEEE, d 'de' MMMM", new Locale("es", "ES"))
                 .format(new Date());
-        // Primera letra en mayúscula: "domingo" → "Domingo"
+        // Primera letra en mayúscula: "martes" → "Martes"
         return fecha.substring(0, 1).toUpperCase() + fecha.substring(1);
     }
 
@@ -230,7 +289,7 @@ public class PacienteActivity extends AppCompatActivity {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario == null) return;
 
-
+        // Mientras carga, el nombre de la cuenta (si lo tiene)
         ponerSaludo(usuario.getDisplayName());
 
         FirebaseDatabase.getInstance(DB_URL)
