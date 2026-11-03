@@ -25,6 +25,9 @@ import java.util.List;
 
 import android.view.View;
 import android.widget.Toast;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
 
@@ -53,6 +56,16 @@ public class PacienteActivity extends AppCompatActivity {
     private DatabaseReference refTomas;
     private ValueEventListener escuchador;
     private final List<Toma> tomasDeHoy = new ArrayList<>();
+
+    // Cada minuto se vuelve a pintar la pantalla, para que "Ahora te toca" cambie solo con la hora
+    private final Handler reloj = new Handler(Looper.getMainLooper());
+    private final Runnable cadaMinuto = new Runnable() {
+        @Override
+        public void run() {
+            mostrarTomas();
+            reloj.postDelayed(this, 60_000);   // 60.000 ms = 1 minuto
+        }
+    };
 
 
     @Override
@@ -133,12 +146,14 @@ public class PacienteActivity extends AppCompatActivity {
         super.onStart();
         // Empieza a escuchar Firebase al ver la pantalla
         if (refTomas != null) refTomas.addValueEventListener(escuchador);
+        reloj.postDelayed(cadaMinuto, 60_000);
     }
 
     @Override
     protected void onStop() {
         // Y para al salir, para no gastar batería
         if (refTomas != null) refTomas.removeEventListener(escuchador);
+        reloj.removeCallbacks(cadaMinuto);
         super.onStop();
     }
 
@@ -156,6 +171,7 @@ public class PacienteActivity extends AppCompatActivity {
                 pendientes.add(toma);
             }
         }
+        listaDespues.removeAllViews();   // borramos las filas de antes para no repetirlas
 
         // No queda ninguna
         if (pendientes.isEmpty()) {
@@ -163,6 +179,7 @@ public class PacienteActivity extends AppCompatActivity {
             tvAhoraMedicamento.setText("¡Ya has terminado por hoy!");
             cajaCajon.setVisibility(View.GONE);
             btnTomada.setVisibility(View.GONE);
+            tvTituloDespues.setVisibility(View.GONE);
             return;
         }
 
@@ -180,8 +197,20 @@ public class PacienteActivity extends AppCompatActivity {
 
         // Solo se puede marcar como tomada cuando ya es la hora
         btnTomada.setVisibility(yaEsLaHora ? View.VISIBLE : View.GONE);
-    }
 
+
+        // El resto de pendientes va en "Después" (la primera ya está en la tarjeta)
+        tvTituloDespues.setVisibility(pendientes.size() > 1 ? View.VISIBLE : View.GONE);
+        LayoutInflater inflater = getLayoutInflater();
+        for (int i = 1; i < pendientes.size(); i++) {
+            Toma toma = pendientes.get(i);
+            View fila = inflater.inflate(R.layout.item_toma_paciente, listaDespues, false);
+            ((TextView) fila.findViewById(R.id.tvHora)).setText(toma.getHora());
+            ((TextView) fila.findViewById(R.id.tvMedicamento)).setText(toma.getNombreMedicamento());
+            ((TextView) fila.findViewById(R.id.tvCajon)).setText("Cajón " + toma.getCajon());
+            listaDespues.addView(fila);
+        }
+    }
     /** Nombre del cajón: */
     private String franja(int cajon) {
         return (cajon >= 1 && cajon <= 4) ? FRANJAS[cajon - 1] : "";
