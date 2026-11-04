@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -105,6 +106,10 @@ public class AvisoTomaActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this,
                         "No se ha podido guardar. Inténtalo otra vez", Toast.LENGTH_LONG).show());
 
+        // Ya está tomada: fuera el aviso de "10 minutos" y la notificación que haya en pantalla
+        AlarmasToma.cancelarPospuesta(this, idToma);
+        NotificationManagerCompat.from(this).cancel(idToma.hashCode());
+
 
         Intent intent = new Intent(this, TomaRegistradaActivity.class);
         intent.putExtra(TomaRegistradaActivity.EXTRA_MEDICAMENTO, medicamento);
@@ -114,6 +119,8 @@ public class AvisoTomaActivity extends AppCompatActivity {
     }
 
     private void recordarLuego() {
+        AlarmasToma.posponer(this, idToma, hora, medicamento, cajon, 10);
+        NotificationManagerCompat.from(this).cancel(idToma.hashCode());
         Toast.makeText(this, "Te avisaremos en 10 minutos", Toast.LENGTH_LONG).show();
         finish();
     }
