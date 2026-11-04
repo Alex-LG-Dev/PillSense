@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/azul_pillsense"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Campana + hora -->
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_campana"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/tvHoraAviso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14:00"
+        android:textColor="@color/white"
+        android:textSize="64sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Es hora de tu pastilla"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+    <!-- Tarjeta blanca: cajón + medicamento -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_caja_blanca"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvNumeroCajonAviso"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bg_circulo_cajon"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="@color/white"
+            android:textSize="60sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAbreCajon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Abre el cajón 2"
+            android:textColor="@color/azul_noche"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvFranjaAviso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mediodía"
+            android:textColor="@color/gris_pizarra"
+            android:textSize="20sp" />
+
+        <!-- Línea de separación -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:alpha="0.3"
+            android:background="@color/gris_pizarra" />
+
+        <TextView
+            android:id="@+id/tvMedicamentoAviso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Ibuprofeno 600 mg"
+            android:textColor="@color/azul_noche"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Botón principal -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTomadaAviso"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:backgroundTint="@color/verde_bosque"
+        android:letterSpacing="0"
+        android:text="Ya me la he tomado"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_toma_hecha"
+        app:iconGravity="textStart"
+        app:iconSize="30dp"
+        app:iconTint="@color/white" />
+
+    <!-- Posponer -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRecordarLuego"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="24dp"
+        android:letterSpacing="0"
+        android:text="Avísame en 10 minutos"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:cornerRadius="16dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="2dp" />
+</LinearLayout>

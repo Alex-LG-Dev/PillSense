@@ -177,6 +177,18 @@ public class PacienteActivity extends AppCompatActivity {
         Button btnPedirAyuda = findViewById(R.id.btnPedirAyuda);
         btnPedirAyuda.setOnClickListener(v ->
                 startActivity(new Intent(this, PedirAyudaActivity.class)));
+
+        // Tarjeta azul: al pulsarla se abre "Aviso de toma"
+
+        findViewById(R.id.tarjetaAhora).setOnClickListener(v -> {
+            if (tomaActual == null) return;   // "¡Ya has terminado por hoy!": no hay nada que enseñar
+            Intent intent = new Intent(this, AvisoTomaActivity.class);
+            intent.putExtra(AvisoTomaActivity.EXTRA_ID_TOMA, tomaActual.getId());
+            intent.putExtra(AvisoTomaActivity.EXTRA_HORA, tomaActual.getHora());
+            intent.putExtra(AvisoTomaActivity.EXTRA_MEDICAMENTO, tomaActual.getNombreMedicamento());
+            intent.putExtra(AvisoTomaActivity.EXTRA_CAJON, tomaActual.getCajon());
+            startActivity(intent);
+        });
     }
 
     @Override
