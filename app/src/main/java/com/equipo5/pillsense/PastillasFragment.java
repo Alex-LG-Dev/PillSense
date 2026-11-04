@@ -58,7 +58,7 @@ public class PastillasFragment extends Fragment {
         }
         refMedicamentos = FirebaseDatabase.getInstance(DB_URL)
                 .getReference("medicamentos")
-                .child(usuario.getUid());
+                .child(PacienteActivo.uidDatos(requireContext()));
 
         // Se ejecuta al abrir la pestaña y cada vez que cambia algo en Firebase
         // (al añadir, editar o borrar, la lista se actualiza sola)
@@ -87,7 +87,7 @@ public class PastillasFragment extends Fragment {
         super.onDestroyView();
     }
 
-    /** Una tarjeta (item_medicamento.xml) por cada medicamento de Firebase. */
+
     private void mostrarLista(DataSnapshot datos) {
         if (getView() == null) return;
 

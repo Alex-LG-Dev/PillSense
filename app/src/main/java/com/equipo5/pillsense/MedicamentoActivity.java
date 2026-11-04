@@ -76,7 +76,7 @@ public class MedicamentoActivity extends AppCompatActivity {
         }
         refMedicamentos = FirebaseDatabase.getInstance(DB_URL)
                 .getReference("medicamentos")
-                .child(usuario.getUid());
+                .child(PacienteActivo.uidDatos(this));
 
         etNombre = findViewById(R.id.etNombreMed);
         etDosis = findViewById(R.id.etDosisMed);

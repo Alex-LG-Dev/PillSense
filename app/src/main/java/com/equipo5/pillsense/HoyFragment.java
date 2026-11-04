@@ -49,7 +49,7 @@ public class HoyFragment extends Fragment {
         if (usuario != null) {
             refTomas = FirebaseDatabase.getInstance(DB_URL)
                     .getReference("tomas")
-                    .child(usuario.getUid());
+                    .child(PacienteActivo.uidDatos(requireContext()));
 
             // Se ejecuta al abrir la pestaña y cada vez que cambia una toma en Firebase
             escuchador = new ValueEventListener() {

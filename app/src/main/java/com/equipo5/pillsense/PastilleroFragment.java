@@ -67,8 +67,8 @@ public class PastilleroFragment extends Fragment {
         if (usuario == null) return;
 
         FirebaseDatabase db = FirebaseDatabase.getInstance(DB_URL);
-        refTomas = db.getReference("tomas").child(usuario.getUid());
-        refMedicamentos = db.getReference("medicamentos").child(usuario.getUid());
+        refTomas = db.getReference("tomas").child(PacienteActivo.uidDatos(requireContext()));
+        refMedicamentos = db.getReference("medicamentos").child(PacienteActivo.uidDatos(requireContext()));
 
         // Cada vez que cambian las tomas o los medicamentos, se repintan los cajones
         escuchadorTomas = new EscuchadorFirebase() {
