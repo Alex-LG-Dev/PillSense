@@ -82,6 +82,27 @@
             android:textColor="@color/texto_principal"
             android:textSize="52sp"
             android:textStyle="bold" />
+        <!-- Quién le cuida ya -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Te cuidan:"
+            android:textColor="@color/texto_principal"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvListaCuidadores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:text="Todavía nadie"
+            android:textColor="@color/texto_secundario"
+            android:textSize="20sp" />
+
 
         <Space
             android:layout_width="match_parent"
