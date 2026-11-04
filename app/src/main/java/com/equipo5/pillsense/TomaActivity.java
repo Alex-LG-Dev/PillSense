@@ -77,8 +77,8 @@ public class TomaActivity extends AppCompatActivity {
             return;
         }
         FirebaseDatabase db = FirebaseDatabase.getInstance(DB_URL);
-        refTomas = db.getReference("tomas").child(usuario.getUid());
-        refMedicamentos = db.getReference("medicamentos").child(usuario.getUid());
+        refTomas = db.getReference("tomas").child(PacienteActivo.uidDatos(this));
+        refMedicamentos = db.getReference("medicamentos").child(PacienteActivo.uidDatos(this));
 
         tvMedicamento = findViewById(R.id.tvMedicamentoToma);
         tvHora = findViewById(R.id.tvHoraToma);
