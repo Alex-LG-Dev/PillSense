@@ -45,7 +45,7 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
 
         mAuth = FirebaseAuth.getInstance();
-        dbUsuarios = FirebaseDatabase.getInstance("https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Usuarios");
+        dbUsuarios = FirebaseDatabase.getInstance("https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/").getReference("usuarios");
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -74,6 +74,8 @@ public class PrincipalActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_perfil) {
                     startActivity(new Intent(PrincipalActivity.this, PerfilActivity.class));
+                } else if (id == R.id.nav_mis_pacientes) {
+                    startActivity(new Intent(PrincipalActivity.this, MisPacientesActivity.class));
                 } else if (id == R.id.nav_pastillero) {
                     if (viewPager != null) {
                         viewPager.setCurrentItem(1, true);

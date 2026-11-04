@@ -126,6 +126,16 @@
             android:name=".AvisoTomaActivity"
             android:exported="false" />
 
+        <!-- Mi código: el paciente se lo da a sus cuidadores para vincularse -->
+        <activity
+            android:name=".MiCodigoActivity"
+            android:exported="false" />
+
+        <!-- Mis pacientes (cuidador): lista y añadir con código -->
+        <activity
+            android:name=".MisPacientesActivity"
+            android:exported="false" />
+
         <!-- Saca la notificación cuando llega la hora de una toma -->
         <receiver
             android:name=".AlarmaTomaReceiver"
