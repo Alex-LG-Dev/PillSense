@@ -82,6 +82,7 @@ public class DrawerBaseActivity extends AppCompatActivity {
     }
 
     private void cerrarSesion() {
+        PacienteActivo.olvidar(this);
         mAuth.signOut();
         SharedPreferences preferencias = getSharedPreferences("PillSensePrefs", Context.MODE_PRIVATE);
         preferencias.edit().putBoolean("mantener_sesion", false).apply();

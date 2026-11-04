@@ -99,16 +99,39 @@ public class MisPacientesActivity extends AppCompatActivity {
 
     private void mostrarPacientes(DataSnapshot datos) {
         listaPacientes.removeAllViews();
+        String uidActivo = PacienteActivo.hayElegido(this) ? PacienteActivo.uidDatos(this) : null;
+
         for (DataSnapshot paciente : datos.getChildren()) {
+            String uid = paciente.getKey();
             String nombre = paciente.getValue(String.class);
+            String nombreMostrado = (nombre != null && !nombre.isEmpty()) ? nombre : "Paciente";
+
             View fila = getLayoutInflater().inflate(R.layout.item_paciente_vinculado, listaPacientes, false);
-            ((TextView) fila.findViewById(R.id.tvNombrePaciente))
-                    .setText(nombre != null && !nombre.isEmpty() ? nombre : "Paciente");
+            TextView tvNombre = fila.findViewById(R.id.tvNombrePaciente);
+
+
+            if (uid != null && uid.equals(uidActivo)) {
+                fila.setBackgroundResource(R.drawable.bg_cajon_ahora);
+                tvNombre.setText(nombreMostrado + "\n✓ Viendo ahora");
+            } else {
+                tvNombre.setText(nombreMostrado);
+            }
+
+            // Al tocarlo pasa a ser el paciente activo y volvemos a la pantalla principal
+            fila.setOnClickListener(v -> {
+                PacienteActivo.elegir(this, uid, nombreMostrado);
+                Toast.makeText(this, "Ahora ves a " + nombreMostrado, Toast.LENGTH_SHORT).show();
+                finish();
+            });
+
+            // "Quitar": pregunta antes de desvincular
+            fila.findViewById(R.id.btnQuitarPaciente).setOnClickListener(v ->
+                    confirmarQuitar(uid, nombreMostrado));
+
             listaPacientes.addView(fila);
         }
         tvSinPacientes.setVisibility(datos.hasChildren() ? View.GONE : View.VISIBLE);
     }
-
     /** Ventanita para escribir el código de 6 números del paciente. */
     private void pedirCodigo() {
         EditText etCodigo = new EditText(this);
@@ -193,6 +216,39 @@ public class MisPacientesActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> aviso("Sin conexión. Inténtalo otra vez."));
     }
 
+    private void confirmarQuitar(String uidPaciente, String nombre) {
+        new AlertDialog.Builder(this)
+                .setTitle("¿Quitar a " + nombre + "?")
+                .setMessage("Dejarás de ver sus pastillas. Sus datos no se borran y "
+                        + "podrás volver a añadirle con su código.")
+                .setPositiveButton("Quitar", (dialogo, cual) -> quitarPaciente(uidPaciente, nombre))
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    /** Borra el vínculo en los dos lados (cuidador y paciente). Las tomas del paciente no se tocan. */
+    private void quitarPaciente(String uidPaciente, String nombre) {
+        FirebaseUser yo = FirebaseAuth.getInstance().getCurrentUser();
+        if (yo == null || uidPaciente == null) return;
+        String miUid = yo.getUid();
+
+        // Poner null en Firebase = borrar ese dato
+        Map<String, Object> cambios = new HashMap<>();
+        cambios.put("usuarios/" + miUid + "/pacientes/" + uidPaciente, null);
+        cambios.put("usuarios/" + uidPaciente + "/cuidadores/" + miUid, null);
+
+        FirebaseDatabase.getInstance(DB_URL).getReference()
+                .updateChildren(cambios)
+                .addOnSuccessListener(x -> {
+                    // Si era el que estaba viendo, lo olvidamos (la principal elegirá otro si hay)
+                    if (PacienteActivo.hayElegido(this)
+                            && uidPaciente.equals(PacienteActivo.uidDatos(this))) {
+                        PacienteActivo.olvidar(this);
+                    }
+                    aviso(nombre + " ya no está en tus pacientes");
+                })
+                .addOnFailureListener(e -> aviso("No se ha podido quitar. Inténtalo otra vez."));
+    }
     private void aviso(String texto) {
         Toast.makeText(this, texto, Toast.LENGTH_LONG).show();
     }
