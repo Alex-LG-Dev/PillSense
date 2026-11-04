@@ -33,6 +33,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/tvEsHora"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Es hora de tu pastilla"
