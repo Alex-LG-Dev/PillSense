@@ -350,9 +350,21 @@ public class PacienteActivity extends AppCompatActivity {
                 activadas = false;
             }
         }
+        // Android 14+: permiso para enseñar la pantalla azul a pantalla completa
+        if (activadas && faltaPermisoPantallaCompleta()) {
+            activadas = false;
+        }
         tarjetaAvisosDesactivados.setVisibility(activadas ? View.GONE : View.VISIBLE);
     }
     private void abrirAjustesNotificaciones() {
+
+        // Si las notificaciones están bien pero falta el de pantalla completa, vamos directos a ese ajuste
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled() && faltaPermisoPantallaCompleta()) {
+            startActivity(new Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:" + getPackageName())));
+            return;
+        }
+
         Intent intent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
@@ -363,6 +375,13 @@ public class PacienteActivity extends AppCompatActivity {
                     Uri.parse("package:" + getPackageName()));
         }
         startActivity(intent);
+    }
+
+
+    /** Android 14 o superior puede tener desactivado el permiso de pantalla completa. */
+    private boolean faltaPermisoPantallaCompleta() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false;
+        return !getSystemService(NotificationManager.class).canUseFullScreenIntent();
     }
 
     /** Programa el aviso de cada toma, guarda sus datos en el móvil y quita los de tomas que ya no existen. */
