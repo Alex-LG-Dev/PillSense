@@ -120,6 +120,12 @@
             android:name=".AvisoTomaActivity"
             android:exported="false" />
 
+        <!-- Saca la notificación cuando llega la hora de una toma -->
+        <receiver
+            android:name=".AlarmaTomaReceiver"
+            android:exported="false" />
+
+
     </application>
 
 
