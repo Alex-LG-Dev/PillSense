@@ -46,6 +46,24 @@ public final class AlarmasToma {
         cancelarAlarma(ctx, idToma, true);
     }
 
+    /** Al encender el móvil: vuelve a programar las tomas guardadas  */
+    public static void reprogramarGuardadas(Context ctx) {
+        android.content.SharedPreferences prefs =
+                ctx.getSharedPreferences("PillSenseAlarmas", Context.MODE_PRIVATE);
+        for (String id : prefs.getStringSet("ids", new java.util.HashSet<>())) {
+
+            String datos = prefs.getString("toma_" + id, null);
+            if (datos == null) continue;
+            String[] partes = datos.split("\\|", 3);
+            if (partes.length < 3) continue;
+            try {
+                programar(ctx, id, partes[0], partes[2], Integer.parseInt(partes[1]));
+            } catch (NumberFormatException e) {
+
+            }
+        }
+    }
+
 
     public static void crearCanal(Context ctx) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;   // antes de Android 8 no hay canales
