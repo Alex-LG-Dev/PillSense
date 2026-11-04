@@ -59,6 +59,7 @@ public class PacienteActivity extends AppCompatActivity {
 
     private TextView tvSaludo;
     private View tarjetaAvisosDesactivados;   // "Avisos desactivados"
+    private View tarjetaSinCuidador;          // "Aún no tienes cuidador"
     // Tarjeta "Ahora te toca"
     private TextView tvAhoraHora, tvAhoraMedicamento, tvAhoraDosis;
     private TextView tvAhoraCajonNumero, tvAhoraCajon, tvAhoraFranja, tvTituloDespues;
@@ -205,6 +206,13 @@ public class PacienteActivity extends AppCompatActivity {
 
         tarjetaAvisosDesactivados = findViewById(R.id.tarjetaAvisosDesactivados);
         findViewById(R.id.btnActivarAvisos).setOnClickListener(v -> abrirAjustesNotificaciones());
+
+        //"Aún no tienes cuidador": su botón abre "Mi código"
+        tarjetaSinCuidador = findViewById(R.id.tarjetaSinCuidador);
+        findViewById(R.id.btnVerMiCodigo).setOnClickListener(v ->
+                startActivity(new Intent(this, MiCodigoActivity.class)));
+
+
     }
 
     @Override
@@ -214,6 +222,7 @@ public class PacienteActivity extends AppCompatActivity {
         if (refTomas != null) refTomas.addValueEventListener(escuchador);
         reloj.postDelayed(cadaMinuto, 60_000);
         comprobarAvisos();
+        comprobarCuidadores();
 
         // Registros de HOY (la fecha se calcula cada vez que se abre la pantalla)
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -382,6 +391,18 @@ public class PacienteActivity extends AppCompatActivity {
     private boolean faltaPermisoPantallaCompleta() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false;
         return !getSystemService(NotificationManager.class).canUseFullScreenIntent();
+    }
+
+    /** Si el paciente no tiene ningún cuidador vinculado, */
+    private void comprobarCuidadores() {
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        if (usuario == null) return;
+
+        FirebaseDatabase.getInstance(DB_URL)
+                .getReference("usuarios").child(usuario.getUid()).child("cuidadores")
+                .get()
+                .addOnSuccessListener(datos ->
+                        tarjetaSinCuidador.setVisibility(datos.hasChildren() ? View.GONE : View.VISIBLE));
     }
 
     /** Programa el aviso de cada toma, guarda sus datos en el móvil y quita los de tomas que ya no existen. */

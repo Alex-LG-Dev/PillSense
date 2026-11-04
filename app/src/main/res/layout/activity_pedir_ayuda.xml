@@ -51,53 +51,52 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Foto de la cuidadora -->
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:background="@drawable/bg_avatar_cuidador"
-            android:contentDescription="@null"
-            android:padding="24dp"
-            android:src="@drawable/ic_persona"
-            app:tint="@color/texto_secundario" />
-
+        <!-- Título -->
         <TextView
-            android:id="@+id/tvNombreCuidador"
+            android:id="@+id/tvTituloCuidadores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="María López"
+            android:text="¿A quién quieres llamar?"
             android:textColor="@color/texto_principal"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tu cuidadora"
-            android:textColor="@color/texto_secundario"
-            android:textSize="20sp" />
-
-        <!-- Botón  llamar a la cuidadora -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLlamarCuidador"
+        <!-- Aquí el código pone un botón por cada cuidador -->
+        <LinearLayout
+            android:id="@+id/listaCuidadores"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="28dp"
-            android:backgroundTint="@color/verde_bosque"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <!-- Sin cuidadores: solo sale si no tiene ninguno -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerMiCodigo"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/azul_pillsense"
             android:letterSpacing="0"
-            android:text="Llamar a María"
+            android:text="Ver mi código"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textSize="21sp"
             android:textStyle="bold"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/ic_telefono"
-            app:iconGravity="textStart"
-            app:iconSize="30dp"
-            app:iconTint="@color/white" />
+            android:visibility="gone"
+            app:cornerRadius="16dp" />
 
+        <!-- Añadir otro cuidador: lleva a "Mi código" -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAnadirCuidador"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0"
+            android:text="+ Añadir otro cuidador"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="18sp" />
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"

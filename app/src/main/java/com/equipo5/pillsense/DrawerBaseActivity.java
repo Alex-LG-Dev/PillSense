@@ -68,6 +68,8 @@ public class DrawerBaseActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_perfil) {
                     startActivity(new Intent(this, PerfilActivity.class));
+                } else if (id == R.id.nav_mis_pacientes) {
+                    startActivity(new Intent(this, MisPacientesActivity.class));
                 } else if (id == R.id.nav_acerca_de) {
                     startActivity(new Intent(this, AcercaDeActivity.class));
                 } else if (id == R.id.nav_cerrar_sesion) {

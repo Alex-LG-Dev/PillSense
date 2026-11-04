@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLlamar"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:backgroundTint="@color/verde_bosque"
+        android:letterSpacing="0"
+        android:text="Llamar a Laura"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_telefono"
+        app:iconGravity="textStart"
+        app:iconSize="28dp"
+        app:iconTint="@color/white" />
+
+    <TextView
+        android:id="@+id/tvSinTelefono"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Sin teléfono guardado"
+        android:textColor="@color/texto_secundario"
+        android:textSize="16sp"
+        android:visibility="gone" />
+</LinearLayout>

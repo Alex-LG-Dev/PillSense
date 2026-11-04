@@ -73,6 +73,42 @@
                 android:textStyle="bold"
                 app:cornerRadius="14dp" />
         </LinearLayout>
+        <!-- Sin cuidador: solo sale si el paciente no tiene ninguno vinculado -->
+        <LinearLayout
+            android:id="@+id/tarjetaSinCuidador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_cajon_ahora"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="👤 Aún no tienes cuidador"
+                android:textColor="@color/texto_principal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVerMiCodigo"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:backgroundTint="@color/azul_pillsense"
+                android:letterSpacing="0"
+                android:text="Ver mi código"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="14dp" />
+        </LinearLayout>
 
         <!-- Tarjeta "Ahora te toca": lo más importante, pero compacta para que se vea "Después" -->
         <LinearLayout
