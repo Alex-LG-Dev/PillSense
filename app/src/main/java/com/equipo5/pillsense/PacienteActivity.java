@@ -1,8 +1,11 @@
 package com.equipo5.pillsense;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -189,6 +194,8 @@ public class PacienteActivity extends AppCompatActivity {
             intent.putExtra(AvisoTomaActivity.EXTRA_CAJON, tomaActual.getCajon());
             startActivity(intent);
         });
+        //Permiso de notificaciones, para poder avisar a la hora de cada toma
+        pedirPermisoNotificaciones();
     }
 
     @Override
@@ -301,6 +308,15 @@ public class PacienteActivity extends AppCompatActivity {
             intent.putExtra(TomaRegistradaActivity.EXTRA_PROXIMO_CAJON, siguienteToma.getCajon());
         }
         startActivity(intent);
+    }
+
+    /** Desde Android 13 hay que pedir permiso para enseñar notificaciones. Solo pregunta una vez. */
+    private void pedirPermisoNotificaciones() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;   // antes de Android 13 no hace falta
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) return;               // ya lo tiene
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
     }
 
 
