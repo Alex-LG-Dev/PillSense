@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- Notificaciones de las tomas (desde Android 13 hay que pedírselas al usuario) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Alarmas exactas, para avisar a la hora justa de cada toma -->
+    <!-- Android 13 o superior: se concede solo, sin preguntar -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <!-- Android 12: el mismo permiso con otro nombre -->
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
+
+    <!-- Enterarse de que el móvil se ha encendido, para volver a programar las alarmas -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Enseñar la pantalla azul de aviso a pantalla completa con el móvil bloqueado -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
         android:allowBackup="true"
@@ -99,6 +115,35 @@
             android:name=".PastillasHoyActivity"
             android:exported="false"
             android:parentActivityName=".PacienteActivity" />
+
+        <!-- Pedir ayuda (paciente) -->
+        <activity
+            android:name=".PedirAyudaActivity"
+            android:exported="false" />
+
+        <!-- Aviso de toma: "Es hora de tu pastilla"  -->
+        <activity
+            android:name=".AvisoTomaActivity"
+            android:exported="false" />
+
+        <!-- Saca la notificación cuando llega la hora de una toma -->
+        <receiver
+            android:name=".AlarmaTomaReceiver"
+            android:exported="false" />
+
+        <!-- Vuelve a programar las alarmas al encender el móvil o si cambia la hora.
+            exported="true" porque estos avisos los manda el sistema (Android) -->
+        <receiver
+            android:name=".ArranqueReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
 
     </application>
 

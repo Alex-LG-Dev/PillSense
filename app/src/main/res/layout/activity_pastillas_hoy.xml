@@ -64,6 +64,7 @@
 
 
     <ScrollView
+        android:id="@+id/scrollCajones"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -96,7 +97,7 @@
                 android:layout_marginTop="14dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:paddingHorizontal="4dp">
 
                 <ImageView
                     android:layout_width="22dp"
@@ -111,12 +112,12 @@
                     android:layout_marginStart="6dp"
                     android:text="Tomada"
                     android:textColor="@color/texto_secundario"
-                    android:textSize="16sp" />
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="16dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_toma_pendiente"
                     app:tint="@color/texto_secundario" />
@@ -127,7 +128,23 @@
                     android:layout_marginStart="6dp"
                     android:text="Pendiente"
                     android:textColor="@color/texto_secundario"
-                    android:textSize="16sp" />
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_toma_olvidada"
+                    app:tint="@color/texto_secundario" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="No tomada"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
