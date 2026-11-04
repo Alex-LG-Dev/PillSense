@@ -201,6 +201,8 @@ public class MisPacientesActivity extends AppCompatActivity {
                     Map<String, Object> datosCuidador = new HashMap<>();
                     datosCuidador.put("nombre", miNombre);
                     datosCuidador.put("telefono", miTelefono != null ? String.valueOf(miTelefono) : "");
+                    // Las reglas de Firebase comprueban con este código que el paciente nos ha dado permiso
+                    datosCuidador.put("codigo", codigo);
 
                     // Guardamos los dos lados a la vez
                     Map<String, Object> cambios = new HashMap<>();
