@@ -9,8 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -20,8 +25,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+
 
 public class PrincipalActivity extends AppCompatActivity {
 
@@ -37,12 +45,22 @@ public class PrincipalActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private FirebaseAuth mAuth;
     private DatabaseReference dbUsuarios;
+    private String uidMostrado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BarraAcciones.prepararVentana(this);
         setContentView(R.layout.activity_principal);
+        // Baja los botones de arriba (Menú, paciente y Avisos) para que no queden debajo de la hora y la cámara
+        View barraSuperior = findViewById(R.id.layoutBotonesSuperiores);
+        int paddingArribaOriginal = barraSuperior.getPaddingTop();
+        ViewCompat.setOnApplyWindowInsetsListener(barraSuperior, (v, insets) -> {
+            Insets barras = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(v.getPaddingLeft(), paddingArribaOriginal + barras.top,
+                    v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
 
         mAuth = FirebaseAuth.getInstance();
         dbUsuarios = FirebaseDatabase.getInstance("https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/").getReference("usuarios");
@@ -66,7 +84,9 @@ public class PrincipalActivity extends AppCompatActivity {
                     android.widget.Toast.makeText(this, "Pantalla Avisos en construcción", android.widget.Toast.LENGTH_SHORT).show()
             );
         }
-
+        // Paciente activo: se elige des del menú
+        uidMostrado = PacienteActivo.uidDatos(this);
+        elegirPrimeroSiNoHayNinguno();
         configurarCabeceraMenu();
 
         if (navigationView != null) {
@@ -149,7 +169,38 @@ public class PrincipalActivity extends AppCompatActivity {
         }
     }
 
+    /** Al volver a esta pantalla (por ejemplo, desde "Mis pacientes"): si ha cambiado el paciente, recargamos. */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String uidAhora = PacienteActivo.uidDatos(this);
+        if (uidAhora != null && !uidAhora.equals(uidMostrado)) {
+            recreate();   // vuelve a cargar todas las pestañas con el paciente nuevo
+        }
+    }
+
+
+
+
+
+    /** Si todavía no ha elegido ninguno pero tiene pacientes, elegimos el primero automáticamente. */
+    private void elegirPrimeroSiNoHayNinguno() {
+        if (PacienteActivo.hayElegido(this)) return;
+        FirebaseUser yo = mAuth.getCurrentUser();
+        if (yo == null) return;
+
+        dbUsuarios.child(yo.getUid()).child("pacientes").get().addOnSuccessListener(datos -> {
+            for (DataSnapshot paciente : datos.getChildren()) {
+                PacienteActivo.elegir(this, paciente.getKey(), paciente.getValue(String.class));
+                recreate();
+                return;   // solo el primero
+            }
+        });
+    }
+
+
     private void cerrarSesion() {
+        PacienteActivo.olvidar(this);
         mAuth.signOut();
         SharedPreferences preferencias = getSharedPreferences("PillSensePrefs", Context.MODE_PRIVATE);
         preferencias.edit().putBoolean("mantener_sesion", false).apply();
