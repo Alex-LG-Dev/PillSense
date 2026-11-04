@@ -29,4 +29,17 @@
         android:textColor="@color/texto_principal"
         android:textSize="@dimen/texto_normal"
         android:textStyle="bold" />
+
+    <!-- Quitar este paciente de la lista (desvincular) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnQuitarPaciente"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:letterSpacing="0"
+        android:minWidth="0dp"
+        android:text="Quitar"
+        android:textAllCaps="false"
+        android:textColor="@color/boton_ayuda"
+        android:textSize="16sp" />
 </LinearLayout>
