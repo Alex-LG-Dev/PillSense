@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo_pantalla"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="8dp">
+
+        <ImageButton
+            android:id="@+id/btnVolver"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Volver"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/texto_principal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Mis pacientes"
+            android:textColor="@color/texto_principal"
+            android:textSize="@dimen/texto_boton"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Si todavía no tiene ninguno -->
+    <TextView
+        android:id="@+id/tvSinPacientes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margen_pantalla"
+        android:layout_marginTop="@dimen/espacio_grande"
+        android:text="Todavía no tienes pacientes.\n\nPídele a tu paciente el código que sale en su app, en «Ver mi código», y pulsa «Añadir paciente»."
+        android:textColor="@color/texto_secundario"
+        android:textSize="@dimen/texto_normal" />
+
+    <!-- Lista de pacientes -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/listaPacientes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp" />
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAnadirPaciente"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/altura_boton"
+        android:layout_margin="16dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:letterSpacing="0"
+        android:text="Añadir paciente"
+        android:textAllCaps="false"
+        android:textSize="@dimen/texto_boton"
+        android:textStyle="bold"
+        app:cornerRadius="@dimen/radio_esquina"
+        app:icon="@drawable/ic_anadir"
+        app:iconGravity="textStart" />
+</LinearLayout>

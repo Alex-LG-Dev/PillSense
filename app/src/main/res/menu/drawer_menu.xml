@@ -6,6 +6,10 @@
             android:id="@+id/nav_perfil"
             android:icon="@drawable/ic_persona"
             android:title="@string/menu_perfil" />
+      <item
+        android:id="@+id/nav_mis_pacientes"
+        android:icon="@drawable/ic_persona"
+        android:title="Mis pacientes" />
 
         <item
             android:id="@+id/nav_pastillero"
