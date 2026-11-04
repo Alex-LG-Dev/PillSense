@@ -1,11 +1,18 @@
 package com.equipo5.pillsense;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +22,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -48,7 +58,7 @@ public class PacienteActivity extends AppCompatActivity {
     private static final String[] FRANJAS = {"Mañana", "Mediodía", "Tarde", "Noche"};
 
     private TextView tvSaludo;
-
+    private View tarjetaAvisosDesactivados;   // "Avisos desactivados"
     // Tarjeta "Ahora te toca"
     private TextView tvAhoraHora, tvAhoraMedicamento, tvAhoraDosis;
     private TextView tvAhoraCajonNumero, tvAhoraCajon, tvAhoraFranja, tvTituloDespues;
@@ -140,6 +150,7 @@ public class PacienteActivity extends AppCompatActivity {
                     // De la más temprana a la más tardía ("08:00" va antes que "14:00")
                     Collections.sort(tomasDeHoy, (a, b) -> a.getHora().compareTo(b.getHora()));
                     mostrarTomas();
+                    programarAlarmas();
                 }
 
                 @Override
@@ -169,10 +180,31 @@ public class PacienteActivity extends AppCompatActivity {
         btnTomada.setOnClickListener(v -> marcarComoTomada());
 
         // "Ver todas mis pastillas" abre la lista completa del día
-        // (descomenta estas líneas cuando hagamos la pantalla PastillasHoyActivity)
         Button btnVerTodas = findViewById(R.id.btnVerTodas);
          btnVerTodas.setOnClickListener(v ->
                 startActivity(new Intent(this, PastillasHoyActivity.class)));
+
+        // "Pedir ayuda" abre la pantalla para llamar a la cuidadora
+        Button btnPedirAyuda = findViewById(R.id.btnPedirAyuda);
+        btnPedirAyuda.setOnClickListener(v ->
+                startActivity(new Intent(this, PedirAyudaActivity.class)));
+
+        // Tarjeta azul: al pulsarla se abre "Aviso de toma"
+
+        findViewById(R.id.tarjetaAhora).setOnClickListener(v -> {
+            if (tomaActual == null) return;   // "¡Ya has terminado por hoy!": no hay nada que enseñar
+            Intent intent = new Intent(this, AvisoTomaActivity.class);
+            intent.putExtra(AvisoTomaActivity.EXTRA_ID_TOMA, tomaActual.getId());
+            intent.putExtra(AvisoTomaActivity.EXTRA_HORA, tomaActual.getHora());
+            intent.putExtra(AvisoTomaActivity.EXTRA_MEDICAMENTO, tomaActual.getNombreMedicamento());
+            intent.putExtra(AvisoTomaActivity.EXTRA_CAJON, tomaActual.getCajon());
+            startActivity(intent);
+        });
+        //Permiso de notificaciones, para poder avisar a la hora de cada toma
+        pedirPermisoNotificaciones();
+
+        tarjetaAvisosDesactivados = findViewById(R.id.tarjetaAvisosDesactivados);
+        findViewById(R.id.btnActivarAvisos).setOnClickListener(v -> abrirAjustesNotificaciones());
     }
 
     @Override
@@ -181,6 +213,7 @@ public class PacienteActivity extends AppCompatActivity {
         // Empieza a escuchar Firebase y el reloj al ver la pantalla
         if (refTomas != null) refTomas.addValueEventListener(escuchador);
         reloj.postDelayed(cadaMinuto, 60_000);
+        comprobarAvisos();
 
         // Registros de HOY (la fecha se calcula cada vez que se abre la pantalla)
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -272,7 +305,10 @@ public class PacienteActivity extends AppCompatActivity {
         refRegistrosHoy.child(tomaActual.getId()).setValue(registro)
                 .addOnFailureListener(e -> Toast.makeText(this,
                         "No se ha podido guardar. Inténtalo otra vez", Toast.LENGTH_LONG).show());
-        // No hace falta repintar aquí: escuchadorRegistros se entera y llama a mostrarTomas()
+
+
+        AlarmasToma.cancelarPospuesta(this, tomaActual.getId());
+        NotificationManagerCompat.from(this).cancel(tomaActual.getId().hashCode());
 
         // Abrimos la pantalla "¡Muy bien!" con los datos de esta toma y de la siguiente
         Intent intent = new Intent(this, TomaRegistradaActivity.class);
@@ -287,6 +323,101 @@ public class PacienteActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /** Pedir permiso para enseñar notificaciones. Solo pregunta una vez. */
+    private void pedirPermisoNotificaciones() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;   // antes de Android 13 no hace falta
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) return;               // ya lo tiene
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        comprobarAvisos();
+    }
+    private void comprobarAvisos() {
+        boolean activadas = NotificationManagerCompat.from(this).areNotificationsEnabled();
+
+        // Además, el canal "Avisos de las pastillas" se puede apagar por separado
+        if (activadas && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel canal = getSystemService(NotificationManager.class)
+                    .getNotificationChannel(AlarmasToma.CANAL);
+            if (canal != null && canal.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                activadas = false;
+            }
+        }
+        // Android 14+: permiso para enseñar la pantalla azul a pantalla completa
+        if (activadas && faltaPermisoPantallaCompleta()) {
+            activadas = false;
+        }
+        tarjetaAvisosDesactivados.setVisibility(activadas ? View.GONE : View.VISIBLE);
+    }
+    private void abrirAjustesNotificaciones() {
+
+        // Si las notificaciones están bien pero falta el de pantalla completa, vamos directos a ese ajuste
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled() && faltaPermisoPantallaCompleta()) {
+            startActivity(new Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:" + getPackageName())));
+            return;
+        }
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+        } else {
+            // Android 7: no hay pantalla de notificaciones, abrimos la ficha de la app
+            intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + getPackageName()));
+        }
+        startActivity(intent);
+    }
+
+
+    /** Android 14 o superior puede tener desactivado el permiso de pantalla completa. */
+    private boolean faltaPermisoPantallaCompleta() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false;
+        return !getSystemService(NotificationManager.class).canUseFullScreenIntent();
+    }
+
+    /** Programa el aviso de cada toma, guarda sus datos en el móvil y quita los de tomas que ya no existen. */
+    private void programarAlarmas() {
+        SharedPreferences prefs = getSharedPreferences("PillSenseAlarmas", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> antes = prefs.getStringSet("ids", new HashSet<>());
+        Set<String> actuales = new HashSet<>();
+
+        for (Toma toma : tomasDeHoy) {
+            AlarmasToma.programar(this, toma.getId(), toma.getHora(),
+                    toma.getNombreMedicamento(), toma.getCajon());
+            actuales.add(toma.getId());
+            // Guardamos los datos para poder reprogramarla al encender el móvil
+            editor.putString("toma_" + toma.getId(),
+                    toma.getHora() + "|" + toma.getCajon() + "|" + toma.getNombreMedicamento());
+        }
+        for (String id : antes) {
+            if (!actuales.contains(id)) {
+                AlarmasToma.cancelar(this, id);
+                editor.remove("toma_" + id);
+            }
+        }
+
+        // Guardamos la lista para la próxima vez
+        editor.putStringSet("ids", actuales).apply();
+    }
+
+    /** Al cerrar sesión: que no le suenen las pastillas de este paciente a otra persona. */
+    private void cancelarTodasLasAlarmas() {
+        SharedPreferences prefs = getSharedPreferences("PillSenseAlarmas", MODE_PRIVATE);
+        for (String id : prefs.getStringSet("ids", new HashSet<>())) {
+            AlarmasToma.cancelar(this, id);
+        }
+        prefs.edit().clear().apply();   // borra la lista y los datos guardados de cada toma
+    }
 
 
     private String franja(int cajon) {
@@ -332,7 +463,9 @@ public class PacienteActivity extends AppCompatActivity {
 
 
     private void cerrarSesion() {
+        cancelarTodasLasAlarmas();
         FirebaseAuth.getInstance().signOut();
+
         SharedPreferences preferencias = getSharedPreferences("PillSensePrefs", Context.MODE_PRIVATE);
         preferencias.edit().putBoolean("mantener_sesion", false).apply();
 
