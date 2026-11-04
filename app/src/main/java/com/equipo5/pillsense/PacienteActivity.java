@@ -1,14 +1,18 @@
 package com.equipo5.pillsense;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +58,7 @@ public class PacienteActivity extends AppCompatActivity {
     private static final String[] FRANJAS = {"Mañana", "Mediodía", "Tarde", "Noche"};
 
     private TextView tvSaludo;
-
+    private View tarjetaAvisosDesactivados;   // "Avisos desactivados"
     // Tarjeta "Ahora te toca"
     private TextView tvAhoraHora, tvAhoraMedicamento, tvAhoraDosis;
     private TextView tvAhoraCajonNumero, tvAhoraCajon, tvAhoraFranja, tvTituloDespues;
@@ -198,6 +202,9 @@ public class PacienteActivity extends AppCompatActivity {
         });
         //Permiso de notificaciones, para poder avisar a la hora de cada toma
         pedirPermisoNotificaciones();
+
+        tarjetaAvisosDesactivados = findViewById(R.id.tarjetaAvisosDesactivados);
+        findViewById(R.id.btnActivarAvisos).setOnClickListener(v -> abrirAjustesNotificaciones());
     }
 
     @Override
@@ -206,6 +213,7 @@ public class PacienteActivity extends AppCompatActivity {
         // Empieza a escuchar Firebase y el reloj al ver la pantalla
         if (refTomas != null) refTomas.addValueEventListener(escuchador);
         reloj.postDelayed(cadaMinuto, 60_000);
+        comprobarAvisos();
 
         // Registros de HOY (la fecha se calcula cada vez que se abre la pantalla)
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -315,13 +323,46 @@ public class PacienteActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /** Desde Android 13 hay que pedir permiso para enseñar notificaciones. Solo pregunta una vez. */
+    /** Pedir permiso para enseñar notificaciones. Solo pregunta una vez. */
     private void pedirPermisoNotificaciones() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;   // antes de Android 13 no hace falta
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) return;               // ya lo tiene
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        comprobarAvisos();
+    }
+    private void comprobarAvisos() {
+        boolean activadas = NotificationManagerCompat.from(this).areNotificationsEnabled();
+
+        // Además, el canal "Avisos de las pastillas" se puede apagar por separado
+        if (activadas && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel canal = getSystemService(NotificationManager.class)
+                    .getNotificationChannel(AlarmasToma.CANAL);
+            if (canal != null && canal.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                activadas = false;
+            }
+        }
+        tarjetaAvisosDesactivados.setVisibility(activadas ? View.GONE : View.VISIBLE);
+    }
+    private void abrirAjustesNotificaciones() {
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+        } else {
+            // Android 7: no hay pantalla de notificaciones, abrimos la ficha de la app
+            intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + getPackageName()));
+        }
+        startActivity(intent);
     }
 
     /** Programa el aviso de cada toma y quita los de tomas que ya no existen. */
