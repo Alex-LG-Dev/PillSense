@@ -187,8 +187,9 @@ public class PacienteActivity extends AppCompatActivity {
         // "Pedir ayuda" abre la pantalla para llamar a la cuidadora
         Button btnPedirAyuda = findViewById(R.id.btnPedirAyuda);
         btnPedirAyuda.setOnClickListener(v ->
-                startActivity(new Intent(this, PedirAyudaActivity.class)));
+               // startActivity(new Intent(this, PedirAyudaActivity.class)));
 
+        startActivity(new Intent(this, MiCodigoActivity.class)));
         // Tarjeta azul: al pulsarla se abre "Aviso de toma"
 
         findViewById(R.id.tarjetaAhora).setOnClickListener(v -> {
