@@ -104,6 +104,12 @@
         <activity
             android:name=".PedirAyudaActivity"
             android:exported="false" />
+
+        <!-- Aviso de toma: "Es hora de tu pastilla"  -->
+        <activity
+            android:name=".AvisoTomaActivity"
+            android:exported="false" />
+
     </application>
 
 
