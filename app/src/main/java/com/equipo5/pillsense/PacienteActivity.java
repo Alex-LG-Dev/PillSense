@@ -365,9 +365,10 @@ public class PacienteActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /** Programa el aviso de cada toma y quita los de tomas que ya no existen. */
+    /** Programa el aviso de cada toma, guarda sus datos en el móvil y quita los de tomas que ya no existen. */
     private void programarAlarmas() {
         SharedPreferences prefs = getSharedPreferences("PillSenseAlarmas", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
         Set<String> antes = prefs.getStringSet("ids", new HashSet<>());
         Set<String> actuales = new HashSet<>();
 
@@ -375,15 +376,19 @@ public class PacienteActivity extends AppCompatActivity {
             AlarmasToma.programar(this, toma.getId(), toma.getHora(),
                     toma.getNombreMedicamento(), toma.getCajon());
             actuales.add(toma.getId());
+            // Guardamos los datos para poder reprogramarla al encender el móvil
+            editor.putString("toma_" + toma.getId(),
+                    toma.getHora() + "|" + toma.getCajon() + "|" + toma.getNombreMedicamento());
         }
-
-        // Las que tenían alarma y ya no existen (el cuidador las ha borrado): fuera
         for (String id : antes) {
-            if (!actuales.contains(id)) AlarmasToma.cancelar(this, id);
+            if (!actuales.contains(id)) {
+                AlarmasToma.cancelar(this, id);
+                editor.remove("toma_" + id);
+            }
         }
 
         // Guardamos la lista para la próxima vez
-        prefs.edit().putStringSet("ids", actuales).apply();
+        editor.putStringSet("ids", actuales).apply();
     }
 
     /** Al cerrar sesión: que no le suenen las pastillas de este paciente a otra persona. */
@@ -392,9 +397,8 @@ public class PacienteActivity extends AppCompatActivity {
         for (String id : prefs.getStringSet("ids", new HashSet<>())) {
             AlarmasToma.cancelar(this, id);
         }
-        prefs.edit().remove("ids").apply();
+        prefs.edit().clear().apply();   // borra la lista y los datos guardados de cada toma
     }
-
 
 
     private String franja(int cajon) {

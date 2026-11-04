@@ -12,6 +12,9 @@
         android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32" />
 
+    <!-- Enterarse de que el móvil se ha encendido, para volver a programar las alarmas -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -124,6 +127,19 @@
         <receiver
             android:name=".AlarmaTomaReceiver"
             android:exported="false" />
+
+        <!-- Vuelve a programar las alarmas al encender el móvil o si cambia la hora.
+            exported="true" porque estos avisos los manda el sistema (Android) -->
+        <receiver
+            android:name=".ArranqueReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
 
     </application>
