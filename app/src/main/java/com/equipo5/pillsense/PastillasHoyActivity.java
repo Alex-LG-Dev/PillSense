@@ -1,5 +1,6 @@
 package com.equipo5.pillsense;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,6 +94,10 @@ public class PastillasHoyActivity extends AppCompatActivity {
         // Flecha de volver
         ImageButton btnVolver = findViewById(R.id.btnVolver);
         btnVolver.setOnClickListener(v -> finish());
+
+        // "Pedir ayuda" abre la pantalla para llamar a la cuidadora
+        findViewById(R.id.btnPedirAyuda).setOnClickListener(v ->
+                startActivity(new Intent(this, PedirAyudaActivity.class)));
 
         tvProgreso = findViewById(R.id.tvProgreso);
         barraProgreso = findViewById(R.id.barraProgreso);
