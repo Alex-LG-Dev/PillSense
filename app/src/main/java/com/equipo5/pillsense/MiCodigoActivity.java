@@ -1,6 +1,7 @@
 package com.equipo5.pillsense;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,11 +11,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -24,6 +28,8 @@ public class MiCodigoActivity extends AppCompatActivity {
             "https://pillsense-d14cb-default-rtdb.europe-west1.firebasedatabase.app/";
 
     private TextView tvCodigo;
+
+    private TextView tvListaCuidadores;
     private DatabaseReference db;
 
     @Override
@@ -46,6 +52,8 @@ public class MiCodigoActivity extends AppCompatActivity {
         db = FirebaseDatabase.getInstance(DB_URL).getReference();
 
         cargarOCrearCodigo();
+        tvListaCuidadores = findViewById(R.id.tvListaCuidadores);
+        cargarCuidadores();
     }
 
     /** Si el paciente ya tiene código, lo enseña. Si no, crea uno nuevo. */
@@ -90,7 +98,23 @@ public class MiCodigoActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> tvCodigo.setText("No se ha podido crear"));
         }).addOnFailureListener(e -> tvCodigo.setText("Sin conexión"));
     }
+    /** Pone los nombres de sus cuidadores */
+    private void cargarCuidadores() {
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        if (usuario == null) return;
 
+        db.child("usuarios").child(usuario.getUid()).child("cuidadores").get()
+                .addOnSuccessListener(datos -> {
+                    List<String> nombres = new ArrayList<>();
+                    for (DataSnapshot cuidador : datos.getChildren()) {
+                        String nombre = cuidador.child("nombre").getValue(String.class);
+                        if (nombre != null && !nombre.trim().isEmpty()) nombres.add(nombre.trim());
+                    }
+                    tvListaCuidadores.setText(nombres.isEmpty()
+                            ? "Todavía nadie"
+                            : TextUtils.join("\n", nombres));
+                });
+    }
     /** "482913" → "482 913", más fácil de leer y de dictar. */
     private void mostrarCodigo(String codigo) {
         tvCodigo.setText(codigo.substring(0, 3) + " " + codigo.substring(3));
