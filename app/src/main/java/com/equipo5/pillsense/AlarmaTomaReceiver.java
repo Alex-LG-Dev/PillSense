@@ -45,6 +45,8 @@ public class AlarmaTomaReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setContentIntent(alPulsar)
+                // Con el móvil bloqueado: enciende la pantalla y abre directamente la pantalla azul
+                .setFullScreenIntent(alPulsar, true)
                 .setAutoCancel(true);   // desaparece al pulsarla
 
         // Solo si el paciente nos dio permiso de notificaciones

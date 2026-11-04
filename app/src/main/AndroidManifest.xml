@@ -15,6 +15,9 @@
     <!-- Enterarse de que el móvil se ha encendido, para volver a programar las alarmas -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Enseñar la pantalla azul de aviso a pantalla completa con el móvil bloqueado -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
