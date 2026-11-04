@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -145,6 +146,7 @@ public class PacienteActivity extends AppCompatActivity {
                     // De la más temprana a la más tardía ("08:00" va antes que "14:00")
                     Collections.sort(tomasDeHoy, (a, b) -> a.getHora().compareTo(b.getHora()));
                     mostrarTomas();
+                    programarAlarmas();
                 }
 
                 @Override
@@ -295,7 +297,10 @@ public class PacienteActivity extends AppCompatActivity {
         refRegistrosHoy.child(tomaActual.getId()).setValue(registro)
                 .addOnFailureListener(e -> Toast.makeText(this,
                         "No se ha podido guardar. Inténtalo otra vez", Toast.LENGTH_LONG).show());
-        // No hace falta repintar aquí: escuchadorRegistros se entera y llama a mostrarTomas()
+
+
+        AlarmasToma.cancelarPospuesta(this, tomaActual.getId());
+        NotificationManagerCompat.from(this).cancel(tomaActual.getId().hashCode());
 
         // Abrimos la pantalla "¡Muy bien!" con los datos de esta toma y de la siguiente
         Intent intent = new Intent(this, TomaRegistradaActivity.class);
@@ -317,6 +322,36 @@ public class PacienteActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) return;               // ya lo tiene
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+    }
+
+    /** Programa el aviso de cada toma y quita los de tomas que ya no existen. */
+    private void programarAlarmas() {
+        SharedPreferences prefs = getSharedPreferences("PillSenseAlarmas", MODE_PRIVATE);
+        Set<String> antes = prefs.getStringSet("ids", new HashSet<>());
+        Set<String> actuales = new HashSet<>();
+
+        for (Toma toma : tomasDeHoy) {
+            AlarmasToma.programar(this, toma.getId(), toma.getHora(),
+                    toma.getNombreMedicamento(), toma.getCajon());
+            actuales.add(toma.getId());
+        }
+
+        // Las que tenían alarma y ya no existen (el cuidador las ha borrado): fuera
+        for (String id : antes) {
+            if (!actuales.contains(id)) AlarmasToma.cancelar(this, id);
+        }
+
+        // Guardamos la lista para la próxima vez
+        prefs.edit().putStringSet("ids", actuales).apply();
+    }
+
+    /** Al cerrar sesión: que no le suenen las pastillas de este paciente a otra persona. */
+    private void cancelarTodasLasAlarmas() {
+        SharedPreferences prefs = getSharedPreferences("PillSenseAlarmas", MODE_PRIVATE);
+        for (String id : prefs.getStringSet("ids", new HashSet<>())) {
+            AlarmasToma.cancelar(this, id);
+        }
+        prefs.edit().remove("ids").apply();
     }
 
 
@@ -364,7 +399,9 @@ public class PacienteActivity extends AppCompatActivity {
 
 
     private void cerrarSesion() {
+        cancelarTodasLasAlarmas();
         FirebaseAuth.getInstance().signOut();
+
         SharedPreferences preferencias = getSharedPreferences("PillSensePrefs", Context.MODE_PRIVATE);
         preferencias.edit().putBoolean("mantener_sesion", false).apply();
 

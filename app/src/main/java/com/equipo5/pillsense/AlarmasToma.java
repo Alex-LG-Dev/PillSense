@@ -77,6 +77,8 @@ public final class AlarmasToma {
             // A la hora justa, aunque el móvil esté en reposo
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cuandoMillis, pi);
         }
+        android.util.Log.d("PillSenseAlarma", "Programada " + hora + " (" + medicamento + ") para "
+                + new java.util.Date(cuandoMillis) + (pospuesta ? " [pospuesta]" : ""));
     }
 
     private static void cancelarAlarma(Context ctx, String idToma, boolean pospuesta) {

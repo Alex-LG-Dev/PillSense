@@ -17,6 +17,8 @@ public class AlarmaTomaReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
+        android.util.Log.d("PillSenseAlarma", "HA SONADO la alarma de las "
+                + intent.getStringExtra(AvisoTomaActivity.EXTRA_HORA));
         String idToma = intent.getStringExtra(AvisoTomaActivity.EXTRA_ID_TOMA);
         String hora = intent.getStringExtra(AvisoTomaActivity.EXTRA_HORA);
         String medicamento = intent.getStringExtra(AvisoTomaActivity.EXTRA_MEDICAMENTO);
@@ -49,6 +51,7 @@ public class AlarmaTomaReceiver extends BroadcastReceiver {
         boolean conPermiso = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                 || ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED;
+        android.util.Log.d("PillSenseAlarma", "¿Permiso de notificaciones? " + conPermiso);
         if (conPermiso) {
             NotificationManagerCompat.from(ctx).notify(idToma.hashCode(), notificacion.build());
         }
