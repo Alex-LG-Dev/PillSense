@@ -29,7 +29,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 /**
  * Pantalla "Editar perfil" (T036): cambiar el nombre y el teléfono.
  *
@@ -56,6 +65,32 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private EditText etTelefono;
     private MaterialButton btnGuardar;
 
+    private ImageView ivFoto;
+    // Foto nueva en Base64. Si es null, el usuario no ha cambiado la foto
+    private String fotoNueva = null;
+
+    // 1) Abre la cámara y devuelve la foto (en pequeño)
+    private final ActivityResultLauncher<Void> lanzarCamara =
+            registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), foto -> {
+                if (foto != null) ponerFoto(foto);
+            });
+
+    // 2) Pide el permiso de cámara. Si lo acepta, abre la cámara
+    private final ActivityResultLauncher<String> pedirPermisoCamara =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), aceptado -> {
+                if (aceptado) {
+                    lanzarCamara.launch(null);
+                } else {
+                    Toast.makeText(this, R.string.foto_sin_permiso, Toast.LENGTH_LONG).show();
+                }
+            });
+
+    // 3) Abre el selector de fotos de Android (no necesita permisos)
+    private final ActivityResultLauncher<PickVisualMediaRequest> lanzarGaleria =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) ponerFoto(FotoUtils.leerDeGaleria(this, uri));
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +111,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
         btnGuardar = findViewById(R.id.btnGuardarPerfil);
 
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
-        findViewById(R.id.btnCambiarFoto).setOnClickListener(v ->
-                Toast.makeText(this, "Cambiar foto: próximamente", Toast.LENGTH_SHORT).show());
+        ivFoto = findViewById(R.id.ivFotoEditar);
+        findViewById(R.id.btnCambiarFoto).setOnClickListener(v -> elegirFoto());
         btnGuardar.setOnClickListener(v -> guardarPerfil());
 
         mostrarDatosDeLaCuenta();
@@ -126,6 +161,13 @@ public class EditarPerfilActivity extends AppCompatActivity {
                 String telefono = datos.child("telefono").getValue(String.class);
                 if (telefono != null && etTelefono.getText().toString().isEmpty()) {
                     etTelefono.setText(telefono);
+                }
+
+                // Foto guardada por el usuario (si no ha elegido otra mientras cargaba)
+                String foto = datos.child("foto").getValue(String.class);
+                if (foto != null && fotoNueva == null) {
+                    Bitmap bitmap = FotoUtils.deBase64(foto);
+                    if (bitmap != null) mostrarFoto(bitmap);
                 }
             }
 
@@ -214,6 +256,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
         datos.put("nombre", nombre);
         datos.put("correo", usuario.getEmail() != null ? usuario.getEmail() : "");
         datos.put("telefono", telefono);
+        // Solo se sube la foto si se ha cambiado
+        if (fotoNueva != null) datos.put("foto", fotoNueva);
 
         final boolean[] terminado = {false};
         // Sin internet, Firebase guarda al volver la conexión: se avisa pasado un rato
@@ -238,5 +282,46 @@ public class EditarPerfilActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.perfil_guardado_sin_bd, Toast.LENGTH_LONG).show();
             }
         });
+    }
+    /** Diálogo: hacer foto con la cámara o elegirla de la galería. */
+    private void elegirFoto() {
+        String[] opciones = {getString(R.string.foto_hacer), getString(R.string.foto_galeria)};
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.foto_titulo)
+                .setItems(opciones, (dialogo, cual) -> {
+                    if (cual == 0) {
+                        abrirCamara();
+                    } else {
+                        lanzarGaleria.launch(new PickVisualMediaRequest.Builder()
+                                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                                .build());
+                    }
+                })
+                .show();
+    }
+
+    /** La primera vez pide el permiso; si ya lo tiene, abre la cámara directamente. */
+    private void abrirCamara() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            lanzarCamara.launch(null);
+        } else {
+            pedirPermisoCamara.launch(Manifest.permission.CAMERA);
+        }
+    }
+
+    /** Guarda la foto en Base64 (se sube al pulsar Guardar) y la enseña redonda. */
+    private void ponerFoto(Bitmap foto) {
+        if (foto == null) {
+            Toast.makeText(this, R.string.med_error_foto, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        fotoNueva = FotoUtils.aBase64(foto);
+        mostrarFoto(foto);
+    }
+
+    private void mostrarFoto(Bitmap foto) {
+        ivFoto.setPadding(0, 0, 0, 0);
+        Glide.with(this).load(foto).circleCrop().into(ivFoto);
     }
 }

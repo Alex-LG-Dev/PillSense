@@ -114,4 +114,9 @@
     <string name="toma_borrar_mensaje">Se borrará la toma de %1$s de las %2$s. No se puede deshacer.</string>
     <string name="toma_borrada">Toma borrada</string>
     <string name="toma_error_borrar">No se ha podido borrar: %1$s</string>
+
+    <string name="foto_titulo">Cambiar foto</string>
+    <string name="foto_hacer">Hacer foto</string>
+    <string name="foto_galeria">Elegir de la galería</string>
+    <string name="foto_sin_permiso">Sin permiso de cámara no se puede hacer la foto</string>
 </resources>
