@@ -1,6 +1,7 @@
 package com.equipo5.pillsense;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.bumptech.glide.Glide;
-
 /**
  * Pantalla "Perfil" (T035): muestra la foto y los datos del usuario.
  * Los datos salen de Firebase Auth (nombre, correo, foto) y de usuarios/{uid}
@@ -106,6 +106,12 @@ public class PerfilActivity extends AppCompatActivity {
 
                         String rol = datos.child("rol").getValue(String.class);
                         tvRol.setText("paciente".equals(rol) ? "Paciente" : "Cuidador");
+                        // Si el usuario ha puesto su foto, se ve en lugar de la de Google/Facebook
+                        Bitmap foto = FotoUtils.deBase64(datos.child("foto").getValue(String.class));
+                        if (foto != null) {
+                            ivFoto.setPadding(0, 0, 0, 0);
+                            Glide.with(PerfilActivity.this).load(foto).circleCrop().into(ivFoto);
+                        }
                     }
 
                     @Override
