@@ -153,9 +153,10 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-
-
     </application>
+    <!-- Cámara para hacer la foto de perfil o del medicamento (T037) -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
 
 </manifest>

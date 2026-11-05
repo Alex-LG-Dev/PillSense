@@ -3,6 +3,7 @@ package com.equipo5.pillsense;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -144,11 +145,15 @@ public class PrincipalActivity extends AppCompatActivity {
             if (tvCorreoMenu != null && currentUser.getEmail() != null) {
                 tvCorreoMenu.setText(currentUser.getEmail());
             }
-            if (ivFotoPerfil != null && currentUser.getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(currentUser.getPhotoUrl())
-                        .circleCrop()
-                        .into(ivFotoPerfil);
+            // Si el usuario ha puesto su foto (T037), se ve en lugar de la de Google/Facebook
+            if (ivFotoPerfil != null) {
+                dbUsuarios.child(currentUser.getUid()).child("foto").get().addOnSuccessListener(datos -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    Bitmap foto = FotoUtils.deBase64(datos.getValue(String.class));
+                    if (foto != null) {
+                        Glide.with(this).load(foto).circleCrop().into(ivFotoPerfil);
+                    }
+                });
             }
 
             if (tvRolMenu != null) {
@@ -173,6 +178,7 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        configurarCabeceraMenu();   // por si ha cambiado la foto o el nombre
         String uidAhora = PacienteActivo.uidDatos(this);
         if (uidAhora != null && !uidAhora.equals(uidMostrado)) {
             recreate();   // vuelve a cargar todas las pestañas con el paciente nuevo

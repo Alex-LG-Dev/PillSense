@@ -1,5 +1,7 @@
 package com.equipo5.pillsense;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,8 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
+
 import android.view.View;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -56,6 +60,16 @@ public class MedicamentoActivity extends AppCompatActivity {
                 if (uri != null) ponerFoto(FotoUtils.leerDeGaleria(this, uri));
             });
 
+    // Pide el permiso de cámara. Si lo acepta, abre la cámara
+    private final ActivityResultLauncher<String> pedirPermisoCamara =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), aceptado -> {
+                if (aceptado) {
+                    lanzarCamara.launch(null);
+                } else {
+                    Toast.makeText(this, R.string.foto_sin_permiso, Toast.LENGTH_LONG).show();
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +97,14 @@ public class MedicamentoActivity extends AppCompatActivity {
         btnGuardar = findViewById(R.id.btnGuardarMed);
         ivFoto = findViewById(R.id.ivFotoMed);
 
-        findViewById(R.id.btnCamara).setOnClickListener(v -> lanzarCamara.launch(null));
+        findViewById(R.id.btnCamara).setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED) {
+                lanzarCamara.launch(null);
+            } else {
+                pedirPermisoCamara.launch(Manifest.permission.CAMERA);
+            }
+        });
         findViewById(R.id.btnGaleria).setOnClickListener(v ->
                 lanzarGaleria.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
