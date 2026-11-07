@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pantalla HISTORIAL (pestaña 4). De momento con datos de ejemplo del diseño. -->
+<!-- Pantalla HISTORIAL (pestaña 4). Sigue el prototipo del Drive, con los datos
+     sacados de Realtime Database y los filtros de la T042. -->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo_pantalla">
@@ -12,7 +14,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 1. TÍTULO Y SEMANA -->
+        <!-- 1. TÍTULO Y PERIODO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,13 +24,14 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvPeriodo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Esta semana · 5 al 11 de octubre"
             android:textColor="@color/texto_secundario"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="Esta semana · 1 al 7 de noviembre" />
 
-        <!-- 2. TARJETA AZUL: porcentaje de cumplimiento -->
+        <!-- 2. TARJETA AZUL: cumplimiento del periodo -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,10 +52,10 @@
                     android:id="@+id/tvPorcentaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="92%"
                     android:textColor="@color/white"
                     android:textSize="48sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="92%" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -64,47 +67,134 @@
                         android:id="@+id/tvTomasSemana"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="24 de 26 tomas"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="24 de 26 tomas" />
 
                     <TextView
                         android:id="@+id/tvOlvidadas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2 olvidadas"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:text="2 olvidadas" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 3. TABLA DE LA SEMANA: cabecera con las horas (mismas columnas que las filas) -->
+        <!-- 3. FILTRO POR FECHAS (T042) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
-            <Space
-                android:layout_width="56dp"
-                android:layout_height="0dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDesde"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:textAllCaps="false"
+                android:textColor="@color/texto_principal"
+                android:textSize="15sp"
+                app:backgroundTint="@color/fondo_tarjeta"
+                app:cornerRadius="16dp"
+                tools:text="Desde: 1 nov" />
 
-            <TextView style="@style/Historial.HoraTabla" android:text="8:00" />
-            <TextView style="@style/Historial.HoraTabla" android:text="9:00" />
-            <TextView style="@style/Historial.HoraTabla" android:text="14:00" />
-            <TextView style="@style/Historial.HoraTabla" android:text="22:00" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHasta"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:textAllCaps="false"
+                android:textColor="@color/texto_principal"
+                android:textSize="15sp"
+                app:backgroundTint="@color/fondo_tarjeta"
+                app:cornerRadius="16dp"
+                tools:text="Hasta: 7 nov" />
         </LinearLayout>
 
-        <!-- Las 7 filas (lunes a domingo) se añaden desde HistorialFragment.java -->
+        <!-- 4. FILTRO POR ESTADO (T042) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTodas"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:text="Todas"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTomadas"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:text="Tomadas"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOlvidadas"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:text="Olvidadas"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                app:cornerRadius="16dp" />
+        </LinearLayout>
+
+        <!-- 5. CABECERA DE LA TABLA: las horas. Se rellena desde el código,
+             porque dependen de los medicamentos de cada usuario. -->
+        <LinearLayout
+            android:id="@+id/cabeceraHoras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal" />
+
+        <!-- Una fila por día del rango elegido -->
         <LinearLayout
             android:id="@+id/tablaSemana"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-        <!-- 4. LEYENDA -->
+        <TextView
+            android:id="@+id/tvSinResultados"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="No hay tomas en estas fechas"
+            android:textColor="@color/texto_secundario"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- 6. LEYENDA -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
