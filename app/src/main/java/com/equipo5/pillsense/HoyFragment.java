@@ -22,6 +22,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 /** Pestaña "Hoy": lista de tomas del usuario leída de Realtime Database, ordenada por hora. */
 public class HoyFragment extends Fragment {
 
@@ -31,11 +39,21 @@ public class HoyFragment extends Fragment {
     private DatabaseReference refTomas;
     private ValueEventListener escuchador;
 
+    // Tomas ya marcadas hoy: registros/{uid}/{fecha}/{idToma}
+    private DatabaseReference refRegistrosHoy;
+    private ValueEventListener escuchadorRegistros;
+    private final Set<String> tomadasHoy = new HashSet<>();
+    private DataSnapshot ultimasTomas;
+
     private LinearLayout lista;
     private TextView tvSinTomas;
 
     public HoyFragment() {
         super(R.layout.fragment_hoy);
+    }
+
+    private static String hoy() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
 
     @Override
@@ -47,14 +65,17 @@ public class HoyFragment extends Fragment {
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
+            String uidDatos = PacienteActivo.uidDatos(requireContext());
+
             refTomas = FirebaseDatabase.getInstance(DB_URL)
                     .getReference("tomas")
-                    .child(PacienteActivo.uidDatos(requireContext()));
+                    .child(uidDatos);
 
             // Se ejecuta al abrir la pestaña y cada vez que cambia una toma en Firebase
             escuchador = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot datos) {
+                    ultimasTomas = datos;
                     mostrarTomas(datos);
                 }
 
@@ -67,6 +88,24 @@ public class HoyFragment extends Fragment {
             };
             // las tomas llegan ordenadas de la más temprana a la más tardía
             refTomas.orderByChild("hora").addValueEventListener(escuchador);
+
+            // Lo que ya se ha tomado hoy, para pintar el estado de cada fila
+            refRegistrosHoy = FirebaseDatabase.getInstance(DB_URL)
+                    .getReference("registros").child(uidDatos).child(hoy());
+            escuchadorRegistros = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot datos) {
+                    tomadasHoy.clear();
+                    for (DataSnapshot hijo : datos.getChildren()) {
+                        tomadasHoy.add(hijo.getKey());   // la clave es el id de la toma
+                    }
+                    if (ultimasTomas != null) mostrarTomas(ultimasTomas);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            };
+            refRegistrosHoy.addValueEventListener(escuchadorRegistros);
         }
 
         // Botón flotante: abre el formulario para crear una toma nueva
@@ -80,6 +119,9 @@ public class HoyFragment extends Fragment {
         if (refTomas != null && escuchador != null) {
             refTomas.orderByChild("hora").removeEventListener(escuchador);
         }
+        if (refRegistrosHoy != null && escuchadorRegistros != null) {
+            refRegistrosHoy.removeEventListener(escuchadorRegistros);
+        }
         super.onDestroyView();
     }
 
@@ -90,6 +132,9 @@ public class HoyFragment extends Fragment {
         lista.removeAllViews();
         LayoutInflater inflater = getLayoutInflater();
         int gris = ContextCompat.getColor(requireContext(), R.color.pestana_inactiva);
+        int verde = ContextCompat.getColor(requireContext(), R.color.verde_menta);
+        int azul = ContextCompat.getColor(requireContext(), R.color.toma_olvidada);
+        String ahora = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
         View ultimaFila = null;
 
         for (DataSnapshot hijo : datos.getChildren()) {
@@ -102,13 +147,27 @@ public class HoyFragment extends Fragment {
             ((TextView) fila.findViewById(R.id.tvEstado)).setText(
                     getString(R.string.toma_detalle, toma.getCajon(), toma.getHoraLimite()));
 
+            String id = hijo.getKey();
+            boolean tomada = id != null && tomadasHoy.contains(id);
+            boolean olvidada = !tomada && toma.getHoraLimite() != null
+                    && ahora.compareTo(toma.getHoraLimite()) > 0;
 
             ImageView ivEstado = fila.findViewById(R.id.ivEstado);
-            ivEstado.setImageResource(R.drawable.ic_toma_pendiente);
-            ivEstado.setColorFilter(gris);
+            if (tomada) {
+                ivEstado.setImageResource(R.drawable.ic_toma_hecha);
+                ivEstado.setColorFilter(verde);
+            } else if (olvidada) {
+                ivEstado.setImageResource(R.drawable.ic_toma_olvidada);
+                ivEstado.setColorFilter(azul);
+            } else {
+                ivEstado.setImageResource(R.drawable.ic_toma_pendiente);
+                ivEstado.setColorFilter(gris);
+            }
+
+            // Tocando el icono se marca la toma como tomada, o se desmarca si fue sin querer
+            ivEstado.setOnClickListener(v -> marcar(id, toma, !tomada));
 
             // Al tocar la fila se abre el formulario para editar esa toma
-            String id = hijo.getKey();
             fila.setOnClickListener(v -> {
                 Intent editar = new Intent(requireContext(), TomaActivity.class);
                 editar.putExtra(TomaActivity.EXTRA_ID, id);
@@ -124,5 +183,45 @@ public class HoyFragment extends Fragment {
             ultimaFila.findViewById(R.id.separador).setVisibility(View.GONE);
         }
         tvSinTomas.setVisibility(ultimaFila == null ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Guarda (o borra) el registro de que esta toma se ha tomado hoy.
+     * Escribe en el mismo sitio y con los mismos campos que la pantalla de aviso.
+     */
+    private void marcar(String idToma, Toma toma, boolean tomada) {
+        if (idToma == null) return;
+        String uidDatos = PacienteActivo.uidDatos(requireContext());
+        if (uidDatos == null) return;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance(DB_URL)
+                .getReference("registros").child(uidDatos).child(hoy()).child(idToma);
+
+        if (!tomada) {
+            ref.removeValue();
+            return;
+        }
+
+        Map<String, Object> registro = new HashMap<>();
+        registro.put("estado", "tomada");
+        registro.put("horaReal", new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()));
+
+        ref.setValue(registro)
+                .addOnSuccessListener(r -> {
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(),
+                                toma.getNombreMedicamento() + " marcada como tomada",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    // Ya está tomada: sobra el aviso que estuviera pendiente
+                    AlarmasToma.cancelarPospuesta(requireContext(), idToma);
+                })
+                .addOnFailureListener(e -> {
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(),
+                                "No se ha podido guardar. Inténtalo otra vez",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
