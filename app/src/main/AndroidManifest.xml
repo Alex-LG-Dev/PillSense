@@ -141,6 +141,15 @@
             android:name=".AlarmaTomaReceiver"
             android:exported="false" />
 
+        <!-- Avisos del servidor (FCM): toma olvidada para el cuidador (T071) -->
+        <service
+            android:name=".AvisosCuidadorService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <!-- Vuelve a programar las alarmas al encender el móvil o si cambia la hora.
             exported="true" porque estos avisos los manda el sistema (Android) -->
         <receiver

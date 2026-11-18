@@ -43,6 +43,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.database)
+    // Avisos al cuidador de tomas olvidadas (T071)
+    implementation(libs.firebase.messaging)
 
     //Inicio de sesión con Google
     implementation("com.google.firebase:firebase-auth")
