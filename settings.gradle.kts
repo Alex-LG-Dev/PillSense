@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "PillSense"
 include(":app")
+include(":pasarela")
