@@ -48,6 +48,7 @@ public class HoyFragment extends Fragment {
 
     private TomaAdapter adapter;
     private TextView tvSinTomas;
+    private TextView tvFecha;
 
     public HoyFragment() {
         super(R.layout.fragment_hoy);
@@ -80,6 +81,7 @@ public class HoyFragment extends Fragment {
         });
         rvTomas.setAdapter(adapter);
         tvSinTomas = view.findViewById(R.id.tvSinTomas);
+        tvFecha = view.findViewById(R.id.tvFecha);
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
@@ -134,6 +136,7 @@ public class HoyFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ponerFecha();
         if (refTomas == null) return;
 
         // Al entrar en la pantalla: empezamos a escuchar las tomas
@@ -161,6 +164,15 @@ public class HoyFragment extends Fragment {
         Log.d("HoyFragment", "Escucha PARADA");
         super.onStop();
     }
+    /** Pone la fecha de hoy en la cabecera, en automatico. */
+    private void ponerFecha() {
+        String fecha = new SimpleDateFormat("EEEE, d 'de' MMMM", Locale.forLanguageTag("es-ES"))
+                .format(new Date());
+        // Primera letra en mayus
+        tvFecha.setText(fecha.substring(0, 1).toUpperCase() + fecha.substring(1));
+    }
+
+
 
 
     private void mostrarTomas(DataSnapshot datos) {
