@@ -2,6 +2,7 @@ package com.equipo5.pillsense;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -86,12 +87,8 @@ public class HoyFragment extends Fragment {
                     }
                 }
             };
-            // las tomas llegan ordenadas de la más temprana a la más tardía
-            refTomas.orderByChild("hora").addValueEventListener(escuchador);
 
             // Lo que ya se ha tomado hoy, para pintar el estado de cada fila
-            refRegistrosHoy = FirebaseDatabase.getInstance(DB_URL)
-                    .getReference("registros").child(uidDatos).child(hoy());
             escuchadorRegistros = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot datos) {
@@ -103,9 +100,11 @@ public class HoyFragment extends Fragment {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("HoyFragment", "Registros: " + error.getMessage());
+                }
             };
-            refRegistrosHoy.addValueEventListener(escuchadorRegistros);
+
         }
 
         // Botón flotante: abre el formulario para crear una toma nueva
@@ -114,15 +113,34 @@ public class HoyFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        // Dejamos de escuchar cuando la pestaña desaparece
-        if (refTomas != null && escuchador != null) {
+    public void onStart() {
+        super.onStart();
+        if (refTomas == null) return;
+
+        // Al entrar en la pantalla: empezamos a escuchar las tomas
+        refTomas.orderByChild("hora").addValueEventListener(escuchador);
+
+        // Y los registros de HOY (la fecha se calcula cada vez, por si ha cambiado el día)
+        refRegistrosHoy = FirebaseDatabase.getInstance(DB_URL)
+                .getReference("registros")
+                .child(PacienteActivo.uidDatos(requireContext()))
+                .child(hoy());
+        refRegistrosHoy.addValueEventListener(escuchadorRegistros);
+
+        Log.d("HoyFragment", "Escucha ACTIVADA");
+    }
+
+    @Override
+    public void onStop() {
+        // Al salir de la pantalla: dejamos de escuchar
+        if (refTomas != null) {
             refTomas.orderByChild("hora").removeEventListener(escuchador);
         }
-        if (refRegistrosHoy != null && escuchadorRegistros != null) {
+        if (refRegistrosHoy != null) {
             refRegistrosHoy.removeEventListener(escuchadorRegistros);
         }
-        super.onDestroyView();
+        Log.d("HoyFragment", "Escucha PARADA");
+        super.onStop();
     }
 
 
