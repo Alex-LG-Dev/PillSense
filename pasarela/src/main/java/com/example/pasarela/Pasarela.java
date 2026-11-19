@@ -30,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -76,6 +77,8 @@ public class Pasarela {
     }
 
     public static void main(String[] args) throws Exception {
+        // Con locale turco "HIGH".toLowerCase() da "hıgh" y FCM rechaza la prioridad
+        Locale.setDefault(Locale.ROOT);
         conectarFirebase();
         conectarMqtt();
         escucharHorarios();
