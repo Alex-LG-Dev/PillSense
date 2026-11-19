@@ -34,6 +34,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class PrincipalActivity extends AppCompatActivity {
 
+    // Extras de la notificación de toma olvidada (T071)
+    public static final String EXTRA_UID_PACIENTE = "uidPaciente";
+    public static final String EXTRA_NOMBRE_PACIENTE = "nombrePaciente";
+    public static final String EXTRA_PESTANA = "pestana";
+    public static final int PESTANA_HOY = 0;
+
     private final String[] titulos = {"Hoy", "Pastillero", "Pastillas", "Historial"};
     private final int[] iconos = {
             R.drawable.ic_pestana_hoy,
@@ -85,6 +91,16 @@ public class PrincipalActivity extends AppCompatActivity {
                     android.widget.Toast.makeText(this, "Pantalla Avisos en construcción", android.widget.Toast.LENGTH_SHORT).show()
             );
         }
+        // Si venimos de la notificación de toma olvidada, se enseña ese paciente
+        String uidAviso = getIntent().getStringExtra(EXTRA_UID_PACIENTE);
+        if (uidAviso != null) {
+            PacienteActivo.elegir(this, uidAviso, getIntent().getStringExtra(EXTRA_NOMBRE_PACIENTE));
+        }
+
+        // Avisos de tomas olvidadas: permiso (Android 13+) y token de este móvil
+        pedirPermisoNotificaciones();
+        TokenFcm.guardar();
+
         // Paciente activo: se elige des del menú
         uidMostrado = PacienteActivo.uidDatos(this);
         elegirPrimeroSiNoHayNinguno();
@@ -123,6 +139,21 @@ public class PrincipalActivity extends AppCompatActivity {
                 tab.setIcon(iconos[posicion]);
             }).attach();
         }
+
+        if (viewPager != null) {
+            viewPager.setCurrentItem(
+                    getIntent().getIntExtra(EXTRA_PESTANA, PESTANA_HOY), false);
+        }
+    }
+
+    /** Pedir permiso para enseñar notificaciones (Android 13 o superior). */
+    private void pedirPermisoNotificaciones() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) return;
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.POST_NOTIFICATIONS)
+                == android.content.pm.PackageManager.PERMISSION_GRANTED) return;
+        androidx.core.app.ActivityCompat.requestPermissions(this,
+                new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
     }
 
     private void configurarCabeceraMenu() {
@@ -207,6 +238,11 @@ public class PrincipalActivity extends AppCompatActivity {
 
     private void cerrarSesion() {
         PacienteActivo.olvidar(this);
+        // Este móvil deja de recibir avisos de esta cuenta; después se cierra la sesión
+        TokenFcm.borrar(this::terminarCierreSesion);
+    }
+
+    private void terminarCierreSesion() {
         mAuth.signOut();
         SharedPreferences preferencias = getSharedPreferences("PillSensePrefs", Context.MODE_PRIVATE);
         preferencias.edit().putBoolean("mantener_sesion", false).apply();

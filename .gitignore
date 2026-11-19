@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Clave de la cuenta de servicio de Firebase (pasarela): nunca en Git
+clave-firebase.json
+*-firebase-adminsdk-*.json
