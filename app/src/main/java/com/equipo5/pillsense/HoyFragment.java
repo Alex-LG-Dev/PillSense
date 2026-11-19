@@ -2,17 +2,16 @@ package com.equipo5.pillsense;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,9 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class HoyFragment extends Fragment {
     private final Set<String> tomadasHoy = new HashSet<>();
     private DataSnapshot ultimasTomas;
 
-    private LinearLayout lista;
+    private TomaAdapter adapter;
     private TextView tvSinTomas;
 
     public HoyFragment() {
@@ -60,7 +61,24 @@ public class HoyFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lista = view.findViewById(R.id.listaTomas);
+        // Lista de tomas: RecyclerView con su adapter
+        RecyclerView rvTomas = view.findViewById(R.id.rvTomas);
+        rvTomas.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new TomaAdapter(new TomaAdapter.OnTomaListener() {
+            @Override
+            public void alTocarIcono(Toma toma, boolean marcarComoTomada) {
+                marcar(toma.getId(), toma, marcarComoTomada);
+            }
+
+            @Override
+            public void alTocarFila(Toma toma) {
+                // Abre el formulario para editar esa toma
+                Intent editar = new Intent(requireContext(), TomaActivity.class);
+                editar.putExtra(TomaActivity.EXTRA_ID, toma.getId());
+                startActivity(editar);
+            }
+        });
+        rvTomas.setAdapter(adapter);
         tvSinTomas = view.findViewById(R.id.tvSinTomas);
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -86,13 +104,11 @@ public class HoyFragment extends Fragment {
                     }
                 }
             };
-            // las tomas llegan ordenadas de la más temprana a la más tardía
-            refTomas.orderByChild("hora").addValueEventListener(escuchador);
 
             // Lo que ya se ha tomado hoy, para pintar el estado de cada fila
-            refRegistrosHoy = FirebaseDatabase.getInstance(DB_URL)
-                    .getReference("registros").child(uidDatos).child(hoy());
             escuchadorRegistros = new ValueEventListener() {
+                /*Estos registros los escribe la app al marcar una toma y, en el futuro,
+                  el pastillero al abrir la tapa (ver T075)*/
                 @Override
                 public void onDataChange(@NonNull DataSnapshot datos) {
                     tomadasHoy.clear();
@@ -103,9 +119,11 @@ public class HoyFragment extends Fragment {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("HoyFragment", "Registros: " + error.getMessage());
+                }
             };
-            refRegistrosHoy.addValueEventListener(escuchadorRegistros);
+
         }
 
         // Botón flotante: abre el formulario para crear una toma nueva
@@ -114,75 +132,52 @@ public class HoyFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        // Dejamos de escuchar cuando la pestaña desaparece
-        if (refTomas != null && escuchador != null) {
+    public void onStart() {
+        super.onStart();
+        if (refTomas == null) return;
+
+        // Al entrar en la pantalla: empezamos a escuchar las tomas
+        refTomas.orderByChild("hora").addValueEventListener(escuchador);
+
+        // Y los registros de HOY (la fecha se calcula cada vez, por si ha cambiado el día)
+        refRegistrosHoy = FirebaseDatabase.getInstance(DB_URL)
+                .getReference("registros")
+                .child(PacienteActivo.uidDatos(requireContext()))
+                .child(hoy());
+        refRegistrosHoy.addValueEventListener(escuchadorRegistros);
+
+        Log.d("HoyFragment", "Escucha ACTIVADA");
+    }
+
+    @Override
+    public void onStop() {
+        // Al salir de la pantalla: dejamos de escuchar
+        if (refTomas != null) {
             refTomas.orderByChild("hora").removeEventListener(escuchador);
         }
-        if (refRegistrosHoy != null && escuchadorRegistros != null) {
+        if (refRegistrosHoy != null) {
             refRegistrosHoy.removeEventListener(escuchadorRegistros);
         }
-        super.onDestroyView();
+        Log.d("HoyFragment", "Escucha PARADA");
+        super.onStop();
     }
 
 
     private void mostrarTomas(DataSnapshot datos) {
         if (getView() == null) return;
 
-        lista.removeAllViews();
-        LayoutInflater inflater = getLayoutInflater();
-        int gris = ContextCompat.getColor(requireContext(), R.color.pestana_inactiva);
-        int verde = ContextCompat.getColor(requireContext(), R.color.verde_menta);
-        int azul = ContextCompat.getColor(requireContext(), R.color.toma_olvidada);
-        String ahora = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-        View ultimaFila = null;
-
+        // Pasamos las tomas de Firebase a una lista para el adapter
+        List<Toma> tomas = new ArrayList<>();
         for (DataSnapshot hijo : datos.getChildren()) {
             Toma toma = hijo.getValue(Toma.class);
             if (toma == null) continue;
-
-            View fila = inflater.inflate(R.layout.item_toma, lista, false);
-            ((TextView) fila.findViewById(R.id.tvHora)).setText(toma.getHora());
-            ((TextView) fila.findViewById(R.id.tvNombre)).setText(toma.getNombreMedicamento());
-            ((TextView) fila.findViewById(R.id.tvEstado)).setText(
-                    getString(R.string.toma_detalle, toma.getCajon(), toma.getHoraLimite()));
-
-            String id = hijo.getKey();
-            boolean tomada = id != null && tomadasHoy.contains(id);
-            boolean olvidada = !tomada && toma.getHoraLimite() != null
-                    && ahora.compareTo(toma.getHoraLimite()) > 0;
-
-            ImageView ivEstado = fila.findViewById(R.id.ivEstado);
-            if (tomada) {
-                ivEstado.setImageResource(R.drawable.ic_toma_hecha);
-                ivEstado.setColorFilter(verde);
-            } else if (olvidada) {
-                ivEstado.setImageResource(R.drawable.ic_toma_olvidada);
-                ivEstado.setColorFilter(azul);
-            } else {
-                ivEstado.setImageResource(R.drawable.ic_toma_pendiente);
-                ivEstado.setColorFilter(gris);
-            }
-
-            // Tocando el icono se marca la toma como tomada, o se desmarca si fue sin querer
-            ivEstado.setOnClickListener(v -> marcar(id, toma, !tomada));
-
-            // Al tocar la fila se abre el formulario para editar esa toma
-            fila.setOnClickListener(v -> {
-                Intent editar = new Intent(requireContext(), TomaActivity.class);
-                editar.putExtra(TomaActivity.EXTRA_ID, id);
-                startActivity(editar);
-            });
-
-            lista.addView(fila);
-            ultimaFila = fila;
+            toma.setId(hijo.getKey());   // la clave del nodo es el id de la toma
+            tomas.add(toma);
         }
 
-
-        if (ultimaFila != null) {
-            ultimaFila.findViewById(R.id.separador).setVisibility(View.GONE);
-        }
-        tvSinTomas.setVisibility(ultimaFila == null ? View.VISIBLE : View.GONE);
+        // El adapter pinta las filas con su estado y color
+        adapter.actualizar(tomas, tomadasHoy);
+        tvSinTomas.setVisibility(tomas.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     /**
